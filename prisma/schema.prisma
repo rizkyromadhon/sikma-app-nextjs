@@ -1,0 +1,332 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  DOSEN
+  MAHASISWA
+}
+
+enum SemesterType {
+  GANJIL
+  GENAP
+}
+
+enum RuanganType {
+  TEORI
+  PRAKTIKUM
+}
+
+enum Hari {
+  SENIN
+  SELASA
+  RABU
+  KAMIS
+  JUMAT
+  SABTU
+  MINGGU
+}
+
+enum StatusPresensi {
+  HADIR
+  TIDAK_HADIR
+  IZIN
+  SAKIT
+}
+
+enum TipePengajuan {
+  IZIN
+  SAKIT
+}
+
+enum StatusPengajuan {
+  DIPROSES
+  DISETUJUI
+  DITOLAK
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+// 1. Tabel User (sudah diperbaiki)
+model User {
+  id                  String  @id @default(cuid())
+  uid                 String? @unique // Misal untuk RFID
+  name                String
+  email               String  @unique
+  password            String?
+  alamat              String?
+  no_hp               String?
+  foto                String?
+  nim                 String? @unique // Opsional
+  nip                 String? @unique // Opsional
+  is_profile_complete Boolean @default(false)
+  role                Role    @default(MAHASISWA)
+  gender              String?
+
+  semesterId Int?
+  prodiId    String? // Opsional, hanya untuk mahasiswa/dosen
+  golonganId String? // Opsional, hanya untuk mahasiswa
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relasi
+  semester           Semester?          @relation(fields: [semesterId], references: [id])
+  prodi              ProgramStudi?      @relation(fields: [prodiId], references: [id])
+  golongan           Golongan?          @relation(fields: [golonganId], references: [id])
+  laporans           LaporanMahasiswa[] @relation("LaporanDariUser")
+  presensi           PresensiKuliah[]
+  pengajuanIzin      PengajuanIzin[]
+  notifikasiDiterima Notifikasi[]       @relation("NotifikasiUntukUser")
+  notifikasiDikirim  Notifikasi[]       @relation("NotifikasiDariSender")
+  jadwalMengajar     JadwalKuliah[] // Dosen mengajar banyak jadwal
+  jadwalDiikuti      PesertaKuliah[] // Mahasiswa mengikuti banyak jadwal
+  account            Account[]
+  session            Session[]
+
+  @@map("user")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// 2. Tabel Semester
+model Semester {
+  id   Int          @id @default(autoincrement())
+  name String       @unique
+  tipe SemesterType
+
+  // Relasi
+  jadwal_kuliah JadwalKuliah[]
+  user          User[]
+}
+
+// 3. Tabel Ruangan
+model Ruangan {
+  id   String      @id @default(cuid())
+  kode String      @unique
+  name String
+  type RuanganType
+
+  // Relasi
+  jadwal_kuliah JadwalKuliah[]
+  alat_presensi AlatPresensi[]
+}
+
+// 4. Tabel Program Studi
+model ProgramStudi {
+  id   String @id @default(cuid())
+  name String @unique
+  slug String @unique
+
+  // Relasi
+  users         User[]
+  golongan      Golongan[]
+  jadwal_kuliah JadwalKuliah[]
+}
+
+// 5. Tabel Presensi Kuliah (sudah diperbaiki)
+model PresensiKuliah {
+  id             String         @id @default(cuid())
+  waktu_presensi DateTime       @default(now()) // Sudah termasuk tanggal & waktu
+  status         StatusPresensi
+  keterangan     String?
+
+  mahasiswaId    String
+  matkulId       String
+  jadwalKuliahId String
+
+  // Relasi
+  mahasiswa     User         @relation(fields: [mahasiswaId], references: [id])
+  mata_kuliah   MataKuliah   @relation(fields: [matkulId], references: [id])
+  jadwal_kuliah JadwalKuliah @relation(fields: [jadwalKuliahId], references: [id])
+}
+
+// 6. Tabel Pengajuan Izin
+model PengajuanIzin {
+  id             String          @id @default(cuid())
+  tanggal_izin   DateTime
+  tipe_pengajuan TipePengajuan
+  pesan          String          @db.Text
+  file_bukti     String?
+  status         StatusPengajuan @default(DIPROSES)
+  catatan_dosen  String?         @db.Text
+
+  mahasiswaId    String
+  jadwalKuliahId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relasi
+  mahasiswa     User         @relation(fields: [mahasiswaId], references: [id])
+  jadwal_kuliah JadwalKuliah @relation(fields: [jadwalKuliahId], references: [id])
+}
+
+// 7. Tabel Notifikasi
+model Notifikasi {
+  id         String    @id @default(cuid())
+  tipe       String
+  konten     String    @db.Text
+  url_tujuan String?
+  read_at    DateTime?
+
+  userId   String // Penerima notifikasi
+  senderId String // Pengirim notifikasi
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relasi
+  user   User @relation("NotifikasiUntukUser", fields: [userId], references: [id])
+  sender User @relation("NotifikasiDariSender", fields: [senderId], references: [id])
+}
+
+// 8. Tabel Mata Kuliah
+model MataKuliah {
+  id   String @id @default(cuid())
+  kode String @unique
+  name String
+
+  // Relasi
+  jadwal_kuliah JadwalKuliah[]
+  presensi      PresensiKuliah[]
+}
+
+// 9. Tabel Laporan Mahasiswa (sudah diperbaiki)
+model LaporanMahasiswa {
+  id      String  @id @default(cuid())
+  tipe    String // Misal: 'lupa_password', 'kerusakan_alat'
+  pesan   String  @db.Text
+  status  String  @default("Belum Ditangani")
+  balasan String? @db.Text
+
+  userId String // Hanya butuh ID user
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relasi
+  user User @relation("LaporanDariUser", fields: [userId], references: [id])
+}
+
+// 10. Tabel Jadwal Kuliah (sudah diperbaiki)
+model JadwalKuliah {
+  id             String   @id @default(cuid())
+  is_kelas_besar Boolean  @default(false)
+  hari           Hari
+  jam_mulai      DateTime
+  jam_selesai    DateTime
+
+  dosenId    String
+  matkulId   String
+  semesterId Int
+  prodiId    String
+  golonganId String
+  ruanganId  String
+
+  // Relasi
+  dosen         User             @relation(fields: [dosenId], references: [id])
+  mata_kuliah   MataKuliah       @relation(fields: [matkulId], references: [id])
+  semester      Semester         @relation(fields: [semesterId], references: [id])
+  prodi         ProgramStudi     @relation(fields: [prodiId], references: [id])
+  golongan      Golongan         @relation(fields: [golonganId], references: [id])
+  ruangan       Ruangan          @relation(fields: [ruanganId], references: [id])
+  presensi      PresensiKuliah[]
+  pengajuanIzin PengajuanIzin[]
+  peserta       PesertaKuliah[]
+}
+
+// 11. Tabel Golongan
+model Golongan {
+  id   String @id @default(cuid())
+  name String // Misal: A, B, C, Pagi, Malam
+
+  prodiId String
+
+  // Relasi
+  prodi         ProgramStudi   @relation(fields: [prodiId], references: [id])
+  users         User[]
+  jadwal_kuliah JadwalKuliah[]
+}
+
+// 12. Tabel Alat Presensi
+model AlatPresensi {
+  id           String    @id @default(cuid())
+  name         String
+  mode         String // Misal: Masuk, Pulang, Absen
+  jadwal_nyala DateTime?
+  jadwal_mati  DateTime?
+  status       String // Misal: , Nonaktif, Error
+
+  ruanganId String
+
+  // Relasi
+  ruangan Ruangan @relation(fields: [ruanganId], references: [id])
+}
+
+// === TABEL BARU YANG DISARANKAN ===
+// 13. Tabel Peserta Kuliah (Pivot Table untuk KRS)
+model PesertaKuliah {
+  id String @id @default(cuid())
+
+  mahasiswaId    String
+  jadwalKuliahId String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relasi
+  mahasiswa     User         @relation(fields: [mahasiswaId], references: [id])
+  jadwal_kuliah JadwalKuliah @relation(fields: [jadwalKuliahId], references: [id])
+
+  // Menjamin setiap mahasiswa hanya bisa mendaftar sekali di satu jadwal
+  @@unique([mahasiswaId, jadwalKuliahId])
+}
