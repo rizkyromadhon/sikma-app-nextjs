@@ -1,9 +1,10 @@
+export const dynamic = "force-dynamic";
+
 import prisma from "@/lib/prisma";
 import { SubmitButton } from "@/components/auth/SubmitButton";
 import { BsPlusCircleDotted } from "react-icons/bs";
 import GolonganTable from "./GolonganTable";
 
-export const dynamic = "force-dynamic";
 const ITEMS_PER_PAGE = 6;
 
 async function getGolongan(prodiId: string | undefined, page: number) {
@@ -38,8 +39,8 @@ export default async function ManajemenGolonganPage({
 }: {
   searchParams?: { prodi?: string; page?: string };
 }) {
-  const prodiId = (await searchParams?.prodi) || undefined;
-  const currentPage = await Number(searchParams?.page || 1);
+  const prodiId = searchParams?.prodi || undefined;
+  const currentPage = Number(searchParams?.page || 1);
 
   const [{ data, totalPages }, prodiList] = await Promise.all([
     getGolongan(prodiId, currentPage),

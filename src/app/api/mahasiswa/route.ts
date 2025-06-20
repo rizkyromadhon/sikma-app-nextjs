@@ -1,0 +1,86 @@
+import { NextResponse } from "next/server";
+import prisma from "@/lib/prisma";
+import { v2 as cloudinary } from "cloudinary";
+
+// Konfigurasi Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+export async function POST(request: Request) {
+  // Karena kita mengirim file, kita gunakan request.formData() bukan request.json()
+  const formData = await request.formData();
+
+  const name = formData.get("name") as string;
+  const nim = formData.get("nim") as string;
+  const email = formData.get("email") as string;
+  const no_hp = formData.get("no_hp") as string;
+  const alamat = formData.get("alamat") as string;
+  const semesterIdStr = formData.get("semester") as string;
+  const prodiId = formData.get("prodi") as string;
+  const golonganId = formData.get("golongan") as string;
+  const gender = formData.get("gender") as string;
+  const foto = formData.get("foto") as File;
+
+  if (!name || !nim || !email || !semesterIdStr || !prodiId || !golonganId || !gender) {
+    return NextResponse.json(
+      { error: "Semua field wajib diisi kecuali No HP, Alamat, dan Foto." },
+      { status: 400 }
+    );
+  }
+
+  const semesterId = parseInt(semesterIdStr, 10);
+
+  let foto_url = null;
+
+  // Proses upload foto jika ada
+  if (foto) {
+    try {
+      // Ubah file menjadi buffer
+      const bytes = await foto.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+
+      // Upload ke Cloudinary
+      const response = await new Promise((resolve, reject) => {
+        cloudinary.uploader
+          .upload_stream({ folder: "mahasiswa" }, (err, result) => {
+            if (err) reject(err);
+            resolve(result);
+          })
+          .end(buffer);
+      });
+
+      // @ts-expect-error
+      foto_url = response?.secure_url;
+    } catch (error) {
+      console.error("Gagal upload foto:", error);
+      return NextResponse.json({ error: "Gagal mengupload foto." }, { status: 500 });
+    }
+  }
+
+  // Simpan data ke database
+  try {
+    const newMahasiswa = await prisma.user.create({
+      data: {
+        name,
+        nim,
+        email,
+        no_hp,
+        alamat,
+        gender,
+        semesterId,
+        prodiId,
+        golonganId,
+        foto: foto_url,
+        role: "MAHASISWA", // Role default ditambahkan di sini
+      },
+    });
+    return NextResponse.json(newMahasiswa, { status: 201 });
+  } catch (error) {
+    console.error("Gagal membuat mahasiswa:", error);
+    // Tambahkan penanganan error Prisma spesifik jika perlu (misal: P2002 untuk nim/email duplikat)
+    return NextResponse.json({ error: "Gagal menyimpan data mahasiswa ke database." }, { status: 500 });
+  }
+}

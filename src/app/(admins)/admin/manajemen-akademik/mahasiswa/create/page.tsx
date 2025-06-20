@@ -1,11 +1,11 @@
-import  prisma  from "@/lib/prisma";
-import CreateMahasiswaForm from "@/components/admin/manajemen-akademik/mahasiswa/CreateMahasiswaForm";
+import prisma from "@/lib/prisma";
+import CreateMahasiswaForm from "@/app/(admins)/admin/manajemen-akademik/mahasiswa/create/CreateMahasiswaForm";
 
 export default async function CreateMahasiswaPage() {
   const [semesters, prodis, golongans] = await Promise.all([
     prisma.semester.findMany({ orderBy: { name: "asc" } }),
-    prisma.programStudi.findMany(),
-    prisma.golongan.findMany(),
+    prisma.programStudi.findMany({ orderBy: { name: "asc" } }),
+    prisma.golongan.findMany({ orderBy: { name: "asc" } }),
   ]);
 
   return (
@@ -13,7 +13,11 @@ export default async function CreateMahasiswaPage() {
       <CreateMahasiswaForm
         semesters={semesters.map((s) => ({ id: s.id.toString(), name: s.name }))}
         prodis={prodis.map((p) => ({ id: p.id.toString(), name: p.name }))}
-        golongans={golongans.map((g) => ({ id: g.id.toString(), name: g.name }))}
+        golongans={golongans.map((g) => ({
+          id: g.id.toString(),
+          name: g.name,
+          prodiId: g.prodiId.toString(), 
+        }))}
       />
     </div>
   );

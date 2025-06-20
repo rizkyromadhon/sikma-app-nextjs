@@ -21,7 +21,7 @@ export default function FlashMessageListener() {
     const semesterStatus = searchParams.get("semester");
     const prodiStatus = searchParams.get("program-studi");
     const golonganStatus = searchParams.get("golongan");
-    // const nimStatus = searchParams.get("nim");
+    const mahasiswaStatus = searchParams.get("mahasiswa");
 
     if (loginStatus === "success") {
       toast({
@@ -172,6 +172,33 @@ export default function FlashMessageListener() {
         type: "success",
         title: "Golongan berhasil dihapus!",
         description: "Data golongan telah berhasil diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (mahasiswaStatus === "create_success") {
+      toast({
+        type: "success",
+        title: "Mahasiswa berhasil ditambahkan!",
+        description: "Data mahasiswa baru telah berhasil disimpan.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (mahasiswaStatus === "update_success") {
+      toast({
+        type: "success",
+        title: "Mahasiswa berhasil diperbarui!",
+        description: "Data mahasiswa telah berhasil diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (mahasiswaStatus === "delete_success") {
+      toast({
+        type: "success",
+        title: "Mahasiswa berhasil dihapus!",
+        description: "Data mahasiswa telah berhasil diperbarui.",
       });
       router.replace(pathname, { scroll: false });
     }

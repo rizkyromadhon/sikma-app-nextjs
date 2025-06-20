@@ -1,5 +1,5 @@
-import  prisma  from "@/lib/prisma";
-import MahasiswaTable from "@/components/admin/manajemen-akademik/mahasiswa/MahasiswaTable";
+import prisma from "@/lib/prisma";
+import MahasiswaTable from "@/app/(admins)/admin/manajemen-akademik/mahasiswa/MahasiswaTable";
 import { BsPlusCircleDotted } from "react-icons/bs";
 import { SubmitButton } from "@/components/auth/SubmitButton";
 
