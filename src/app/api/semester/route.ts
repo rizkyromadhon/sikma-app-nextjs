@@ -1,10 +1,10 @@
 // app/api/semester/route.ts
 
 import { NextResponse } from "next/server";
-import { PrismaClient, Prisma } from "@/generated/prisma/client";
+import {  Prisma } from "@/generated/prisma/client";
+import prisma from "@/lib/prisma";
 
 export async function POST(request: Request) {
-  const prisma = new PrismaClient();
 
   try {
     const body = await request.json();

@@ -1,5 +1,5 @@
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
+import  prisma  from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { LuUsers, LuUser } from "react-icons/lu";
 import StatCard from "@/components/admin/dashboard/StatCard";

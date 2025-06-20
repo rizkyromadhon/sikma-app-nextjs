@@ -1,7 +1,7 @@
 "use server";
 import { RegisterSchema, LoginSchema } from "@/lib/zod";
 import { hashSync } from "bcrypt-ts";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";

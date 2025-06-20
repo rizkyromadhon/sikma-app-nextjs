@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 
 export const getTotalStudents = async (prodiId: string) => {
   const count = await prisma.user.count({
@@ -65,12 +65,12 @@ export const getStudentsByProdi = async (prodiId: string, prodiName: string) => 
 export const getAllSemesters = async () => {
   const semesters = await prisma.semester.findMany({
     orderBy: {
-      id: "asc", 
+      id: "asc",
     },
     select: {
       id: true,
       name: true,
-      tipe: true, 
+      tipe: true,
     },
   });
   return semesters;

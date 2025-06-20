@@ -162,9 +162,9 @@ model Ruangan {
 
 // 4. Tabel Program Studi
 model ProgramStudi {
-  id   String @id @default(cuid())
-  name String @unique
-  slug String @unique
+  id   String  @id @default(cuid())
+  name String  @unique
+  slug String? @unique
 
   // Relasi
   users         User[]

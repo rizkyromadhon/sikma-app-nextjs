@@ -19,6 +19,9 @@ export default function FlashMessageListener() {
     const logoutStatus = searchParams.get("logout");
     const isLogin = searchParams.get("islogin");
     const semesterStatus = searchParams.get("semester");
+    const prodiStatus = searchParams.get("program-studi");
+    const golonganStatus = searchParams.get("golongan");
+    // const nimStatus = searchParams.get("nim");
 
     if (loginStatus === "success") {
       toast({
@@ -26,7 +29,6 @@ export default function FlashMessageListener() {
         title: "Login berhasil!",
         description: "Selamat datang kembali di SIKMA.",
       });
-
       router.replace(pathname, { scroll: false });
     }
 
@@ -36,7 +38,6 @@ export default function FlashMessageListener() {
         title: "Registrasi berhasil!",
         description: "Silahkan login untuk melanjutkan.",
       });
-
       router.replace(pathname, { scroll: false });
     }
 
@@ -46,7 +47,6 @@ export default function FlashMessageListener() {
         title: "Registrasi gagal!",
         description: "Email sudah terdaftar.",
       });
-
       router.replace(pathname, { scroll: false });
     }
 
@@ -56,7 +56,6 @@ export default function FlashMessageListener() {
         title: "Logout berhasil!",
         description: "Sampai jumpa lagi.",
       });
-
       router.replace(pathname, { scroll: false });
     }
 
@@ -102,7 +101,6 @@ export default function FlashMessageListener() {
         title: "Semester berhasil ditambahkan!",
         description: "Data semester baru telah berhasil disimpan.",
       });
-      // Hapus parameter dari URL agar toast tidak muncul lagi saat refresh
       router.replace(pathname, { scroll: false });
     }
 
@@ -112,7 +110,69 @@ export default function FlashMessageListener() {
         title: "Semester berhasil diperbarui!",
         description: "Data semester telah berhasil diperbarui.",
       });
-      // Hapus parameter dari URL agar toast tidak muncul lagi saat refresh
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (semesterStatus === "delete_success") {
+      toast({
+        type: "success",
+        title: "Semester berhasil dihapus!",
+        description: "Data semester telah berhasil diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (prodiStatus === "create_success") {
+      toast({
+        type: "success",
+        title: "Program Studi berhasil ditambahkan!",
+        description: "Data program studi baru telah berhasil disimpan.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (prodiStatus === "update_success") {
+      toast({
+        type: "success",
+        title: "Program Studi berhasil diperbarui!",
+        description: "Data program studi telah berhasil diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (prodiStatus === "delete_success") {
+      toast({
+        type: "success",
+        title: "Program Studi berhasil dihapus!",
+        description: "Data program studi telah berhasil diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (golonganStatus === "create_success") {
+      toast({
+        type: "success",
+        title: "Golongan berhasil ditambahkan!",
+        description: "Data golongan baru telah berhasil disimpan.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (golonganStatus === "update_success") {
+      toast({
+        type: "success",
+        title: "Golongan berhasil diperbarui!",
+        description: "Data golongan telah berhasil diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (golonganStatus === "delete_success") {
+      toast({
+        type: "success",
+        title: "Golongan berhasil dihapus!",
+        description: "Data golongan telah berhasil diperbarui.",
+      });
       router.replace(pathname, { scroll: false });
     }
   }, [searchParams, router, pathname, toast]);

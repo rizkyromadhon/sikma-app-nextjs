@@ -1,7 +1,6 @@
-import { PrismaClient } from "@/generated/prisma/client";
+import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import EditSemesterForm from "./EditSemesterForm";
-const prisma = new PrismaClient();
 
 async function getSemesterById(id: string) {
   const numericId = parseInt(id, 10);
@@ -25,7 +24,8 @@ interface PageProps {
 }
 
 export default async function EditSemesterPage({ params }: PageProps) {
-  const semester = await getSemesterById(params.id);
+  const { id } = await params;
+  const semester = await getSemesterById(id);
 
   return (
     <div className="w-full max-w-2xl mt-10 mx-auto p-8 bg-white dark:bg-black/20 rounded-md shadow-[0_0_10px_1px_#1a1a1a1a] dark:shadow-[0_0_20px_1px_#ffffff1a]">

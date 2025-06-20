@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import  prisma  from "@/lib/prisma";
 import CreateMahasiswaForm from "@/components/admin/manajemen-akademik/mahasiswa/CreateMahasiswaForm";
 
 export default async function CreateMahasiswaPage() {
