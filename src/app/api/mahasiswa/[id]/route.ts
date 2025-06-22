@@ -1,51 +1,42 @@
-// app/api/mahasiswa/[id]/route.ts
-
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 import { Prisma } from "@/generated/prisma/client";
 
-// Konfigurasi Cloudinary (wajib ada di setiap file yang menggunakannya)
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Fungsi untuk mengekstrak public_id dari URL Cloudinary
 const getPublicIdFromUrl = (url: string) => {
   const regex = /\/v\d+\/([^\/]+)\.\w{3,4}$/;
   const match = url.match(regex);
   return match ? match[1] : null;
 };
 
-// --- Handler untuk UPDATE (PUT) ---
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
-  const mahasiswaId = params.id;
+  const { id } = await params;
+  const mahasiswaId = id;
   const formData = await request.formData();
 
   const name = formData.get("name") as string;
   const nim = formData.get("nim") as string;
   const email = formData.get("email") as string;
-  const semesterIdStr = formData.get("semester") as string;
+  const semesterId = formData.get("semester") as string;
   const prodiId = formData.get("prodi") as string;
   const golonganId = formData.get("golongan") as string;
   const gender = formData.get("gender") as string;
   const fotoFile = formData.get("foto") as File | null;
 
   // Validasi input
-  if (!name || !nim || !email || !semesterIdStr || !prodiId || !golonganId || !gender) {
+  if (!name || !nim || !email || !semesterId || !prodiId || !golonganId || !gender) {
     return NextResponse.json({ error: "Semua field wajib diisi." }, { status: 400 });
   }
 
-  // Konversi ID relasi ke angka
-  const semesterId = parseInt(semesterIdStr, 10);
-
   try {
     let uploadedFotoUrl: string | undefined = undefined;
-    // Cek apakah ada foto baru yang di-upload
     if (fotoFile && fotoFile.size > 0) {
-      // 1. Ambil data mahasiswa saat ini untuk mendapatkan URL foto lama
       const currentUser = await prisma.user.findUnique({ where: { id: mahasiswaId } });
 
       // 2. Jika ada foto lama, hapus dari Cloudinary
@@ -109,7 +100,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 }
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
-  const mahasiswaId = params.id;
+  const { id } = await params;
+  const mahasiswaId = id;
 
   try {
     const userToDelete = await prisma.user.findUnique({

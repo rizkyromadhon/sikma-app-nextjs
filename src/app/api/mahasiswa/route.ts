@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
+import { hashSync } from "bcrypt-ts";
 
 // Konfigurasi Cloudinary
 cloudinary.config({
@@ -18,20 +19,19 @@ export async function POST(request: Request) {
   const email = formData.get("email") as string;
   const no_hp = formData.get("no_hp") as string;
   const alamat = formData.get("alamat") as string;
-  const semesterIdStr = formData.get("semester") as string;
+  const semesterId = formData.get("semester") as string;
   const prodiId = formData.get("prodi") as string;
   const golonganId = formData.get("golongan") as string;
   const gender = formData.get("gender") as string;
   const foto = formData.get("foto") as File;
+  const password = hashSync("passwordmahasiswa", 10);
 
-  if (!name || !nim || !email || !semesterIdStr || !prodiId || !golonganId || !gender) {
+  if (!name || !nim || !email || !semesterId || !prodiId || !golonganId || !gender) {
     return NextResponse.json(
       { error: "Semua field wajib diisi kecuali No HP, Alamat, dan Foto." },
       { status: 400 }
     );
   }
-
-  const semesterId = parseInt(semesterIdStr, 10);
 
   let foto_url = null;
 
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
       const buffer = Buffer.from(bytes);
 
       // Upload ke Cloudinary
-      const response = await new Promise((resolve, reject) => {
+      const response = await new Promise<UploadApiResponse | undefined>((resolve, reject) => {
         cloudinary.uploader
           .upload_stream({ folder: "mahasiswa" }, (err, result) => {
             if (err) reject(err);
@@ -52,8 +52,11 @@ export async function POST(request: Request) {
           .end(buffer);
       });
 
-      // @ts-expect-error
-      foto_url = response?.secure_url;
+      if (response && response.secure_url) {
+        foto_url = response.secure_url;
+      } else {
+        throw new Error("Gagal mendapatkan URL dari Cloudinary setelah upload.");
+      }
     } catch (error) {
       console.error("Gagal upload foto:", error);
       return NextResponse.json({ error: "Gagal mengupload foto." }, { status: 500 });
@@ -74,13 +77,13 @@ export async function POST(request: Request) {
         prodiId,
         golonganId,
         foto: foto_url,
-        role: "MAHASISWA", // Role default ditambahkan di sini
+        role: "MAHASISWA",
+        password: password,
       },
     });
     return NextResponse.json(newMahasiswa, { status: 201 });
   } catch (error) {
     console.error("Gagal membuat mahasiswa:", error);
-    // Tambahkan penanganan error Prisma spesifik jika perlu (misal: P2002 untuk nim/email duplikat)
     return NextResponse.json({ error: "Gagal menyimpan data mahasiswa ke database." }, { status: 500 });
   }
 }

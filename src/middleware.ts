@@ -1,41 +1,52 @@
-import { auth } from "@/auth";
-export { auth as middlewares } from "@/auth";
+// File: src/middleware.ts
+
+import NextAuth from "next-auth";
+import authConfig from "@/auth.config"; // <-- PENTING: Impor dari auth.config.ts
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
-  const session = await auth();
-  const pathname = request.nextUrl.pathname;
+const { auth } = NextAuth(authConfig);
 
-  if (!session?.user) {
-    return NextResponse.redirect(new URL("/login?login=unauthorized", request.url));
-  }
+const publicRoutes = ["/"];
+const authRoutes = ["/login"];
 
-  if (session?.user && pathname === "/login") {
-    const role = session.user.role;
+export default auth((req) => {
+  const { nextUrl } = req;
+  const isLoggedIn = !!req.auth;
+  const role = req.auth?.user?.role;
+  console.log("[DEBUG] req.auth:", req.auth);
+  console.log("[MIDDLEWARE DEBUG] Pathname:", nextUrl.pathname);
+  console.log("[MIDDLEWARE DEBUG] Is logged in:", isLoggedIn);
 
-    if (role === "ADMIN") {
-      return NextResponse.redirect(new URL("/admin/dashboard?islogin=true", request.url));
-    } else if (role === "DOSEN") {
-      return NextResponse.redirect(new URL("/dosen", request.url));
-    } else {
-      return NextResponse.redirect(new URL("/", request.url));
+  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+  const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+  const isAdminRoute = nextUrl.pathname.startsWith("/admin");
+  const isDosenRoute = nextUrl.pathname.startsWith("/dosen");
+
+  if (isAuthRoute) {
+    if (isLoggedIn) {
+      if (role === "ADMIN") return Response.redirect(new URL("/admin/dashboard", nextUrl));
+      if (role === "DOSEN") return Response.redirect(new URL("/dosen/dashboard", nextUrl));
+      return Response.redirect(new URL("/", nextUrl));
     }
+    return NextResponse.next();
   }
 
-  const role = session.user.role;
-
-  if (pathname.startsWith("/admin") && role !== "ADMIN") {
-    return NextResponse.redirect(new URL("/not-admin", request.url));
+  if (!isLoggedIn && !isPublicRoute) {
+    return Response.redirect(new URL("/login?error=unauthorized", nextUrl));
   }
 
-  if (pathname.startsWith("/dosen") && role !== "DOSEN") {
-    return NextResponse.redirect(new URL("/not-dosen", request.url));
+  if (isAdminRoute && role !== "ADMIN") {
+    return Response.redirect(new URL("/not-admin", nextUrl));
+  }
+
+  if (isDosenRoute && role !== "DOSEN") {
+    return Response.redirect(new URL("/not-dosen", nextUrl));
   }
 
   return NextResponse.next();
-}
+});
 
+// Konfigurasi matcher
 export const config = {
-  matcher: ["/admin/:path*", "/dosen/:path*", "/not-admin", "/not-dosen"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };

@@ -20,7 +20,7 @@ export default async function ManajemenProdiPage() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Manajemen Program Studi</h1>
         <SubmitButton
-          text="Tambah Semester"
+          text="Tambah Program Studi"
           href="/admin/manajemen-akademik/program-studi/create"
           icon={<BsPlusCircleDotted />}
           className="bg-white dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-black/10 hover:transition-all text-sm border border-gray-300 dark:border-gray-800 flex items-center gap-2 cursor-pointer"

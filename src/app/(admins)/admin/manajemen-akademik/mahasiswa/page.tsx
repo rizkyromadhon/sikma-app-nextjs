@@ -1,7 +1,61 @@
 import prisma from "@/lib/prisma";
-import MahasiswaTable from "@/app/(admins)/admin/manajemen-akademik/mahasiswa/MahasiswaTable";
-import { BsPlusCircleDotted } from "react-icons/bs";
 import { SubmitButton } from "@/components/auth/SubmitButton";
+import { BsPlusCircleDotted } from "react-icons/bs";
+import MahasiswaTable from "./MahasiswaTable";
+import { Prisma } from "@/generated/prisma/client";
+
+export const dynamic = "force-dynamic";
+
+// Tentukan jumlah item per halaman
+const ITEMS_PER_PAGE = 6;
+
+// Fungsi ini sekarang menerima parameter halaman (page)
+async function getMahasiswaData(
+  filters: { semester?: string; prodi?: string; golongan?: string; nim?: string },
+  page: number
+) {
+  const where: Prisma.UserWhereInput = {
+    role: "MAHASISWA",
+    nim: { not: null },
+  };
+
+  if (filters.semester) where.semesterId = filters.semester;
+  if (filters.prodi) where.prodiId = filters.prodi;
+  if (filters.golongan) where.golonganId = filters.golongan;
+  if (filters.nim) where.nim = { contains: filters.nim, mode: "insensitive" };
+
+  // Ambil data untuk halaman saat ini dan total data secara bersamaan
+  const [mahasiswa, totalCount] = await Promise.all([
+    prisma.user.findMany({
+      where,
+      take: ITEMS_PER_PAGE,
+      skip: (page - 1) * ITEMS_PER_PAGE, // Lewati item dari halaman sebelumnya
+      include: {
+        prodi: true,
+        golongan: true,
+        semester: true,
+      },
+      orderBy: { name: "asc" },
+    }),
+    prisma.user.count({ where }), // Hitung total mahasiswa yang cocok dengan filter
+  ]);
+
+  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
+
+  return { mahasiswa, totalPages };
+}
+
+async function getFilterOptions() {
+  const [semesters, prodis, golongans] = await Promise.all([
+    prisma.semester.findMany({ orderBy: { name: "asc" } }),
+    prisma.programStudi.findMany({ orderBy: { name: "asc" } }),
+    prisma.golongan.findMany({
+      select: { id: true, name: true, prodiId: true, semesterId: true },
+      orderBy: { name: "asc" },
+    }),
+  ]);
+  return { semesters, prodis, golongans };
+}
 
 export default async function ManageMahasiswaPage({
   searchParams,
@@ -11,39 +65,16 @@ export default async function ManageMahasiswaPage({
     prodi?: string;
     golongan?: string;
     nim?: string;
+    page?: string; // Tambahkan `page` ke tipe
   };
 }) {
-  const { semester, prodi, golongan, nim } = (await searchParams) || {};
+  const { semester, prodi, golongan, nim } = searchParams || {};
+  const currentPage = Number(searchParams?.page) || 1;
 
-  const semesterId = semester ? parseInt(semester) : undefined;
+  // Panggil fungsi dengan filter dan halaman saat ini
+  const { mahasiswa, totalPages } = await getMahasiswaData({ semester, prodi, golongan, nim }, currentPage);
 
-  const mahasiswa = await prisma.user.findMany({
-    where: {
-      role: "MAHASISWA",
-      nim: { not: null },
-      ...(semester && { semesterId }),
-      ...(prodi && { prodiId: prodi }),
-      ...(golongan && { golonganId: golongan }),
-      ...(nim && { nim: { contains: nim } }),
-    },
-    include: {
-      prodi: true,
-      golongan: true,
-      semester: true,
-    },
-    orderBy: { name: "asc" },
-  });
-
-  const [semesters, prodis, golongans] = await Promise.all([
-    prisma.semester.findMany({ orderBy: { name: "asc" } }),
-    prisma.programStudi.findMany({}),
-    prisma.golongan.findMany({}),
-  ]);
-
-  const cleanedMahasiswa = mahasiswa.map((m) => ({
-    ...m,
-    nim: m.nim ?? "",
-  }));
+  const { semesters, prodis, golongans } = await getFilterOptions();
 
   return (
     <div className="p-6">
@@ -53,16 +84,23 @@ export default async function ManageMahasiswaPage({
           text="Tambah Mahasiswa"
           href="/admin/manajemen-akademik/mahasiswa/create"
           icon={<BsPlusCircleDotted />}
-          className="bg-white dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-black/10 hover:transition-all text-sm border border-gray-300 dark:border-gray-800 flex items-center gap-2 cursor-pointer"
+          className="bg-white dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full text-sm border border-gray-300 dark:border-gray-800 hover:bg-gray-200 dark:hover:bg-black/20 flex items-center gap-2 cursor-pointer"
         />
       </div>
 
       <MahasiswaTable
-        data={cleanedMahasiswa}
+        data={mahasiswa}
+        totalPages={totalPages}
+        currentPage={currentPage}
         filters={{
-          semesters,
-          prodis,
-          golongans,
+          semesters: semesters.map((s) => ({ id: s.id.toString(), name: s.name })),
+          prodis: prodis.map((p) => ({ id: p.id.toString(), name: p.name })),
+          golongans: golongans.map((g) => ({
+            id: g.id.toString(),
+            name: g.name,
+            prodiId: g.prodiId.toString(),
+            semesterId: g.semesterId.toString(),
+          })),
           current: { semester, prodi, golongan, nim },
         }}
       />

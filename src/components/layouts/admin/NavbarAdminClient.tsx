@@ -6,7 +6,6 @@ import DropdownDesktop from "../DropdownDesktop";
 import LogoutModal from "@/components/common/LogoutModal";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
-import ThemeToggle from "@/components/features/ToggleTheme";
 
 interface NavbarAdminClientProps {
   session: Session | null;
@@ -31,7 +30,6 @@ export default function NavbarAdminClient({ session }: NavbarAdminClientProps) {
               </Link>
             </div>
             <div className="z-10 flex items-center">
-              <ThemeToggle />
               <div className="hidden md:block">
                 {session?.user ? (
                   <DropdownDesktop session={session} onLogoutClick={() => setIsLogoutModalOpen(true)} />

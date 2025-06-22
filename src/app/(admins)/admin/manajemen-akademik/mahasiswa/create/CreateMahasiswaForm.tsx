@@ -10,6 +10,7 @@ interface GolonganOption {
   id: string;
   name: string;
   prodiId: string;
+  semesterId: string;
 }
 
 interface Option {
@@ -51,20 +52,22 @@ export default function CreateMahasiswaForm({ semesters, prodis, golongans }: Cr
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (form.prodi) {
-      const newFilteredGolongans = golongans.filter((g) => g.prodiId === form.prodi);
+    if (form.prodi && form.semester) {
+      const newFilteredGolongans = golongans.filter(
+        (g) => g.prodiId === form.prodi && g.semesterId === form.semester
+      );
       setFilteredGolongans(newFilteredGolongans);
     } else {
       setFilteredGolongans([]);
     }
-  }, [form.prodi, golongans]);
+  }, [form.prodi, golongans, form.semester]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
 
-    if (name === "prodi") {
-      setForm((prev) => ({ ...prev, prodi: value, golongan: "" }));
-      return; // Hentikan fungsi di sini
+    if (name === "prodi" || name === "semester") {
+      setForm((prev) => ({ ...prev, [name]: value, golongan: "" }));
+      return;
     }
 
     // Logika untuk upload file
@@ -138,6 +141,7 @@ export default function CreateMahasiswaForm({ semesters, prodis, golongans }: Cr
     Object.entries(form).forEach(([key, value]) => {
       if (value) formData.append(key, value);
     });
+    console.log("data yang dikirim", formData);
 
     try {
       const response = await fetch("/api/mahasiswa", {
@@ -277,15 +281,17 @@ export default function CreateMahasiswaForm({ semesters, prodis, golongans }: Cr
               name="golongan"
               value={form.golongan}
               onChange={handleChange}
-              disabled={!form.prodi || filteredGolongans.length === 0}
-              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm disabled:bg-gray-200 disabled:dark:bg-gray-800/50 disabled:cursor-not-allowed focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              disabled={!form.prodi || !form.semester}
+              className="w-full px-4 py-2 border rounded bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
               required
             >
               <option value="" disabled className="bg-white dark:bg-black/95">
-                {!form.prodi
-                  ? "Pilih Prodi Terlebih Dahulu"
+                {!form.semester
+                  ? "Pilih Semester Dulu"
+                  : !form.prodi
+                  ? "Pilih Prodi Dulu"
                   : filteredGolongans.length === 0
-                  ? "Tidak Ada Golongan"
+                  ? "Tidak ada golongan"
                   : "Pilih Golongan"}
               </option>
               {filteredGolongans.map((g) => (

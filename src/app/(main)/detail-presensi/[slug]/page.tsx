@@ -1,7 +1,7 @@
 // src/app/detail-presensi/[slug]/page.tsx
 
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation"; // Untuk handle jika slug tidak ditemukan
 import { format } from "date-fns";
 import { id as localeID } from "date-fns/locale";

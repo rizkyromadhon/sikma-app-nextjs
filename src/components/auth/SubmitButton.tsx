@@ -36,7 +36,7 @@ export const SubmitButton = ({ text, type, className, icon, onClick, isLoading, 
       type={type}
       disabled={isSubmitting}
       onClick={handleClick}
-      className={` ${className} ${isSubmitting ? "cursor-not-allowed opacity-70" : ""}`}
+      className={`cursor-pointer ${className} ${isSubmitting ? "cursor-not-allowed opacity-70" : ""}`}
     >
       <div className="relative flex items-center justify-center gap-2">
         {isSubmitting && (

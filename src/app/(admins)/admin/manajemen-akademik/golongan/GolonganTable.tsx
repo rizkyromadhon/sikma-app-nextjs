@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Golongan, ProgramStudi } from "@/generated/prisma/client";
+import { Golongan, ProgramStudi, Semester } from "@/generated/prisma/client";
 import { SubmitButton } from "@/components/auth/SubmitButton";
 import { LuCircleAlert } from "react-icons/lu";
 import Link from "next/link";
@@ -10,6 +10,7 @@ import { LuCircleArrowRight, LuCircleArrowLeft } from "react-icons/lu";
 
 type GolonganWithProdi = Golongan & {
   prodi: ProgramStudi;
+  semester: Semester | null;
 };
 
 interface GolonganTableProps {
@@ -17,7 +18,9 @@ interface GolonganTableProps {
   totalPages: number;
   currentPage: number;
   prodiList: ProgramStudi[];
+  semesterList: Semester[];
   currentProdiFilter?: string;
+  currentSemesterFilter?: string;
 }
 
 const GolonganTable = ({
@@ -25,6 +28,8 @@ const GolonganTable = ({
   totalPages,
   currentPage,
   prodiList,
+  semesterList,
+  currentSemesterFilter,
   currentProdiFilter,
 }: GolonganTableProps) => {
   const router = useRouter();
@@ -34,16 +39,21 @@ const GolonganTable = ({
   const [selectedGolongan, setSelectedGolongan] = useState<GolonganWithProdi | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const prodiId = e.target.value;
+  const createPaginationUrl = (page: number) => {
     const params = new URLSearchParams(searchParams);
-    if (prodiId) {
-      params.set("prodi", prodiId);
+    params.set("page", page.toString());
+    return `?${params.toString()}`;
+  };
+
+  const handleFilterChange = (param: string, value: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (value) {
+      params.set(param, value);
     } else {
-      params.delete("prodi");
+      params.delete(param);
     }
     params.set("page", "1");
-    router.push(`/admin/manajemen-akademik/golongan?${params.toString()}`);
+    router.push(`?${params.toString()}`);
   };
 
   const handleOpenModal = (golongan: GolonganWithProdi) => {
@@ -56,6 +66,14 @@ const GolonganTable = ({
     setSelectedGolongan(null);
   };
 
+  function buildQueryWith(filters: URLSearchParams, updates: Record<string, string>) {
+    const params = new URLSearchParams(filters);
+    for (const [key, value] of Object.entries(updates)) {
+      params.set(key, value);
+    }
+    return params.toString();
+  }
+
   const handleConfirmDelete = async () => {
     if (!selectedGolongan) return;
     setIsLoading(true);
@@ -65,14 +83,18 @@ const GolonganTable = ({
         const data = await response.json();
         throw new Error(data.error || "Gagal menghapus golongan.");
       }
-      setIsModalOpen(false);
 
-      // Menggunakan router.replace agar tidak menambah history browser
-      // dan `scroll: false` untuk mempertahankan posisi scroll
-      const params = new URLSearchParams(searchParams);
-      params.set("golongan", "delete_success");
-      router.replace(`/admin/manajemen-akademik/golongan?${params.toString()}`, { scroll: false });
-      router.refresh();
+      const currentParams = new URLSearchParams(Array.from(searchParams.entries()));
+      const updatedQuery = buildQueryWith(currentParams, {
+        page: currentPage.toString(),
+        golongan: "delete_success",
+      });
+
+      setIsModalOpen(false);
+      router.push(`/admin/manajemen-akademik/golongan?${updatedQuery}`);
+      console.log("Redirect to:", `/admin/manajemen-akademik/golongan?${updatedQuery}`);
+
+      setIsModalOpen(false);
     } catch (error) {
       if (error instanceof Error) alert(`Error: ${error.message}`);
     } finally {
@@ -82,29 +104,54 @@ const GolonganTable = ({
 
   return (
     <>
-      <div className="mb-4">
-        <select
-          onChange={handleFilterChange}
-          value={currentProdiFilter || ""}
-          className="w-full px-4 py-2 max-w-1/4 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
-        >
-          <option value="" className="bg-white dark:bg-black/90">
-            Semua Program Studi
-          </option>
-          {prodiList.map((prodi) => (
-            <option key={prodi.id} value={prodi.id} className="bg-white dark:bg-black/90">
-              {prodi.name}
+      <div className="flex items-center gap-4 mb-6">
+        <div>
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-1">
+            Filter Semester
+          </label>
+          <select
+            value={currentSemesterFilter || ""}
+            onChange={(e) => handleFilterChange("semester", e.target.value)}
+            className="w-60 px-4 py-2  border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+          >
+            <option value="" className="bg-white dark:bg-black/90">
+              Semua Semester
             </option>
-          ))}
-        </select>
+            {semesterList.map((smt) => (
+              <option key={smt.id} value={smt.id} className="bg-white dark:bg-black/90">
+                {smt.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="prodi" className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-1">
+            Filter Program Studi
+          </label>
+          <select
+            id="prodi"
+            onChange={(e) => handleFilterChange("prodi", e.target.value)}
+            value={currentProdiFilter || ""}
+            className="w-60 px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+          >
+            <option value="" className="bg-white dark:bg-black/90">
+              Semua Program Studi
+            </option>
+            {prodiList.map((prodi) => (
+              <option key={prodi.id} value={prodi.id} className="bg-white dark:bg-black/90">
+                {prodi.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
       <div className="overflow-auto rounded border border-gray-300 dark:border-gray-800 shadow-sm">
         <table className="min-w-full text-sm text-left text-black dark:text-gray-200">
           <thead className="bg-gray-100 dark:bg-black/40 uppercase tracking-wide text-gray-600 dark:text-gray-300">
             <tr>
-              <th className="px-6 py-3 font-semibold">ID</th>
-              <th className="px-6 py-3 font-semibold ">Nama Golongan</th>
+              <th className="px-6 py-3 font-semibold">Semester</th>
               <th className="px-6 py-3 font-semibold ">Program Studi</th>
+              <th className="px-6 py-3 font-semibold text-center">Nama Golongan</th>
               <th className="px-6 py-3 font-semibold text-center w-px whitespace-nowrap">Aksi</th>
             </tr>
           </thead>
@@ -121,9 +168,9 @@ const GolonganTable = ({
                   key={golongan.id}
                   className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-black/30 hover:transition-all bg-white dark:bg-black/10"
                 >
-                  <td className="px-6 py-4 font-medium whitespace-nowrap">{golongan.id}</td>
-                  <td className="px-6 py-4">{golongan.name}</td>
+                  <td className="px-6 py-4">{golongan.semester?.name ?? "-"}</td>
                   <td className="px-6 py-4">{golongan.prodi.name}</td>
+                  <td className="px-6 py-4 text-center">{golongan.name}</td>
                   <td className="px-6 py-4 flex items-center gap-4 justify-center">
                     <SubmitButton
                       href={`/admin/manajemen-akademik/golongan/${golongan.id}/edit`}
@@ -143,7 +190,6 @@ const GolonganTable = ({
         </table>
       </div>
 
-      {/* Kontrol Pagination */}
       {totalPages > 1 && (
         <div className="flex justify-between items-center mt-4">
           <span className="text-sm text-gray-700 dark:text-gray-400">
@@ -151,7 +197,7 @@ const GolonganTable = ({
           </span>
           <div className="flex items-center gap-2">
             <Link
-              href={`?page=${currentPage - 1}&prodi=${currentProdiFilter || ""}`}
+              href={createPaginationUrl(currentPage - 1)}
               className={`px-3 py-1 text-sm rounded-md flex items-center gap-2 ${
                 currentPage <= 1
                   ? "pointer-events-none bg-transparent dark:bg-black/80 border border-gray-300 dark:border-gray-800 text-gray-400"
@@ -162,7 +208,7 @@ const GolonganTable = ({
               Sebelumnya
             </Link>
             <Link
-              href={`?page=${currentPage + 1}&prodi=${currentProdiFilter || ""}`}
+              href={createPaginationUrl(currentPage + 1)}
               className={`px-3 py-1 text-sm rounded-md flex items-center gap-2 ${
                 currentPage >= totalPages
                   ? "pointer-events-none bg-transparent dark:bg-black/80 border border-gray-300 dark:border-gray-800 text-gray-400"

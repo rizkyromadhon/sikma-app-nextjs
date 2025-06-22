@@ -12,6 +12,10 @@ import {
 } from "react-icons/lu";
 import CollapsibleSidebarLink from "./CollapsibleSidebarLink";
 import { FaRegCommentDots } from "react-icons/fa";
+import { useTheme } from "next-themes";
+import ThemeSwitcher from "@/components/features/SidebarThemeToggle";
+import ThemeToggle from "@/components/features/ToggleTheme";
+import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
   {
@@ -46,18 +50,17 @@ const navLinks = [
 ];
 
 export default function Sidebar({ isCollapsed, onToggle }: { isCollapsed: boolean; onToggle: () => void }) {
-  // const [isCollapsed, setIsCollapsed] = useState(false);
-
+  const { theme } = useTheme();
   return (
     <div className="relative flex">
       <aside
         className={cn(
-          "hidden md:flex flex-col h-screen bg-white dark:bg-black border-r border-gray-200 dark:border-gray-800 transition-[width] duration-300 ease-in-out overflow-hidden relative",
+          " h-[calc(100vh-64px)] bg-white dark:bg-black border-r border-gray-200 dark:border-gray-800 transition-[width] duration-300 ease-in-out overflow-hidden relative",
           isCollapsed ? "w-20 min-w-[5rem]" : "w-64"
         )}
       >
         {/* Sidebar content */}
-        <nav className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-4">
+        <nav className="h-[41.5rem] overflow-y-auto overflow-x-hidden px-4 py-4">
           <div className="space-y-2">
             {navLinks.map((link) =>
               link.subLinks ? (
@@ -80,6 +83,31 @@ export default function Sidebar({ isCollapsed, onToggle }: { isCollapsed: boolea
             )}
           </div>
         </nav>
+        {/* {!isCollapsed ? <ThemeSwitcher theme={theme} /> : <ThemeToggle style="mx-auto" />} */}
+        <AnimatePresence mode="wait">
+          {!isCollapsed ? (
+            <motion.div
+              key="theme-switcher"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ThemeSwitcher theme={theme} />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="theme-toggle"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1, rotate: -360 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.4, delay: 0.01 }}
+              className="flex justify-center"
+            >
+              <ThemeToggle style="mx-auto" />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </aside>
 
       <div

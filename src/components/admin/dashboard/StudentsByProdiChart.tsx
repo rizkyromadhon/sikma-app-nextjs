@@ -11,7 +11,7 @@ import {
   PieChart,
   Pie,
   Cell,
-  Legend,
+  // Legend,
 } from "recharts";
 import { useTheme } from "next-themes";
 import type { TooltipProps } from "recharts";
@@ -58,7 +58,7 @@ const CustomPieTooltip = ({ active, payload }: TooltipProps<ValueType, NameType>
   const item = payload[0];
   return (
     <div
-      className="p-2 rounded-md shadow-md"
+      className="p-2 rounded-md shadow-md text-xs"
       style={{
         backgroundColor: isDark ? "#1F2937" : "#FFFFFF",
         border: isDark ? "none" : "1px solid #9CA3AF",
@@ -128,11 +128,11 @@ const StudentsByProdiChart = ({ data, sidebarCollapsed }: StudentsByProdiChartPr
               ))}
             </Pie>
             <Tooltip content={<CustomPieTooltip />} />
-            <Legend
+            {/* <Legend
               verticalAlign="middle"
               align="center"
               wrapperStyle={{ color: isDark ? "#E5E7EB" : "#1F2937", fontSize: 14 }}
-            />
+            /> */}
           </PieChart>
         </ResponsiveContainer>
       </div>

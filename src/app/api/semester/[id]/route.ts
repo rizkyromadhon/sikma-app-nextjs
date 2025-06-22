@@ -5,7 +5,8 @@ import { Prisma } from "@/generated/prisma/client";
 import prisma from "@/lib/prisma";
 
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
-  const semesterId = parseInt(params.id, 10);
+  const { id } = await params;
+  const semesterId = parseInt(id, 10);
 
   if (isNaN(semesterId)) {
     return NextResponse.json({ error: "ID Semester tidak valid." }, { status: 400 });
@@ -48,7 +49,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 }
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
-  const semesterId = parseInt(params.id, 10);
+  const { id } = await params;
+  const semesterId = parseInt(id, 10);
 
   if (isNaN(semesterId)) {
     return NextResponse.json({ error: "ID Semester tidak valid." }, { status: 400 });

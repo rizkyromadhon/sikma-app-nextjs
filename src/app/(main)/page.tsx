@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import LiveFeed from "@/components/features/dashboard/LiveFeed";
 import LiveSummary from "@/components/features/dashboard/LiveSummary";
 

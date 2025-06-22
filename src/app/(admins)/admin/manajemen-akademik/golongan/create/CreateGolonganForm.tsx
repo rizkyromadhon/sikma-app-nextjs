@@ -2,15 +2,16 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { ProgramStudi } from "@/generated/prisma/client";
+import { ProgramStudi, Semester } from "@/generated/prisma/client";
 import { SubmitButton } from "@/components/auth/SubmitButton";
 
 interface CreateGolonganFormProps {
   prodiList: ProgramStudi[];
+  semesterList: Semester[];
 }
 
-export default function CreateGolonganForm({ prodiList }: CreateGolonganFormProps) {
-  const [form, setForm] = useState({ name: "", prodiId: "" });
+export default function CreateGolonganForm({ prodiList, semesterList }: CreateGolonganFormProps) {
+  const [form, setForm] = useState({ name: "", prodiId: "", semesterId: "" });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -42,8 +43,48 @@ export default function CreateGolonganForm({ prodiList }: CreateGolonganFormProp
 
   return (
     <form onSubmit={handleSubmit} className="w-full">
-      <div className="space-y-4 w-full">
-        {/* Dropdown Program Studi */}
+      <div className="space-y-4 w-full ">
+        <div>
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Nama Golongan
+          </label>
+          <input
+            id="name"
+            name="name"
+            value={form.name}
+            autoComplete="off"
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            placeholder="Golongan A"
+            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+            required
+          />
+        </div>
+        <div>
+          <label
+            htmlFor="semesterId"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >
+            Semester
+          </label>
+          <select
+            id="semesterId"
+            name="semesterId"
+            value={form.semesterId}
+            onChange={(e) => setForm({ ...form, semesterId: e.target.value })}
+            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+            required
+          >
+            <option value="" disabled className="bg-white dark:bg-black/90">
+              Pilih Semester
+            </option>
+            {semesterList.map((smt) => (
+              <option key={smt.id} value={smt.id} className="bg-white dark:bg-black/90">
+                {smt.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div>
           <label
             htmlFor="prodiId"
@@ -71,21 +112,6 @@ export default function CreateGolonganForm({ prodiList }: CreateGolonganFormProp
         </div>
 
         {/* Input Nama Golongan */}
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Nama Golongan
-          </label>
-          <input
-            id="name"
-            name="name"
-            value={form.name}
-            autoComplete="off"
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
-            placeholder="Golongan A"
-            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
-            required
-          />
-        </div>
 
         {error && <p className="text-sm text-red-500 dark:text-red-400">{error}</p>}
 

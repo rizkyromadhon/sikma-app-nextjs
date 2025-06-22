@@ -53,9 +53,8 @@ const ProdiTable = ({ data }: ProdiTableProps) => {
         <table className="min-w-full text-sm text-left text-black dark:text-gray-200">
           <thead className="bg-gray-100 dark:bg-black/40 uppercase tracking-wide text-gray-600 dark:text-gray-300">
             <tr>
-              <th className="px-6 py-3 font-semibold">ID</th>
-              <th className="px-6 py-3 font-semibold w-full">Nama Program Studi</th>
-              <th className="px-6 py-3 font-semibold text-center w-px whitespace-nowrap">Aksi</th>
+              <th className="px-6 py-3 font-semibold text-center">Nama Program Studi</th>
+              <th className="px-6 py-3 font-semibold text-center whitespace-nowrap">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -71,8 +70,7 @@ const ProdiTable = ({ data }: ProdiTableProps) => {
                   key={prodi.id}
                   className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-black/30 hover:transition-all bg-white dark:bg-black/10"
                 >
-                  <td className="px-6 py-4 font-medium whitespace-nowrap">{prodi.id}</td>
-                  <td className="px-6 py-4">{prodi.name}</td>
+                  <td className="px-6 py-4 text-center">{prodi.name}</td>
                   <td className="px-6 py-4 flex items-center gap-4 justify-center">
                     <SubmitButton
                       href={`/admin/manajemen-akademik/program-studi/${prodi.id}/edit`}

@@ -1,47 +1,23 @@
-import { type DefaultSession, type DefaultUser } from "next-auth";
-import { JWT } from "next-auth/jwt";
-
-type UserRole = "ADMIN" | "DOSEN" | "MAHASISWA";
-type NullableString = string | null | undefined;
-
-interface UserProdi {
-  id: string;
-  name: string;
-}
+import { Role } from "@prisma/client";
+import { type DefaultSession } from "next-auth";
 
 declare module "next-auth" {
-  interface Session {
-    user: {
-      id: string;
-      role: UserRole;
-      name?: NullableString;
-      nim?: NullableString;
-      nip?: NullableString;
-      prodi?: UserProdi | null;
-      image?: NullableString;
-    } & DefaultSession["user"];
+  interface User {
+    role?: Role;
+    prodiId?: string | null;
   }
 
-  interface User extends DefaultUser {
-    id: string;
-    role: UserRole;
-    name: string;
-    nim?: NullableString;
-    nip?: NullableString;
-    foto?: NullableString;
-    prodi?: UserProdi | null;
+  interface Session {
+    user: {
+      role?: Role;
+      prodiId?: string | null;
+    } & DefaultSession["user"];
   }
 }
 
 declare module "next-auth/jwt" {
-  interface JWT extends DefaultJWT {
-    id: string;
-    // sub: string;
-    role: UserRole;
-    name?: NullableString;
-    nim?: NullableString;
-    nip?: NullableString;
-    picture?: NullableString;
-    prodi?: UserProdi | null;
+  interface JWT {
+    role?: Role;
+    prodiId?: string | null;
   }
 }

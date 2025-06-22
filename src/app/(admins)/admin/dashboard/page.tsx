@@ -42,7 +42,7 @@ const DashboardAdminPage = async () => {
   ]);
 
   return (
-    <div className="min-h-screen p-8 text-gray-900 dark:text-gray-100">
+    <div className="h-20 p-8 text-gray-900 dark:text-gray-100">
       <h1 className="text-3xl font-bold mb-4 text-black dark:text-white tracking-tight">Dashboard Admin</h1>
       <p className="text-xl text-gray-900 dark:text-gray-300 mb-8">
         Program Studi - <span className="text-blue-500 dark:text-blue-400">{adminProdiName}</span>

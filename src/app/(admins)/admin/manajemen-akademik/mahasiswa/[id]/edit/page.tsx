@@ -39,7 +39,8 @@ async function getFormData(mahasiswaId: string) {
 }
 
 export default async function EditMahasiswaPage({ params }: { params: { id: string } }) {
-  const { user, semesters, prodis, golongans } = await getFormData(params.id);
+  const { id } = await params;
+  const { user, semesters, prodis, golongans } = await getFormData(id);
 
   return (
     <EditMahasiswaForm

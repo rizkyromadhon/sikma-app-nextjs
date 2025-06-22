@@ -1,17 +1,17 @@
 import { NextResponse } from "next/server";
-import {  Prisma } from "@/generated/prisma/client";
+import { Prisma } from "@/generated/prisma/client";
 import prisma from "@/lib/prisma";
 
-
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
-  const golonganId = params.id;
+  const { id } = await params;
+  const golonganId = id;
 
   try {
-    const { name, prodiId } = await request.json();
-    if (!name || !prodiId) return NextResponse.json({ error: "Nama dan Prodi wajib diisi" }, { status: 400 });
+    const { name, prodiId, semesterId } = await request.json();
+    if (!name || !prodiId) return NextResponse.json({ error: "Nama, Prodi, Semester wajib diisi" }, { status: 400 });
     const updated = await prisma.golongan.update({
       where: { id: golonganId },
-      data: { name, prodiId: prodiId },
+      data: { name, prodiId: prodiId, semesterId: semesterId },
     });
     return NextResponse.json(updated);
   } catch (error) {
@@ -31,7 +31,9 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 
 // Handler untuk DELETE
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
-  const golonganId = params.id;
+  const { id } = await params;
+  const golonganId = id;
+
   try {
     await prisma.golongan.delete({ where: { id: golonganId } });
     return NextResponse.json({ message: "Berhasil dihapus" });

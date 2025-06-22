@@ -18,7 +18,7 @@ export default function SidebarLink({ href, label, icon: Icon, isCollapsed }: Si
     <Link
       href={href}
       className={cn(
-        "grid grid-cols-[24px_1fr] items-center rounded-lg hover:transition-all duration-300 text-sm w-full",
+        "grid grid-cols-[24px_1fr] items-center rounded-lg hover:transition-all text-sm w-full",
         isCollapsed ? "px-[13px] py-2" : "px-[13px] py-2",
         "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200",
         isActive && "bg-gray-100 dark:bg-[#141414] text-black dark:text-white font-medium"
@@ -30,7 +30,7 @@ export default function SidebarLink({ href, label, icon: Icon, isCollapsed }: Si
 
       <div
         className={cn(
-          "overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out",
+          "overflow-hidden whitespace-nowrap hover:transition-all ",
           isCollapsed ? "opacity-0 w-0 ml-0" : "opacity-100 w-auto ml-2"
         )}
       >

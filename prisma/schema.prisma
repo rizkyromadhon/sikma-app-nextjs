@@ -58,6 +58,19 @@ enum StatusPengajuan {
   DITOLAK
 }
 
+enum AlatMode {
+  MASUK
+  PULANG
+  PRESENSI // Mode general untuk absen masuk/keluar
+  REGISTRASI // Mode baru untuk registrasi kartu RFID
+}
+
+enum AlatStatus {
+  AKTIF
+  NONAKTIF
+  ERROR
+}
+
 model Account {
   id                String  @id @default(cuid())
   userId            String  @map("user_id")
@@ -104,7 +117,7 @@ model User {
   role                Role    @default(MAHASISWA)
   gender              String?
 
-  semesterId Int?
+  semesterId String?
   prodiId    String? // Opsional, hanya untuk mahasiswa/dosen
   golonganId String? // Opsional, hanya untuk mahasiswa
 
@@ -139,13 +152,14 @@ model VerificationToken {
 
 // 2. Tabel Semester
 model Semester {
-  id   Int          @id @default(autoincrement())
+  id   String       @id @default(cuid())
   name String       @unique
   tipe SemesterType
 
   // Relasi
   jadwal_kuliah JadwalKuliah[]
   user          User[]
+  Golongan      Golongan[]
 }
 
 // 3. Tabel Ruangan
@@ -267,9 +281,8 @@ model JadwalKuliah {
 
   dosenId    String
   matkulId   String
-  semesterId Int
+  semesterId String
   prodiId    String
-  golonganId String
   ruanganId  String
 
   // Relasi
@@ -277,43 +290,44 @@ model JadwalKuliah {
   mata_kuliah   MataKuliah       @relation(fields: [matkulId], references: [id])
   semester      Semester         @relation(fields: [semesterId], references: [id])
   prodi         ProgramStudi     @relation(fields: [prodiId], references: [id])
-  golongan      Golongan         @relation(fields: [golonganId], references: [id])
+  // golongan      Golongan?        @relation(fields: [golonganId], references: [id])
+  golongans     Golongan[]       @relation("JadwalToGolongan")
   ruangan       Ruangan          @relation(fields: [ruanganId], references: [id])
   presensi      PresensiKuliah[]
   pengajuanIzin PengajuanIzin[]
   peserta       PesertaKuliah[]
 }
 
-// 11. Tabel Golongan
 model Golongan {
-  id   String @id @default(cuid())
-  name String // Misal: A, B, C, Pagi, Malam
+  id         String @id @default(cuid())
+  name       String
+  prodiId    String
+  semesterId String
 
-  prodiId String
-
-  // Relasi
   prodi         ProgramStudi   @relation(fields: [prodiId], references: [id])
+  semester      Semester?      @relation(fields: [semesterId], references: [id])
   users         User[]
-  jadwal_kuliah JadwalKuliah[]
+  jadwal_kuliah JadwalKuliah[] @relation("JadwalToGolongan")
+
+  @@unique([prodiId, semesterId, name])
 }
 
 // 12. Tabel Alat Presensi
 model AlatPresensi {
-  id           String    @id @default(cuid())
+  id           String     @id @default(cuid())
   name         String
-  mode         String // Misal: Masuk, Pulang, Absen
+  mode         AlatMode   @default(PRESENSI)
   jadwal_nyala DateTime?
   jadwal_mati  DateTime?
-  status       String // Misal: , Nonaktif, Error
+  status       AlatStatus @default(NONAKTIF)
 
   ruanganId String
 
   // Relasi
-  ruangan Ruangan @relation(fields: [ruanganId], references: [id])
+  ruangan           Ruangan @relation(fields: [ruanganId], references: [id])
+  targetMahasiswaId String?
 }
 
-// === TABEL BARU YANG DISARANKAN ===
-// 13. Tabel Peserta Kuliah (Pivot Table untuk KRS)
 model PesertaKuliah {
   id String @id @default(cuid())
 

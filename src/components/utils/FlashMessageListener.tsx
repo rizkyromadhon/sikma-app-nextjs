@@ -22,6 +22,11 @@ export default function FlashMessageListener() {
     const prodiStatus = searchParams.get("program-studi");
     const golonganStatus = searchParams.get("golongan");
     const mahasiswaStatus = searchParams.get("mahasiswa");
+    const dosenStatus = searchParams.get("dosen");
+    const ruanganStatus = searchParams.get("ruangan");
+    const matkulStatus = searchParams.get("mata-kuliah");
+    const jadwalStatus = searchParams.get("jadwal-kuliah");
+    const alatStatus = searchParams.get("alat-presensi");
 
     if (loginStatus === "success") {
       toast({
@@ -199,6 +204,141 @@ export default function FlashMessageListener() {
         type: "success",
         title: "Mahasiswa berhasil dihapus!",
         description: "Data mahasiswa telah berhasil diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (dosenStatus === "create_success") {
+      toast({
+        type: "success",
+        title: "Dosen berhasil ditambahkan!",
+        description: "Data dosen baru telah berhasil disimpan.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (dosenStatus === "update_success") {
+      toast({
+        type: "success",
+        title: "Dosen berhasil diperbarui!",
+        description: "Data dosen telah berhasil diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (dosenStatus === "delete_success") {
+      toast({
+        type: "success",
+        title: "Dosen berhasil dihapus!",
+        description: "Data dosen telah berhasil diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (ruanganStatus === "create_success") {
+      toast({
+        type: "success",
+        title: "Ruangan berhasil ditambahkan!",
+        description: "Data ruangan baru telah berhasil disimpan.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (ruanganStatus === "update_success") {
+      toast({
+        type: "success",
+        title: "Ruangan berhasil diperbarui!",
+        description: "Data ruangan telah berhasil diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (ruanganStatus === "delete_success") {
+      toast({
+        type: "success",
+        title: "Ruangan berhasil dihapus!",
+        description: "Data ruangan telah berhasil diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (matkulStatus === "create_success") {
+      toast({
+        type: "success",
+        title: "Mata Kuliah berhasil ditambahkan!",
+        description: "Data mata kuliah baru telah berhasil disimpan.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (matkulStatus === "update_success") {
+      toast({
+        type: "success",
+        title: "Mata Kuliah berhasil diperbarui!",
+        description: "Data mata kuliah telah berhasil diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (matkulStatus === "delete_success") {
+      toast({
+        type: "success",
+        title: "Mata Kuliah berhasil dihapus!",
+        description: "Data mata kuliah telah berhasil diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (jadwalStatus === "create_success") {
+      toast({
+        type: "success",
+        title: "Jadwal Kuliah berhasil ditambahkan!",
+        description: "Data jadwal kuliah baru telah berhasil disimpan.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (jadwalStatus === "update_success") {
+      toast({
+        type: "success",
+        title: "Jadwal Kuliah berhasil diperbarui!",
+        description: "Data jadwal kuliah telah berhasil diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (jadwalStatus === "delete_success") {
+      toast({
+        type: "success",
+        title: "Jadwal Kuliah berhasil dihapus!",
+        description: "Data jadwal kuliah telah berhasil diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (alatStatus === "create_success") {
+      toast({
+        type: "success",
+        title: "Alat Presensi berhasil ditambahkan!",
+        description: "Data alat presensi baru telah berhasil disimpan.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (alatStatus === "update_success") {
+      toast({
+        type: "success",
+        title: "Alat Presensi berhasil diperbarui!",
+        description: "Data alat presensi telah berhasil diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (alatStatus === "delete_success") {
+      toast({
+        type: "success",
+        title: "Alat Presensi berhasil dihapus!",
+        description: "Data alat presensi telah berhasil diperbarui.",
       });
       router.replace(pathname, { scroll: false });
     }

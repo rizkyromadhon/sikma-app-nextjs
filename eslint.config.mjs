@@ -6,11 +6,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const compat = new FlatCompat({
+  rules: {
+    "@typescript-eslint/ban-ts-comment": "error",
+  },
   baseDirectory: __dirname,
 });
 
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
-];
+const eslintConfig = [...compat.extends("next/core-web-vitals", "next/typescript")];
 
 export default eslintConfig;

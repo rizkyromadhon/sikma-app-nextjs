@@ -10,7 +10,7 @@ interface SemesterTableProps {
 }
 
 const SemesterTable = ({ data }: SemesterTableProps) => {
-  const router = useRouter(); 
+  const router = useRouter();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSemester, setSelectedSemester] = useState<Semester | null>(null);
@@ -57,16 +57,15 @@ const SemesterTable = ({ data }: SemesterTableProps) => {
         <table className="min-w-full text-sm text-left text-black dark:text-gray-200">
           <thead className="bg-gray-100 dark:bg-black/40 uppercase tracking-wide text-gray-600 dark:text-gray-300">
             <tr>
-              <th className="px-6 py-3 font-semibold">ID</th>
-              <th className="px-6 py-3 font-semibold">Nama Semester</th>
-              <th className="px-6 py-3 font-semibold">Tipe</th>
+              <th className="px-6 py-3 font-semibold text-center">Nama Semester</th>
+              <th className="px-6 py-3 font-semibold text-center">Tipe</th>
               <th className="px-6 py-3 font-semibold text-center w-px whitespace-nowrap">Aksi</th>
             </tr>
           </thead>
           <tbody>
             {data.length === 0 ? (
               <tr>
-                <td colSpan={4} className="text-center py-8 text-gray-400 dark:text-gray-300">
+                <td colSpan={3} className="text-center py-8 text-gray-400 dark:text-gray-300">
                   Belum ada data semester.
                 </td>
               </tr>
@@ -76,9 +75,8 @@ const SemesterTable = ({ data }: SemesterTableProps) => {
                   key={semester.id}
                   className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-black/30 hover:transition-all bg-white dark:bg-black/10"
                 >
-                  <td className="px-6 py-4 font-medium whitespace-nowrap">{semester.id}</td>
-                  <td className="px-6 py-4">{semester.name}</td>
-                  <td className="px-6 py-4">{semester.tipe}</td>
+                  <td className="px-6 py-4 text-center">{semester.name}</td>
+                  <td className="px-6 py-4 text-center">{semester.tipe}</td>
                   <td className="px-6 py-4 flex items-center gap-4 justify-center">
                     <SubmitButton
                       text="Edit"

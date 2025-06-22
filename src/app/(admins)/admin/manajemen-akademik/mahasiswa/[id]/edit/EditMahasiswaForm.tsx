@@ -21,7 +21,7 @@ interface MahasiswaData {
   alamat: string | null;
   gender: string | null;
   foto: string | null;
-  semesterId: number | null;
+  semesterId: string | null;
   prodiId: string | null;
   golonganId: string | null;
 }
@@ -46,7 +46,7 @@ export default function EditMahasiswaForm({
     email: mahasiswa.email || "",
     no_hp: mahasiswa.no_hp || "",
     alamat: mahasiswa.alamat || "",
-    semester: mahasiswa.semesterId?.toString() || "",
+    semester: mahasiswa.semesterId || "",
     prodi: mahasiswa.prodiId || "",
     golongan: mahasiswa.golonganId || "",
     gender: mahasiswa.gender || "",

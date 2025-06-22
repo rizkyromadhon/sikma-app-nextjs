@@ -35,7 +35,7 @@ export default function CollapsibleSidebarLink({
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "grid grid-cols-[24px_1fr] w-full items-center rounded-lg text-gray-600 dark:text-gray-400 hover:transition-all duration-300 hover:text-gray-900 dark:hover:text-gray-200 text-sm",
+          "grid grid-cols-[24px_1fr] w-full items-center rounded-lg text-gray-600 dark:text-gray-400 hover:transition-all hover:text-gray-900 dark:hover:text-gray-200 text-sm",
           isCollapsed ? "px-[13px] py-2" : "px-[13px] py-2",
           isParentActive && "text-black dark:text-white bg-gray-100 dark:bg-[#141414]"
         )}
@@ -47,7 +47,7 @@ export default function CollapsibleSidebarLink({
         <div className="flex items-center justify-between flex-1 overflow-hidden">
           <div
             className={cn(
-              "overflow-hidden flex items-start whitespace-nowrap hover:transition-all duration-300",
+              "overflow-hidden flex items-start whitespace-nowrap hover:transition-all",
               isCollapsed ? "opacity-0 w-0 ml-0" : "opacity-100 w-auto ml-2"
             )}
           >

@@ -56,8 +56,8 @@ export const getStudentsByProdi = async (prodiId: string, prodiName: string) => 
     },
   });
 
-  const maleCount = students.filter((s) => s.gender === "Laki-laki").length;
-  const femaleCount = students.filter((s) => s.gender === "Perempuan").length;
+  const maleCount = students.filter((s) => s.gender === "LAKI-LAKI").length;
+  const femaleCount = students.filter((s) => s.gender === "PEREMPUAN").length;
 
   return [{ name: prodiName, male: maleCount, female: femaleCount }];
 };
