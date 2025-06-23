@@ -6,7 +6,6 @@ import { Prisma } from "@/generated/prisma/client";
 
 export const dynamic = "force-dynamic";
 
-// Tentukan jumlah item per halaman
 const ITEMS_PER_PAGE = 6;
 
 // Fungsi ini sekarang menerima parameter halaman (page)
@@ -24,7 +23,6 @@ async function getMahasiswaData(
   if (filters.golongan) where.golonganId = filters.golongan;
   if (filters.nim) where.nim = { contains: filters.nim, mode: "insensitive" };
 
-  // Ambil data untuk halaman saat ini dan total data secara bersamaan
   const [mahasiswa, totalCount] = await Promise.all([
     prisma.user.findMany({
       where,
@@ -37,7 +35,7 @@ async function getMahasiswaData(
       },
       orderBy: { name: "asc" },
     }),
-    prisma.user.count({ where }), // Hitung total mahasiswa yang cocok dengan filter
+    prisma.user.count({ where }),
   ]);
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
@@ -65,7 +63,7 @@ export default async function ManageMahasiswaPage({
     prodi?: string;
     golongan?: string;
     nim?: string;
-    page?: string; // Tambahkan `page` ke tipe
+    page?: string; 
   };
 }) {
   const { semester, prodi, golongan, nim } = searchParams || {};

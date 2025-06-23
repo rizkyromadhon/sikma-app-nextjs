@@ -113,7 +113,7 @@ export default function RfidTable({
           <select
             id="status"
             value={initialStatusFilter || ""}
-            onChange={(e) => updateFilter("status_rfid", e.target.value)}
+            onChange={(e) => updateFilter("statusRfid", e.target.value)}
             className="w-80 px-4 py-2 border border-gray-200 dark:border-gray-800 rounded-md bg-gray-50 dark:bg-black/50 text-sm focus:outline-none focus:shadow-[0_0_15px_0.5px] shadow-gray-400/60 dark:shadow-gray-600/50"
           >
             <option value="" className="bg-white dark:bg-black/90">

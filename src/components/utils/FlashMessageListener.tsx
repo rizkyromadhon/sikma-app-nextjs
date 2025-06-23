@@ -27,6 +27,7 @@ export default function FlashMessageListener() {
     const matkulStatus = searchParams.get("mata-kuliah");
     const jadwalStatus = searchParams.get("jadwal-kuliah");
     const alatStatus = searchParams.get("alat-presensi");
+    const exportStatus = searchParams.get("rekapitulasi-kehadiran");
 
     if (loginStatus === "success") {
       toast({
@@ -339,6 +340,24 @@ export default function FlashMessageListener() {
         type: "success",
         title: "Alat Presensi berhasil dihapus!",
         description: "Data alat presensi telah berhasil diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (exportStatus === "export_success") {
+      toast({
+        type: "success",
+        title: "Berhasil!",
+        description: "File berhasil diekspor.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (exportStatus === "export_error") {
+      toast({
+        type: "error",
+        title: "Gagal!",
+        description: "Terjadi kesalahan saat mengekspor.",
       });
       router.replace(pathname, { scroll: false });
     }

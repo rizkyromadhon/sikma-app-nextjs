@@ -1,18 +1,21 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  devIndicators: false,
+const nextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "upload.wikimedia.org",
+        hostname: "placehold.co",
         port: "",
         pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "res.cloudinary.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "upload.wikimedia.org",
         port: "",
         pathname: "/**",
       },

@@ -58,7 +58,6 @@ export default async function RegistrasiRfidPage({
 }: {
   searchParams?: { search?: string; page?: string; statusRfid?: string };
 }) {
-  const { search, statusRfid } = (await searchParams) || {};
   const session = await auth();
   if (!session?.user?.id || session.user.role !== "ADMIN") {
     redirect("/login?error=unauthorized");
@@ -78,10 +77,9 @@ export default async function RegistrasiRfidPage({
       </div>
     );
   }
-
-  const currentPage = Number(searchParams?.page) || 1;
-  // const search = searchParams?.search;
-  const { data, totalPages } = await getMahasiswa(adminUser.prodiId, search, currentPage, statusRfid);
+  const { search, statusRfid, page } = (await searchParams) || {};
+  const currentPage = Number(page) || 1;
+  const { data, totalPages } = await getMahasiswa(adminUser.prodiId, search, statusRfid, currentPage);
 
   return (
     <div className="p-6">

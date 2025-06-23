@@ -105,7 +105,7 @@ export default function RegistrasiRfidPageClient({ initialMahasiswa, alatId }: R
 
   const getPageContainerClass = () => {
     const baseClass =
-      "w-full max-w-2xl mt-10 mx-auto p-8 bg-white dark:bg-black/20 rounded-xl transition-all duration-500";
+      "w-full max-w-2xl mt-10 mb-10 mx-auto p-8 bg-white dark:bg-black/20 rounded-xl transition-all duration-500";
     switch (status) {
       case "waiting":
         return `${baseClass} shadow-[0_0_30px_1px] shadow-sky-500/80 dark:shadow-sky-800`;

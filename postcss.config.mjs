@@ -4,9 +4,9 @@ const config = {
   },
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}", // Jika Anda masih punya pages
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}", 
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/**/*.{js,ts,jsx,tsx,mdx}", // Tambahkan ini jika Anda menggunakan src/
+    "./src/**/*.{js,ts,jsx,tsx,mdx}", 
   ],
   autoprefixer: {},
 };
