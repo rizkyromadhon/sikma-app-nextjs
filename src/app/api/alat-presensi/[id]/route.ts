@@ -5,7 +5,7 @@ import { format } from "date-fns-tz";
 import { isAktifSekarang } from "@/lib/schedule-helper";
 import { sendMessage } from "@/lib/socket";
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
   try {
@@ -32,7 +32,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
   try {
@@ -80,8 +80,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 }
 
 // --- Handler untuk DELETE ---
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
-  const id = params.id;
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
   try {
     await prisma.alatPresensi.delete({

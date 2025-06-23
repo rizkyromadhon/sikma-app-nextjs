@@ -24,7 +24,8 @@ async function getInitialData(mahasiswaId: string, adminProdiId: string) {
 }
 
 // Komponen Halaman Edit sekarang menjadi Client Component
-export default async function RegistrasiRfidPage({ params }: { params: { id: string } }) {
+export default async function RegistrasiRfidPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const session = await auth();
   if (!session?.user?.id || session.user.role !== "ADMIN") {
     redirect("/login?error=unauthorized");
@@ -46,7 +47,7 @@ export default async function RegistrasiRfidPage({ params }: { params: { id: str
   }
 
   try {
-    const { mahasiswa, alatId } = await getInitialData(params.id, adminUser.prodiId);
+    const { mahasiswa, alatId } = await getInitialData(id, adminUser.prodiId);
 
     // Render komponen Client dan lempar data awal sebagai props
     return <RegistrasiRfidClient initialMahasiswa={mahasiswa} alatId={alatId} />;

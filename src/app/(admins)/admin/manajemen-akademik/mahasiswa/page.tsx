@@ -4,8 +4,6 @@ import { BsPlusCircleDotted } from "react-icons/bs";
 import MahasiswaTable from "./MahasiswaTable";
 import { Prisma } from "@/generated/prisma/client";
 
-export const dynamic = "force-dynamic";
-
 const ITEMS_PER_PAGE = 6;
 
 // Fungsi ini sekarang menerima parameter halaman (page)
@@ -58,16 +56,16 @@ async function getFilterOptions() {
 export default async function ManageMahasiswaPage({
   searchParams,
 }: {
-  searchParams?: {
+  searchParams?: Promise<{
     semester?: string;
     prodi?: string;
     golongan?: string;
     nim?: string;
-    page?: string; 
-  };
+    page?: string;
+  }>;
 }) {
-  const { semester, prodi, golongan, nim } = searchParams || {};
-  const currentPage = Number(searchParams?.page) || 1;
+  const { semester, prodi, golongan, nim, page } = (await searchParams) || {};
+  const currentPage = Number(page) || 1;
 
   // Panggil fungsi dengan filter dan halaman saat ini
   const { mahasiswa, totalPages } = await getMahasiswaData({ semester, prodi, golongan, nim }, currentPage);

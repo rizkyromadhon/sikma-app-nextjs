@@ -3,7 +3,6 @@ import { SubmitButton } from "@/components/auth/SubmitButton";
 import { BsPlusCircleDotted } from "react-icons/bs";
 import RuanganTable from "./MatkulTable";
 
-export const dynamic = "force-dynamic";
 const ITEMS_PER_PAGE = 6;
 
 async function getMatkul(search?: string, page: number = 1) {
@@ -34,7 +33,7 @@ async function getMatkul(search?: string, page: number = 1) {
 export default async function ManajemenMatkulPage({
   searchParams,
 }: {
-  searchParams: { search?: string; page?: string };
+  searchParams: Promise<{ search?: string; page?: string }>;
 }) {
   const { search = "", page = "1" } = await searchParams;
   const { data, totalPages, currentPage } = await getMatkul(search, Number(page));

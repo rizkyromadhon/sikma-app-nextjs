@@ -34,7 +34,10 @@ export const getStudentsPerSemester = async (prodiId: string) => {
   const counts: { [key: number]: number } = {};
   students.forEach((s) => {
     if (s.semesterId !== null) {
-      counts[s.semesterId] = (counts[s.semesterId] || 0) + 1;
+      const semesterNum = Number(s.semesterId);
+      if (!isNaN(semesterNum)) {
+        counts[semesterNum] = (counts[semesterNum] || 0) + 1;
+      }
     }
   });
 

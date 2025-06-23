@@ -2,8 +2,6 @@ import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import EditRuanganForm from "./EditRuanganForm";
 
-export const dynamic = "force-dynamic";
-
 async function getRuanganById(id: string) {
   const ruangan = await prisma.ruangan.findUnique({
     where: { id: id },
@@ -14,8 +12,8 @@ async function getRuanganById(id: string) {
   return ruangan;
 }
 
-export default async function EditRuanganPage({ params }: { params: { id: string } }) {
-  const id = await params.id;
+export default async function EditRuanganPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
   const ruangan = await getRuanganById(id);
 

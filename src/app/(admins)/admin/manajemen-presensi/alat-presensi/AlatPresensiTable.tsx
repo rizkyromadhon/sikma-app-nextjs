@@ -20,12 +20,30 @@ type AlatPresensiData = {
   ruangan: { kode: string; name: string };
 };
 
-export default function AlatPresensiTable({ initialSearch }: { initialSearch?: string }) {
+export interface AlatPresensiTableProps {
+  data: Array<{
+    id: string;
+    name: string;
+    status: AlatStatus;
+    ruanganId: string;
+    mode: AlatMode;
+    targetMahasiswaId: string | null;
+    jadwal_nyala: string | null;
+    jadwal_mati: string | null;
+    ruangan: {
+      kode: string;
+      name: string;
+    };
+  }>;
+  initialSearch?: string;
+}
+
+export default function AlatPresensiTable({ data, initialSearch }: AlatPresensiTableProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const search = searchParams.get("search") || "";
 
-  const { data, error, isLoading } = useSWR<AlatPresensiData[]>(
+  const { error, isLoading } = useSWR<AlatPresensiData[]>(
     `/api/alat-presensi${search ? `?search=${search}` : ""}`,
     fetcher,
     { refreshInterval: 5000 }

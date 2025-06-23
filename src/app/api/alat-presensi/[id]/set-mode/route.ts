@@ -4,7 +4,7 @@ import { sendMessage } from "@/lib/socket";
 import { isAktifSekarang } from "@/lib/schedule-helper.js";
 import { AlatMode } from "@/generated/prisma/client";
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   try {
     const { mode, mahasiswaId } = await req.json();

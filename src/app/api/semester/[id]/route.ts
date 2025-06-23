@@ -4,13 +4,9 @@ import { NextResponse } from "next/server";
 import { Prisma } from "@/generated/prisma/client";
 import prisma from "@/lib/prisma";
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const semesterId = parseInt(id, 10);
-
-  if (isNaN(semesterId)) {
-    return NextResponse.json({ error: "ID Semester tidak valid." }, { status: 400 });
-  }
+  const semesterId = id;
 
   try {
     const body = await request.json();
@@ -48,13 +44,9 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const semesterId = parseInt(id, 10);
-
-  if (isNaN(semesterId)) {
-    return NextResponse.json({ error: "ID Semester tidak valid." }, { status: 400 });
-  }
+  const semesterId = id;
 
   try {
     await prisma.semester.delete({

@@ -74,7 +74,13 @@ async function getJadwalData(
 export default async function ManajemenJadwalPage({
   searchParams,
 }: {
-  searchParams: { semester?: string; golongan?: string; search?: string; page?: string; prodi?: string };
+  searchParams: Promise<{
+    semester?: string;
+    golongan?: string;
+    search?: string;
+    page?: string;
+    prodi?: string;
+  }>;
 }) {
   const session = await auth();
   const { semester, golongan, search, page } = await searchParams;

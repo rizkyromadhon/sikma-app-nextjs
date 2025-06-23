@@ -47,9 +47,15 @@ connect();
  */
 export const sendMessage = (message: object) => {
   const messageString = JSON.stringify(message);
+  console.log("sendMessage called with:", messageString);
 
   if (socket && socket.readyState === WebSocket.OPEN) {
-    socket.send(messageString);
+    try {
+      socket.send(messageString);
+      console.log("Message sent:", messageString);
+    } catch (err) {
+      console.error("Error sending message:", err);
+    }
   } else {
     console.warn("Socket belum siap. Menambahkan pesan ke antrian.");
     messageQueue.push(messageString);

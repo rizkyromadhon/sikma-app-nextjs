@@ -192,7 +192,7 @@ function ExportModal({ isOpen, onClose, filters }: ExportModalProps) {
               <Button
                 onClick={() => handleExport("excel")}
                 disabled={!!exportingFormat}
-                className="bg-emerald-600 text-white"
+                className="bg-emerald-600 text-white hover:bg-emerald-700 hover:shadow-[0_0_12px_1px] shadow-emerald-600 dark:shadow-emerald-800 hover:transition-all"
               >
                 <FaRegFileExcel className="mr-2" /> Ekspor ke Excel
               </Button>
@@ -200,7 +200,7 @@ function ExportModal({ isOpen, onClose, filters }: ExportModalProps) {
               <Button
                 onClick={() => handleExport("pdf")}
                 disabled={!!exportingFormat}
-                className="bg-red-700 text-white"
+                className="bg-red-700 text-white hover:bg-red-700 hover:shadow-[0_0_12px_1px] shadow-red-600 dark:shadow-red-800 hover:transition-all"
               >
                 <FaRegFilePdf className="mr-2" /> Ekspor ke PDF
               </Button>
@@ -342,7 +342,7 @@ export default function RekapTable({
           </div>
         </div>
         <div>
-          <Button onClick={() => setIsExportModalOpen(true)} variant="outline">
+          <Button onClick={() => setIsExportModalOpen(true)} variant="outline" className="cursor-pointer">
             <LuDownload className="mr-2" /> Ekspor Data Rekapitulasi
           </Button>
         </div>

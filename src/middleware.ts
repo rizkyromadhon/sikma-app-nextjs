@@ -6,8 +6,8 @@ import { NextResponse } from "next/server";
 
 const { auth } = NextAuth(authConfig);
 
-const publicRoutes = ["/"];
-const authRoutes = ["/login"];
+const publicRoutes = ["/", "/pusat-bantuan"];
+const authRoutes = ["/login", "/register"];
 
 export default auth((req) => {
   const { nextUrl } = req;
@@ -32,7 +32,7 @@ export default auth((req) => {
   }
 
   if (!isLoggedIn && !isPublicRoute) {
-    return Response.redirect(new URL("/login?error=unauthorized", nextUrl));
+    return Response.redirect(new URL("/login?login=unauthorized", nextUrl));
   }
 
   if (isAdminRoute && role !== "ADMIN") {

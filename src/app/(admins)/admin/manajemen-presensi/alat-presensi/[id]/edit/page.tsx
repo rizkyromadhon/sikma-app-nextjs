@@ -3,8 +3,6 @@ import { notFound } from "next/navigation";
 import EditAlatForm from "./EditAlatForm";
 // import { Ruangan } from "@/generated/prisma/client";
 
-export const dynamic = "force-dynamic";
-
 async function getFormData(alatId: string) {
   const [alat, ruangans] = await Promise.all([
     prisma.alatPresensi.findUnique({
@@ -27,7 +25,7 @@ async function getFormData(alatId: string) {
   return { alat: serializableAlat, ruangans };
 }
 
-export default async function EditAlatPresensiPage({ params }: { params: { id: string } }) {
+export default async function EditAlatPresensiPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const { alat, ruangans } = await getFormData(id);
 

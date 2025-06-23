@@ -4,8 +4,6 @@ import { BsPlusCircleDotted } from "react-icons/bs";
 import DosenTable from "./DosenTable";
 import { Prisma } from "@/generated/prisma/client";
 
-export const dynamic = "force-dynamic";
-
 const ITEMS_PER_PAGE = 6;
 
 async function getDosen(prodiId?: string, nip?: string, page: number = 1) {
@@ -46,10 +44,10 @@ async function getAllProdi() {
 export default async function ManajemenDosenPage({
   searchParams,
 }: {
-  searchParams: { prodi?: string; nip?: string; page?: number };
+  searchParams: Promise<{ prodi?: string; nip?: string; page?: number }>;
 }) {
-  const { prodi, nip, page } = (await searchParams) || {};
-  const currentPage = (await page) || 1;
+  const { prodi, nip, page } = await searchParams;
+  const currentPage = page ?? 1;
   // const currentPage = Number(searchParams?.page) || 1;
 
   const [{ data, totalPages }, prodis] = await Promise.all([

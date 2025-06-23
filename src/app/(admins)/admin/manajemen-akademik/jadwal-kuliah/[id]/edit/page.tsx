@@ -1,11 +1,7 @@
-// app/(admins)/admin/manajemen-akademik/jadwal-kuliah/[id]/edit/page.tsx
-
 import prisma from "@/lib/prisma";
 import { auth } from "@/auth";
 import { redirect, notFound } from "next/navigation";
 import EditJadwalForm from "./EditJadwalForm";
-
-export const dynamic = "force-dynamic";
 
 // Fungsi untuk mengambil semua data yang dibutuhkan untuk form
 async function getFormData(adminProdiId: string, jadwalId: string) {
@@ -35,7 +31,7 @@ async function getFormData(adminProdiId: string, jadwalId: string) {
   return { jadwal, semesters, dosens, mataKuliahs, ruangans };
 }
 
-export default async function EditJadwalPage({ params }: { params: { id: string } }) {
+export default async function EditJadwalPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const session = await auth();
   if (!session?.user?.id || session.user.role !== "ADMIN") {

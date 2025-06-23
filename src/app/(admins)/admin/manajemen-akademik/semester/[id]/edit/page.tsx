@@ -3,27 +3,21 @@ import { notFound } from "next/navigation";
 import EditSemesterForm from "./EditSemesterForm";
 
 async function getSemesterById(id: string) {
-  const numericId = parseInt(id, 10);
+  // const numericId = parseInt(id, 10);
 
-  if (isNaN(numericId)) {
-    notFound();
-  }
+  // if (isNaN(numericId)) {
+  //   notFound();
+  // }
 
   const semester = await prisma.semester.findUnique({
-    where: { id: numericId },
+    where: { id: id },
   });
 
   if (!semester) notFound();
   return semester;
 }
 
-interface PageProps {
-  params: {
-    id: string;
-  };
-}
-
-export default async function EditSemesterPage({ params }: PageProps) {
+export default async function EditSemesterPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const semester = await getSemesterById(id);
 

@@ -113,7 +113,7 @@ export default function DropdownDesktop({ session, onLogoutClick }: DropdownDesk
                     onClick={onLogoutClick}
                     className={`${
                       focus ? "bg-red-50 dark:bg-red-900/50 " : ""
-                    } group flex w-full items-center rounded-b-xl px-3 py-3 text-sm font-medium text-red-600 dark:text-red-400 dark:hover:bg-red-900/40 transition-colors focus:outline-none`}
+                    } group flex w-full items-center rounded-b-xl px-3 py-3 text-sm font-medium text-red-600 dark:text-red-400 dark:hover:bg-red-900/40 transition-colors focus:outline-none cursor-pointer`}
                   >
                     <LuLogOut className="mr-2 h-5 w-5" />
                     Logout

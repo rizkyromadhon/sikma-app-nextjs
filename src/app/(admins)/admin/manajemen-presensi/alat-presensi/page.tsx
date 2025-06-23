@@ -4,8 +4,6 @@ import { BsPlusCircleDotted } from "react-icons/bs";
 import AlatPresensiTable from "./AlatPresensiTable";
 import { Prisma } from "@/generated/prisma/client";
 
-export const dynamic = "force-dynamic";
-
 async function getAlatPresensi(search?: string) {
   const where: Prisma.AlatPresensiWhereInput = {};
   if (search) {
@@ -29,7 +27,7 @@ async function getAlatPresensi(search?: string) {
 export default async function ManajemenAlatPresensiPage({
   searchParams,
 }: {
-  searchParams: { search?: string };
+  searchParams: Promise<{ search?: string }>;
 }) {
   const { search } = await searchParams;
   const searchParms = search;

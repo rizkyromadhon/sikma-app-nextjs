@@ -16,7 +16,7 @@ const getPublicIdFromUrl = (url: string) => {
 };
 
 // --- Handler untuk UPDATE (PUT) ---
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const dosenId = id;
   const formData = await request.formData();
@@ -93,7 +93,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const dosenId = id;
 

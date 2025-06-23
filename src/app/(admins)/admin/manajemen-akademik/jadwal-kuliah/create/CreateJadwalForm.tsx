@@ -22,6 +22,7 @@ interface CreateJadwalFormProps {
   dosens: FormOptions[];
   mataKuliahs: FormOptions[];
   ruangans: RuanganOption[];
+  golongans: FormOptions[];
 }
 
 export default function CreateJadwalForm({

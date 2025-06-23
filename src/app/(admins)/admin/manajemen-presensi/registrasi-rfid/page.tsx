@@ -6,8 +6,6 @@ import { redirect } from "next/navigation";
 import RfidTable from "./RfidTable"; // Komponen tabel yang akan kita buat
 import { Prisma } from "@/generated/prisma/client";
 
-export const dynamic = "force-dynamic";
-
 const ITEMS_PER_PAGE = 15;
 
 // Fungsi untuk mengambil data mahasiswa dengan filter dan pagination
@@ -56,7 +54,7 @@ async function getMahasiswa(adminProdiId: string, search?: string, statusRfid?: 
 export default async function RegistrasiRfidPage({
   searchParams,
 }: {
-  searchParams?: { search?: string; page?: string; statusRfid?: string };
+  searchParams?: Promise<{ search?: string; page?: string; statusRfid?: string }>;
 }) {
   const session = await auth();
   if (!session?.user?.id || session.user.role !== "ADMIN") {

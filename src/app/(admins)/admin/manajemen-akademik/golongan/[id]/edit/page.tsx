@@ -2,8 +2,6 @@ import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import EditGolonganForm from "./EditGolonganForm";
 
-export const dynamic = "force-dynamic";
-
 async function getGolonganById(id: string) {
   const golongan = await prisma.golongan.findUnique({
     where: { id: id },
@@ -31,7 +29,7 @@ async function getAllSemester() {
   });
 }
 
-export default async function EditGolonganPage({ params }: { params: { id: string } }) {
+export default async function EditGolonganPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const [golongan, prodiList, semesterList] = await Promise.all([
     getGolonganById(id),

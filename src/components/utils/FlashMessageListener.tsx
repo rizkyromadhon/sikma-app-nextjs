@@ -29,6 +29,15 @@ export default function FlashMessageListener() {
     const alatStatus = searchParams.get("alat-presensi");
     const exportStatus = searchParams.get("rekapitulasi-kehadiran");
 
+    if (loginStatus === "unauthorized") {
+      toast({
+        type: "error",
+        title: "Akses ditolak",
+        description: "Silahkan login untuk melanjutkan.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
     if (loginStatus === "success") {
       toast({
         type: "success",
@@ -61,15 +70,6 @@ export default function FlashMessageListener() {
         type: "success",
         title: "Logout berhasil!",
         description: "Sampai jumpa lagi.",
-      });
-      router.replace(pathname, { scroll: false });
-    }
-
-    if (loginStatus === "unauthorized") {
-      toast({
-        type: "error",
-        title: "Akses ditolak",
-        description: "Anda harus login terlebih dahulu.",
       });
       router.replace(pathname, { scroll: false });
     }

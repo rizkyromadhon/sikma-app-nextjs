@@ -1,6 +1,6 @@
 // app/api/prodi/[id]/route.ts
 import { NextResponse } from "next/server";
-import {  Prisma } from "@/generated/prisma/client";
+import { Prisma } from "@/generated/prisma/client";
 import prisma from "@/lib/prisma";
 
 function createSlug(name: string): string {
@@ -10,8 +10,9 @@ function createSlug(name: string): string {
     .replace(/[^\w-]+/g, "");
 }
 
-async function handleRequest(method: "PUT" | "DELETE", request: Request, params: { id: string }) {
-  const prodiId = params.id;
+async function handleRequest(method: "PUT" | "DELETE", request: Request, params: Promise<{ id: string }>) {
+  const { id } = await params;
+  const prodiId = id;
 
   try {
     if (method === "PUT") {
@@ -44,10 +45,10 @@ async function handleRequest(method: "PUT" | "DELETE", request: Request, params:
   }
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   return handleRequest("PUT", request, params);
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   return handleRequest("DELETE", request, params);
 }

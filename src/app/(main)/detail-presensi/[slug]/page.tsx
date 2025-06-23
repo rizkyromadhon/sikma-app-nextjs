@@ -7,11 +7,11 @@ import { format } from "date-fns";
 import { id as localeID } from "date-fns/locale";
 import { LuArrowLeft } from "react-icons/lu";
 
-export default async function DetailPresensiPage({ params }: { params: { slug: string } }) {
-  // 1. Ambil data program studi berdasarkan slug untuk mendapatkan nama dan ID-nya
+export default async function DetailPresensiPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const prodi = await prisma.programStudi.findUnique({
     where: {
-      slug: params.slug,
+      slug: slug,
     },
   });
 

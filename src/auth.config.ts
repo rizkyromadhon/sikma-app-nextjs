@@ -1,5 +1,3 @@
-// File: src/auth.config.ts
-
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { LoginSchema } from "@/lib/zod";
@@ -18,7 +16,6 @@ export default {
 
           const user = await prisma.user.findUnique({
             where: { email },
-            // Ambil semua data yang dibutuhkan untuk token
             select: {
               id: true,
               name: true,
@@ -38,7 +35,6 @@ export default {
       },
     }),
   ],
-  // PERBAIKAN UTAMA: Pindahkan `callbacks` ke file ini agar bisa dibaca oleh middleware
   callbacks: {
     jwt,
     session,

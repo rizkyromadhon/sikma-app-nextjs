@@ -48,7 +48,7 @@ async function getAllSemester() {
 export default async function ManajemenGolonganPage({
   searchParams,
 }: {
-  searchParams: { prodi?: string; semester?: string; page?: string };
+  searchParams: Promise<{ prodi?: string; semester?: string; page?: string }>;
 }) {
   const params = await searchParams;
   const { prodi, semester, page } = params;

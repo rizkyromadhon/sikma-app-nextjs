@@ -11,7 +11,6 @@ cloudinary.config({
 });
 
 export async function POST(request: Request) {
-  // Karena kita mengirim file, kita gunakan request.formData() bukan request.json()
   const formData = await request.formData();
 
   const name = formData.get("name") as string;

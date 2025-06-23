@@ -1,10 +1,6 @@
-// app/(admins)/admin/manajemen-akademik/mata-kuliah/[id]/edit/page.tsx
-
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import EditMatkulForm from "./EditMatkulForm";
-
-export const dynamic = "force-dynamic";
 
 async function getMatkulById(id: string) {
   const matkul = await prisma.mataKuliah.findUnique({
@@ -16,7 +12,7 @@ async function getMatkulById(id: string) {
   return matkul;
 }
 
-export default async function EditMatkulPage({ params }: { params: { id: string } }) {
+export default async function EditMatkulPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
   const matkul = await getMatkulById(id);

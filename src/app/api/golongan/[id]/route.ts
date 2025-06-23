@@ -2,13 +2,14 @@ import { NextResponse } from "next/server";
 import { Prisma } from "@/generated/prisma/client";
 import prisma from "@/lib/prisma";
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const golonganId = id;
 
   try {
     const { name, prodiId, semesterId } = await request.json();
-    if (!name || !prodiId) return NextResponse.json({ error: "Nama, Prodi, Semester wajib diisi" }, { status: 400 });
+    if (!name || !prodiId)
+      return NextResponse.json({ error: "Nama, Prodi, Semester wajib diisi" }, { status: 400 });
     const updated = await prisma.golongan.update({
       where: { id: golonganId },
       data: { name, prodiId: prodiId, semesterId: semesterId },
@@ -30,7 +31,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 }
 
 // Handler untuk DELETE
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const golonganId = id;
 

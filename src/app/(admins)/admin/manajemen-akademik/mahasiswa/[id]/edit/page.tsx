@@ -1,10 +1,6 @@
-// app/(admins)/admin/manajemen-akademik/mahasiswa/[id]/edit/page.tsx
-
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import EditMahasiswaForm from "./EditMahasiswaForm";
-
-export const dynamic = "force-dynamic";
 
 // Fungsi untuk mengambil semua data yang diperlukan untuk form
 async function getFormData(mahasiswaId: string) {
@@ -38,7 +34,7 @@ async function getFormData(mahasiswaId: string) {
   return { user, semesters, prodis, golongans };
 }
 
-export default async function EditMahasiswaPage({ params }: { params: { id: string } }) {
+export default async function EditMahasiswaPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const { user, semesters, prodis, golongans } = await getFormData(id);
 

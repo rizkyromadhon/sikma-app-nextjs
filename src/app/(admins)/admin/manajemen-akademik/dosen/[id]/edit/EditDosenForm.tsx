@@ -118,9 +118,7 @@ export default function EditMahasiswaForm({ dosen, prodis }: EditDosenFormProps)
         Edit Dosen - <strong>{dosen.name}</strong>
       </h1>
       <form onSubmit={handleSubmit} className="flex items-start gap-8 w-full">
-        {/* Kiri: Form */}
         <div className="space-y-4 w-3/2">
-          {/* Nama dan NIM */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input
               name="name"

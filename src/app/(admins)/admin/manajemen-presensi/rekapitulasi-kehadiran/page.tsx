@@ -4,8 +4,6 @@ import { redirect } from "next/navigation";
 import RekapTable from "./RekapTable";
 import { Prisma } from "@/generated/prisma/client";
 
-export const dynamic = "force-dynamic";
-
 const ITEMS_PER_PAGE = 6;
 
 async function getMahasiswa(
@@ -65,8 +63,10 @@ async function getFilterOptions(adminProdiId: string) {
 export default async function RekapKehadiranPage({
   searchParams,
 }: {
-  searchParams?: { semester?: string; golongan?: string; search?: string; page?: string };
+  searchParams?: Promise<{ semester?: string; golongan?: string; search?: string; page?: string }>;
 }) {
+  const params = (await searchParams) || {};
+  const { semester, golongan, search, page } = params;
   const session = await auth();
   if (!session?.user?.id || session.user.role !== "ADMIN") {
     redirect("/login?error=unauthorized");
@@ -80,9 +80,10 @@ export default async function RekapKehadiranPage({
     return <div className="p-8 text-center text-red-500">Admin tidak terkait prodi</div>;
   }
 
-  const page = Number(searchParams?.page) || 1;
+  const filters = { semester, golongan, search };
+  const currentPage = Number(page) || 1;
   const [result, filterOptions] = await Promise.all([
-    getMahasiswa(admin.prodiId, searchParams || {}, page),
+    getMahasiswa(admin.prodiId, filters, currentPage),
     getFilterOptions(admin.prodiId),
   ]);
 
@@ -100,9 +101,9 @@ export default async function RekapKehadiranPage({
           })),
           mataKuliahs: filterOptions.mataKuliahs.map((mk) => ({ id: mk.id, name: mk.name })),
           prodiId: admin.prodiId,
-          current: searchParams || {},
+          current: params,
         }}
-        currentPage={page}
+        currentPage={currentPage}
         totalPages={result.totalPages}
       />
     </div>
