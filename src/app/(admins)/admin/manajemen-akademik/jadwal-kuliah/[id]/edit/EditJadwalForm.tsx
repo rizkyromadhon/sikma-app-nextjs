@@ -55,8 +55,8 @@ export default function EditJadwalForm({
   // Inisialisasi state form dengan data yang ada
   const [form, setForm] = useState({
     hari: jadwal.hari,
-    jam_mulai: format(new Date(jadwal.jam_mulai), "HH:mm"), // Ubah ISO ke format input time
-    jam_selesai: format(new Date(jadwal.jam_selesai), "HH:mm"),
+    jam_mulai: jadwal.jam_mulai,
+    jam_selesai: jadwal.jam_selesai,
     matkulId: jadwal.matkulId,
     dosenId: jadwal.dosenId,
     semesterId: jadwal.semesterId.toString(), // Ubah number ke string untuk value <select>
@@ -141,8 +141,8 @@ export default function EditJadwalForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           hari: form.hari,
-          jam_mulai: form.jam_mulai ? convertTimeToISO(form.jam_mulai) : null,
-          jam_selesai: form.jam_selesai ? convertTimeToISO(form.jam_selesai) : null,
+          jam_mulai: form.jam_mulai,
+          jam_selesai: form.jam_selesai,
           matkulId: form.matkulId,
           dosenId: form.dosenId,
           semesterId: form.semesterId,

@@ -12,6 +12,7 @@ type Attendance = {
   mahasiswa: { name: string | null; foto: string | null };
   mata_kuliah: { name: string };
   ruangan: { name: string };
+  jadwal_kuliah: { ruangan: { name: string } };
 };
 
 interface LiveFeedProps {
@@ -42,7 +43,7 @@ export default function LiveFeed({ initialAttendances }: LiveFeedProps) {
                     alt={`Foto ${item.mahasiswa.name}`}
                     width={40}
                     height={40}
-                    className="rounded-full object-cover"
+                    className="rounded-full w-10 h-10 object-cover"
                   />
                 ) : (
                   <LuCircleUser className="h-full w-full text-gray-400" />
@@ -54,7 +55,9 @@ export default function LiveFeed({ initialAttendances }: LiveFeedProps) {
                   {` telah presensi di mata kuliah `}
                   <span className="font-semibold">{item.mata_kuliah.name}</span>
                   {` di `}
-                  <span className="font-semibold">{item.ruangan.name}</span>
+                  <span className="font-semibold">
+                    {item.jadwal_kuliah?.ruangan?.name ?? "Tanpa Ruangan"}
+                  </span>
                 </p>
                 <p className="text-gray-500 dark:text-gray-400">
                   {formatDistanceToNow(new Date(item.waktu_presensi), {

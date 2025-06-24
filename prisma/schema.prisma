@@ -45,6 +45,7 @@ enum StatusPresensi {
   TIDAK_HADIR
   IZIN
   SAKIT
+  TERLAMBAT
 }
 
 enum TipePengajuan {
@@ -61,8 +62,8 @@ enum StatusPengajuan {
 enum AlatMode {
   MASUK
   PULANG
-  PRESENSI // Mode general untuk absen masuk/keluar
-  REGISTRASI // Mode baru untuk registrasi kartu RFID
+  PRESENSI
+  REGISTRASI
 }
 
 enum AlatStatus {
@@ -101,25 +102,24 @@ model Session {
   @@map("sessions")
 }
 
-// 1. Tabel User (sudah diperbaiki)
 model User {
   id                  String  @id @default(cuid())
-  uid                 String? @unique // Misal untuk RFID
+  uid                 String? @unique
   name                String
   email               String  @unique
   password            String?
   alamat              String?
   no_hp               String?
   foto                String?
-  nim                 String? @unique // Opsional
-  nip                 String? @unique // Opsional
+  nim                 String? @unique
+  nip                 String? @unique
   is_profile_complete Boolean @default(false)
   role                Role    @default(MAHASISWA)
   gender              String?
 
   semesterId String?
-  prodiId    String? // Opsional, hanya untuk mahasiswa/dosen
-  golonganId String? // Opsional, hanya untuk mahasiswa
+  prodiId    String?
+  golonganId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -200,7 +200,7 @@ model PresensiKuliah {
   // Relasi
   mahasiswa     User         @relation(fields: [mahasiswaId], references: [id])
   mata_kuliah   MataKuliah   @relation(fields: [matkulId], references: [id])
-  jadwal_kuliah JadwalKuliah @relation(fields: [jadwalKuliahId], references: [id])
+  jadwal_kuliah JadwalKuliah @relation(fields: [jadwalKuliahId], references: [id], onDelete: Cascade)
 }
 
 // 6. Tabel Pengajuan Izin
@@ -254,30 +254,27 @@ model MataKuliah {
   presensi      PresensiKuliah[]
 }
 
-// 9. Tabel Laporan Mahasiswa (sudah diperbaiki)
 model LaporanMahasiswa {
   id      String  @id @default(cuid())
-  tipe    String // Misal: 'lupa_password', 'kerusakan_alat'
+  tipe    String
   pesan   String  @db.Text
   status  String  @default("Belum Ditangani")
   balasan String? @db.Text
 
-  userId String // Hanya butuh ID user
+  userId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relasi
   user User @relation("LaporanDariUser", fields: [userId], references: [id])
 }
 
-// 10. Tabel Jadwal Kuliah (sudah diperbaiki)
 model JadwalKuliah {
-  id             String   @id @default(cuid())
-  is_kelas_besar Boolean  @default(false)
+  id             String  @id @default(cuid())
+  is_kelas_besar Boolean @default(false)
   hari           Hari
-  jam_mulai      DateTime
-  jam_selesai    DateTime
+  jam_mulai      String
+  jam_selesai    String
 
   dosenId    String
   matkulId   String
@@ -285,14 +282,12 @@ model JadwalKuliah {
   prodiId    String
   ruanganId  String
 
-  // Relasi
   dosen         User             @relation(fields: [dosenId], references: [id])
   mata_kuliah   MataKuliah       @relation(fields: [matkulId], references: [id])
   semester      Semester         @relation(fields: [semesterId], references: [id])
   prodi         ProgramStudi     @relation(fields: [prodiId], references: [id])
-  // golongan      Golongan?        @relation(fields: [golonganId], references: [id])
   golongans     Golongan[]       @relation("JadwalToGolongan")
-  ruangan       Ruangan          @relation(fields: [ruanganId], references: [id])
+  ruangan       Ruangan          @relation(fields: [ruanganId], references: [id], onDelete: Restrict)
   presensi      PresensiKuliah[]
   pengajuanIzin PengajuanIzin[]
   peserta       PesertaKuliah[]
@@ -338,8 +333,8 @@ model PesertaKuliah {
   updatedAt DateTime @updatedAt
 
   // Relasi
-  mahasiswa     User         @relation(fields: [mahasiswaId], references: [id])
-  jadwal_kuliah JadwalKuliah @relation(fields: [jadwalKuliahId], references: [id])
+  mahasiswa     User         @relation(fields: [mahasiswaId], references: [id], onDelete: Restrict)
+  jadwal_kuliah JadwalKuliah @relation(fields: [jadwalKuliahId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   // Menjamin setiap mahasiswa hanya bisa mendaftar sekali di satu jadwal
   @@unique([mahasiswaId, jadwalKuliahId])

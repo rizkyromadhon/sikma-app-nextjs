@@ -19,10 +19,14 @@ export default function ThemeToggle({ style }: { style?: string }) {
   return (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className={`flex h-9 w-9 items-center justify-center rounded-full border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer ${style}`}
+      className={`flex h-8 w-8 items-center justify-center rounded-full shadow-[0_0_12px] shadow-neutral-400 dark:shadow-neutral-700 text-gray-700 dark:text-gray-300 cursor-pointer ${style}`}
       aria-label="Toggle theme"
     >
-      {theme === "dark" ? <LuSun className="h-5 w-5 text-yellow-400" /> : <LuMoon className="h-5 w-5" />}
+      {theme === "dark" ? (
+        <LuSun className="h-5 w-5 hover:transform hover:rotate-90" />
+      ) : (
+        <LuMoon className="h-5 w-5" />
+      )}
     </button>
   );
 }

@@ -69,7 +69,7 @@ wss.on("connection", (ws) => {
   });
 });
 
-server.listen(SOCKET_PORT);
+server.listen(SOCKET_PORT, "0.0.0.0");
 
 const previousStatuses = {};
 

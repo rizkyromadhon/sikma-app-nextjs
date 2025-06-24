@@ -58,8 +58,8 @@ export default async function EditJadwalPage({ params }: { params: Promise<{ id:
   // Serialisasi objek Date sebelum dikirim ke client
   const serializableJadwal = {
     ...jadwal,
-    jam_mulai: jadwal.jam_mulai.toISOString(),
-    jam_selesai: jadwal.jam_selesai.toISOString(),
+    jam_mulai: jadwal.jam_mulai,
+    jam_selesai: jadwal.jam_selesai,
   };
 
   return (

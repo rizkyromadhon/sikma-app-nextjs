@@ -241,8 +241,7 @@ export default function JadwalKuliahTable({
                   <td className="px-4 py-3 text-center">
                     <div className="font-semibold">{jadwal.hari}</div>
                     <div className="text-xs font-mono">
-                      {format(new Date(jadwal.jam_mulai), "HH:mm")} -{" "}
-                      {format(new Date(jadwal.jam_selesai), "HH:mm")}
+                      {jadwal.jam_mulai} - {jadwal.jam_selesai}
                     </div>
                   </td>
                   <td className="px-4 py-3 text-center">{jadwal.mata_kuliah.name}</td>

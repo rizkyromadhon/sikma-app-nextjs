@@ -103,7 +103,6 @@ export default function NavbarClient({ session }: NavbarClientProps) {
               </div>
             </div>
             <div className="z-10 flex items-center">
-              <ThemeToggle />
               {/* Desktop */}
               <div className="hidden md:block ml-4">
                 {session?.user ? (

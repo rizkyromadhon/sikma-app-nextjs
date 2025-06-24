@@ -119,8 +119,8 @@ export default async function ManajemenJadwalPage({
   // Buat data serializable sebelum dikirim ke client
   const serializableJadwalKuliah = jadwalKuliah.map((jadwal) => ({
     ...jadwal,
-    jam_mulai: jadwal.jam_mulai.toISOString(),
-    jam_selesai: jadwal.jam_selesai.toISOString(),
+    jam_mulai: jadwal.jam_mulai,
+    jam_selesai: jadwal.jam_selesai,
   }));
 
   return (

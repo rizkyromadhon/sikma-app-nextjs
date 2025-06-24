@@ -1,58 +1,89 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { Prisma } from "@/generated/prisma";
+import { toDate, getTimezoneOffset } from "date-fns-tz";
+
+export async function GET(request: Request) {
+  try {
+    const jadwalKuliah = await prisma.jadwalKuliah.findMany({
+      include: {
+        mata_kuliah: true,
+        dosen: true,
+        prodi: true,
+        ruangan: true,
+        semester: true,
+        golongans: true,
+      },
+    });
+    return NextResponse.json(jadwalKuliah);
+  } catch (error) {
+    console.error("Gagal mengambil data jadwal kuliah:", error);
+    return NextResponse.json({ error: "Gagal mengambil data jadwal kuliah" }, { status: 500 });
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { hari, jam_mulai, jam_selesai, matkulId, dosenId, golonganIds, prodiId, ruanganId, semesterId } =
-      body;
-
-    console.log("Menerima permintaan untuk membuat jadwal kuliah:", body);
-
-    if (
-      !hari ||
-      !jam_mulai ||
-      !jam_selesai ||
-      !matkulId ||
-      !dosenId ||
-      !prodiId ||
-      !ruanganId ||
-      !semesterId
-    ) {
-      return NextResponse.json({ error: "Data tidak lengkap." }, { status: 400 });
-    }
-
-    if (!Array.isArray(golonganIds)) {
-      return NextResponse.json({ error: "golonganIds harus berupa array." }, { status: 400 });
-    }
-
-    if (new Date(jam_mulai) >= new Date(jam_selesai)) {
-      return NextResponse.json({ error: "Jam mulai harus lebih awal dari jam selesai." }, { status: 400 });
-    }
-
-    const { is_kelas_besar } = body;
-
-    const connectGolongans = golonganIds
-      .filter((id: string) => id !== "__KELAS_BESAR__")
-      .map((id: string) => ({ id }));
-
-    const data = {
+    const {
       hari,
-      jam_mulai: new Date(jam_mulai),
-      jam_selesai: new Date(jam_selesai),
+      jam_mulai,
+      jam_selesai,
       matkulId,
       dosenId,
+      golonganIds,
       prodiId,
       ruanganId,
       semesterId,
-      is_kelas_besar: is_kelas_besar,
-      ...(connectGolongans.length > 0 && {
-        golongans: { connect: connectGolongans },
-      }),
+      is_kelas_besar,
+    } = body;
+
+    console.log("Menerima permintaan untuk membuat jadwal kuliah:", body);
+
+    const dataToCreate: Prisma.JadwalKuliahCreateInput = {
+      hari,
+      jam_mulai: jam_mulai,
+      jam_selesai: jam_selesai,
+      is_kelas_besar: is_kelas_besar ?? false,
+      mata_kuliah: { connect: { id: matkulId } },
+      dosen: { connect: { id: dosenId } },
+      prodi: { connect: { id: prodiId } },
+      ruangan: { connect: { id: ruanganId } },
+      semester: { connect: { id: semesterId } },
     };
 
-    console.log("Data yang akan disimpan:", data);
+    if (golonganIds && golonganIds.length > 0) {
+      dataToCreate.golongans = {
+        connect: golonganIds.map((id: string) => ({ id })),
+      };
+    }
+    console.log("Data yang akan disimpan:", dataToCreate);
 
-    const newJadwal = await prisma.jadwalKuliah.create({ data });
+    const newJadwal = await prisma.jadwalKuliah.create({ data: dataToCreate });
+
+    if (golonganIds && golonganIds.length > 0) {
+      const mahasiswaList = await prisma.user.findMany({
+        where: {
+          role: "MAHASISWA",
+          prodiId,
+          semesterId,
+          golonganId: { in: golonganIds },
+        },
+        select: { id: true },
+      });
+
+      const pesertaToCreate = mahasiswaList.map((mhs) => ({
+        mahasiswaId: mhs.id,
+        jadwalKuliahId: newJadwal.id,
+      }));
+
+      await prisma.pesertaKuliah.createMany({
+        data: pesertaToCreate,
+        skipDuplicates: true,
+      });
+
+      console.log(`Peserta otomatis ditambahkan: ${pesertaToCreate.length} mahasiswa.`);
+    }
 
     return NextResponse.json(newJadwal, { status: 201 });
   } catch (error) {

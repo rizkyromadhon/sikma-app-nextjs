@@ -47,8 +47,8 @@ export const GET = async () => {
 
   const formatted = jadwal.map((j) => ({
     day: j.hari.charAt(0).toUpperCase() + j.hari.slice(1).toLowerCase(),
-    start: format(new Date(j.jam_mulai), "HH:mm"),
-    end: format(new Date(j.jam_selesai), "HH:mm"),
+    start: j.jam_mulai,
+    end: j.jam_selesai,
     matkul: j.mata_kuliah.name,
     dosen: j.dosen.name,
     ruangan: j.ruangan.name,

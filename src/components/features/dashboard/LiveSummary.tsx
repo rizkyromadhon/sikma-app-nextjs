@@ -3,7 +3,7 @@ import { LuUsers, LuUserX } from "react-icons/lu";
 
 interface RekapProdi {
   slug: string;
-  nama: string;
+  name: string;
   hadir: number;
   tidakHadir: number;
 }
@@ -30,7 +30,7 @@ export default function SummaryPresence({
           <LiveSummaryProdi
             key={prodi.slug}
             slug={prodi.slug}
-            nama={prodi.nama}
+            name={prodi.name}
             hadir={prodi.hadir}
             tidakHadir={prodi.tidakHadir}
           />

@@ -6,12 +6,12 @@ import { LuUsers, LuUserX } from "react-icons/lu";
 
 interface LiveSummaryProdiProps {
   slug: string;
-  nama: string;
+  name: string;
   hadir: number;
   tidakHadir: number;
 }
 
-export default function LiveSummaryProdi({ slug, nama, hadir, tidakHadir }: LiveSummaryProdiProps) {
+export default function LiveSummaryProdi({ slug, name, hadir, tidakHadir }: LiveSummaryProdiProps) {
   return (
     <div className="relative mt-2 group">
       <div className="absolute inset-px rounded-lg bg-white dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 ring-1 shadow-sm ring-black/5 dark:ring-white/10 lg:rounded-lg hover:transition-all group-hover:ring-gray-400 dark:group-hover:ring-gray-600"></div>
@@ -21,7 +21,7 @@ export default function LiveSummaryProdi({ slug, nama, hadir, tidakHadir }: Live
         className="relative flex items-center justify-start gap-x-4 px-4 md:px-6 py-4"
       >
         <p className="flex-grow text-base md:text-lg font-medium tracking-tight text-gray-900 dark:text-white">
-          {nama}
+          {name}
         </p>
 
         {/* Kontainer untuk statistik */}

@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 
 const { auth } = NextAuth(authConfig);
 
-const publicRoutes = ["/", "/pusat-bantuan"];
+const publicRoutes = ["/", "/pusat-bantuan", "/monitoring"];
 const authRoutes = ["/login", "/register"];
 
 export default auth((req) => {

@@ -115,24 +115,13 @@ export default function CreateJadwalForm({
     }
 
     try {
-      function convertTimeToISO(time: string): string {
-        const [hours, minutes] = time.split(":").map(Number);
-        const date = new Date();
-
-        date.setHours(hours);
-        date.setMinutes(minutes);
-        date.setSeconds(0);
-        date.setMilliseconds(0);
-
-        return date.toISOString();
-      }
       const res = await fetch("/api/jadwal-kuliah", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           hari: form.hari,
-          jam_mulai: form.jam_mulai ? convertTimeToISO(form.jam_mulai) : null,
-          jam_selesai: form.jam_selesai ? convertTimeToISO(form.jam_selesai) : null,
+          jam_mulai: form.jam_mulai,
+          jam_selesai: form.jam_selesai,
           matkulId: form.matkulId,
           dosenId: form.dosenId,
           semesterId: form.semesterId,
@@ -142,6 +131,7 @@ export default function CreateJadwalForm({
           golonganIds: golonganIdsToSend,
         }),
       });
+      console.log("res", res);
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Gagal menambahkan jadwal.");
 

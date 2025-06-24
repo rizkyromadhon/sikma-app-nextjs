@@ -27,8 +27,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 
     const dataToUpdate: Prisma.JadwalKuliahUpdateInput = {
       hari,
-      jam_mulai: new Date(jam_mulai),
-      jam_selesai: new Date(jam_selesai),
+      jam_mulai: jam_mulai,
+      jam_selesai: jam_selesai,
       is_kelas_besar,
       mata_kuliah: { connect: { id: matkulId } },
       dosen: { connect: { id: dosenId } },
