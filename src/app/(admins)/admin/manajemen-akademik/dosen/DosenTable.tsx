@@ -7,6 +7,7 @@ import Link from "next/link";
 import { User, ProgramStudi } from "@/generated/prisma/client";
 import { SubmitButton } from "@/components/auth/SubmitButton";
 import { LuCircleAlert, LuCircleArrowLeft, LuCircleArrowRight } from "react-icons/lu";
+import { BsPlusCircleDotted } from "react-icons/bs";
 
 // Tipe data untuk props
 type DosenWithProdi = User & { prodi: ProgramStudi | null };
@@ -76,27 +77,35 @@ export default function DosenTable({
   return (
     <div className="space-y-6">
       {/* --- Filter --- */}
-      <div className="flex gap-4">
-        <select
-          className=" px-4 py-2 max-w-1/4 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none w-60"
-          value={filters.current.prodi || ""}
-          onChange={(e) => updateFilter("prodi", e.target.value)}
-        >
-          <option value="" className="bg-white dark:bg-black/90">
-            Semua Program Studi
-          </option>
-          {filters.prodis.map((p) => (
-            <option key={p.id} value={p.id.toString()} className="bg-white dark:bg-black/90">
-              {p.name}
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <select
+            className=" px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none w-60"
+            value={filters.current.prodi || ""}
+            onChange={(e) => updateFilter("prodi", e.target.value)}
+          >
+            <option value="" className="bg-white dark:bg-black/90">
+              Semua Program Studi
             </option>
-          ))}
-        </select>
-        <input
-          type="text"
-          placeholder="Cari Dosen berdasarkan NIP..."
-          className="bg-white dark:bg-black/50 text-black dark:text-gray-200 border border-gray-300 dark:border-gray-800 rounded px-4 py-2 focus:outline-none text-sm w-80"
-          defaultValue={filters.current.nip || ""}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => updateFilter("nip", e.target.value)}
+            {filters.prodis.map((p) => (
+              <option key={p.id} value={p.id.toString()} className="bg-white dark:bg-black/90">
+                {p.name}
+              </option>
+            ))}
+          </select>
+          <input
+            type="text"
+            placeholder="Cari Dosen berdasarkan NIP..."
+            className="bg-white dark:bg-black/50 text-black dark:text-gray-200 border border-gray-300 dark:border-gray-800 rounded-md px-4 py-2 focus:outline-none text-sm w-80"
+            defaultValue={filters.current.nip || ""}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => updateFilter("nip", e.target.value)}
+          />
+        </div>
+        <SubmitButton
+          text="Tambah Dosen"
+          href="/admin/manajemen-akademik/dosen/create"
+          icon={<BsPlusCircleDotted />}
+          className="bg-white dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-black/10 hover:transition-all text-sm border border-gray-300 dark:border-gray-800 flex items-center gap-2"
         />
       </div>
 

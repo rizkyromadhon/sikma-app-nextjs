@@ -3,6 +3,15 @@ import { SubmitButton } from "@/components/auth/SubmitButton";
 import { BsPlusCircleDotted } from "react-icons/bs";
 import GolonganTable from "./GolonganTable";
 import { Prisma } from "@/generated/prisma";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import Link from "next/link";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -64,15 +73,25 @@ export default async function ManajemenGolonganPage({
 
   return (
     <div className="w-full mx-auto p-6 bg-white dark:bg-black/20 rounded-lg shadow">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white ">Manajemen Golongan</h1>
-        <SubmitButton
-          text="Tambah Golongan"
-          href="/admin/manajemen-akademik/golongan/create"
-          icon={<BsPlusCircleDotted />}
-          className="bg-white dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-black/10 hover:transition-all text-sm border border-gray-300 dark:border-gray-800 flex items-center gap-2 cursor-pointer"
-        />
-      </div>
+      <Breadcrumb className="ml-12 mb-6">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/admin/dashboard">Admin</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbLink asChild>
+            <Link href="#">Manajemen Akademik</Link>
+          </BreadcrumbLink>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Golongan</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white ">Manajemen Golongan</h1>
+      <div className="flex justify-between items-center mb-6"></div>
       <GolonganTable
         initialData={data}
         totalPages={totalPages}

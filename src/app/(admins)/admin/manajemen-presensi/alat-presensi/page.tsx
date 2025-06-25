@@ -3,6 +3,15 @@ import { SubmitButton } from "@/components/auth/SubmitButton";
 import { BsPlusCircleDotted } from "react-icons/bs";
 import AlatPresensiTable from "./AlatPresensiTable";
 import { Prisma } from "@/generated/prisma/client";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import Link from "next/link";
 
 async function getAlatPresensi(search?: string) {
   const where: Prisma.AlatPresensiWhereInput = {};
@@ -42,15 +51,24 @@ export default async function ManajemenAlatPresensiPage({
 
   return (
     <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Manajemen Alat Presensi</h1>
-        <SubmitButton
-          text="Tambah Alat"
-          href="/admin/manajemen-presensi/alat-presensi/create"
-          icon={<BsPlusCircleDotted />}
-          className="bg-white dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-black/10 hover:transition-all text-sm border border-gray-300 dark:border-gray-800 flex items-center gap-2 cursor-pointer"
-        />
-      </div>
+      <Breadcrumb className="ml-12 mb-6">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/admin/dashboard">Admin</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbLink asChild>
+            <Link href="#">Manajemen Presensi</Link>
+          </BreadcrumbLink>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Alat Presensi</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Manajemen Alat Presensi</h1>
       <AlatPresensiTable data={serializableData} initialSearch={search} />
     </div>
   );

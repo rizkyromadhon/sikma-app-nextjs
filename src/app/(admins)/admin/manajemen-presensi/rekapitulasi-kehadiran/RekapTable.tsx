@@ -61,6 +61,7 @@ function ExportModal({ isOpen, onClose, filters }: ExportModalProps) {
   const [filteredMatkuls, setFilteredMatkuls] = useState<FilterOption[]>([]);
   const [loadingMatkul, setLoadingMatkul] = useState(false);
   const [exportingFormat, setExportingFormat] = useState<"pdf" | "excel" | null>(null);
+  const [isLoadingFormat, setIsLoadingFormat] = useState<"pdf" | "excel" | null>(null);
 
   useEffect(() => {
     setFilteredGolongans([]);
@@ -93,6 +94,7 @@ function ExportModal({ isOpen, onClose, filters }: ExportModalProps) {
       return;
     }
     setExportingFormat(format);
+    setIsLoadingFormat(format);
     try {
       const res = await axios.post(`/api/rekap/file/${format}`, selectedFilters, { responseType: "blob" });
       const blob = new Blob([res.data], {
@@ -119,6 +121,7 @@ function ExportModal({ isOpen, onClose, filters }: ExportModalProps) {
       alert("Gagal mengekspor data.");
     } finally {
       setExportingFormat(null);
+      setIsLoadingFormat(null);
     }
   };
 
@@ -192,17 +195,29 @@ function ExportModal({ isOpen, onClose, filters }: ExportModalProps) {
               <Button
                 onClick={() => handleExport("excel")}
                 disabled={!!exportingFormat}
-                className="bg-emerald-600 text-white hover:bg-emerald-700 hover:shadow-[0_0_12px_1px] shadow-emerald-600 dark:shadow-emerald-800 hover:transition-all"
+                className="relative bg-emerald-600 text-white hover:bg-emerald-700 hover:shadow-[0_0_12px_1px] shadow-emerald-600 dark:shadow-emerald-800 hover:transition-all"
               >
-                <FaRegFileExcel className="mr-2" /> Ekspor ke Excel
+                {isLoadingFormat === "excel" ? (
+                  <Loader2 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-spin h-4 w-4" />
+                ) : (
+                  <div className="flex items-center justify-center w-full">
+                    <FaRegFileExcel className="mr-2" /> Ekspor ke Excel
+                  </div>
+                )}
               </Button>
 
               <Button
                 onClick={() => handleExport("pdf")}
                 disabled={!!exportingFormat}
-                className="bg-red-700 text-white hover:bg-red-700 hover:shadow-[0_0_12px_1px] shadow-red-600 dark:shadow-red-800 hover:transition-all"
+                className="relative bg-red-700 text-white hover:bg-red-700 hover:shadow-[0_0_12px_1px] shadow-red-600 dark:shadow-red-800 hover:transition-all"
               >
-                <FaRegFilePdf className="mr-2" /> Ekspor ke PDF
+                {isLoadingFormat === "pdf" ? (
+                  <Loader2 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-spin h-4 w-4" />
+                ) : (
+                  <div className="flex items-center justify-center w-full">
+                    <FaRegFilePdf className="mr-2" /> Ekspor ke PDF
+                  </div>
+                )}
               </Button>
 
               <Button variant="outline" onClick={onClose}>
@@ -291,55 +306,46 @@ export default function RekapTable({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap justify-between items-end gap-4">
-        <div className="flex flex-wrap gap-4 items-end">
-          <div>
-            <label className="text-sm mb-1 block">Filter Semester</label>
-            <Select value={semesterValue} onValueChange={(val) => updateFilter("semester", val)}>
-              <SelectTrigger className="w-60">
-                <SelectValue placeholder="Semua Semester" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Semua Semester</SelectItem>
-                {filters.semesters.map((s) => (
-                  <SelectItem key={s.id} value={String(s.id)}>
-                    {s.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <label className="text-sm mb-1 block">Filter Golongan</label>
-            <Select
-              value={golonganValue}
-              onValueChange={(val) => updateFilter("golongan", val)}
-              disabled={!semesterValue || semesterValue === "all"}
-            >
-              <SelectTrigger className="w-60">
-                <SelectValue placeholder="Pilih Golongan" />
-              </SelectTrigger>
-              <SelectContent>
-                {filteredGolongans.map((g) => (
-                  <SelectItem key={g.id} value={String(g.id)}>
-                    {g.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <label className="text-sm mb-1 block">Cari Mahasiswa</label>
-            <Input
-              placeholder="Cari nama atau NIM..."
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                updateFilter("search", e.target.value);
-              }}
-              className="w-60"
-            />
-          </div>
+      <div className="flex justify-between items-center">
+        <div className="flex items-center gap-4">
+          <Select value={semesterValue} onValueChange={(val) => updateFilter("semester", val)}>
+            <SelectTrigger className="w-60">
+              <SelectValue placeholder="Semua Semester" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Semua Semester</SelectItem>
+              {filters.semesters.map((s) => (
+                <SelectItem key={s.id} value={String(s.id)}>
+                  {s.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select
+            value={golonganValue}
+            onValueChange={(val) => updateFilter("golongan", val)}
+            disabled={!semesterValue || semesterValue === "all"}
+          >
+            <SelectTrigger className="w-60">
+              <SelectValue placeholder="Pilih Golongan" />
+            </SelectTrigger>
+            <SelectContent>
+              {filteredGolongans.map((g) => (
+                <SelectItem key={g.id} value={String(g.id)}>
+                  {g.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Input
+            placeholder="Cari nama atau NIM..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              updateFilter("search", e.target.value);
+            }}
+            className="w-60"
+          />
         </div>
         <div>
           <Button onClick={() => setIsExportModalOpen(true)} variant="outline" className="cursor-pointer">

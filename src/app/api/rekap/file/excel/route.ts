@@ -104,14 +104,14 @@ export async function POST(request: Request) {
 
     // 4. Isi Data
     presensiData.forEach((p, index) => {
-      const row = worksheet.addRow({
-        no: index + 1,
-        nim: p.mahasiswa.nim,
-        name: p.mahasiswa.name,
-        tanggal: format(p.waktu_presensi, "eeee, dd LLLL yyyy", { locale: localeID }),
-        jam: format(p.waktu_presensi, "HH:mm:ss"),
-        status: p.status,
-      });
+      const row = worksheet.addRow([
+        index + 1,
+        p.mahasiswa.nim ?? "-",
+        p.mahasiswa.name ?? "-",
+        format(p.waktu_presensi, "eeee, dd LLLL yyyy", { locale: localeID }),
+        format(p.waktu_presensi, "HH:mm:ss"),
+        p.status,
+      ]);
       // Beri border pada setiap sel di baris data
       row.eachCell({ includeEmpty: true }, (cell) => {
         cell.border = {

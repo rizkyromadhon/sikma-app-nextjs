@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="6b521452-6976-4c21-a9c3-a0a0ac33697b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/next.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/dashboard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/dashboard/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/dosen/DosenTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/dosen/DosenTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/dosen/[id]/edit/EditDosenForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/dosen/[id]/edit/EditDosenForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/dosen/create/CreateDosenForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/dosen/create/CreateDosenForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/dosen/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/dosen/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/golongan/GolonganTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/golongan/GolonganTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/golongan/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/golongan/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/jadwal-kuliah/JadwalKuliahTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/jadwal-kuliah/JadwalKuliahTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/jadwal-kuliah/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/jadwal-kuliah/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/mahasiswa/MahasiswaTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/mahasiswa/MahasiswaTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/mahasiswa/[id]/edit/EditMahasiswaForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/mahasiswa/[id]/edit/EditMahasiswaForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/mahasiswa/create/CreateMahasiswaForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/mahasiswa/create/CreateMahasiswaForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/mahasiswa/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/mahasiswa/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/mata-kuliah/MatkulTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/mata-kuliah/MatkulTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/mata-kuliah/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/mata-kuliah/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/program-studi/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/program-studi/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/ruangan/RuanganTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/ruangan/RuanganTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/ruangan/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/ruangan/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/semester/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-akademik/semester/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-presensi/alat-presensi/AlatPresensiTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-presensi/alat-presensi/AlatPresensiTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-presensi/alat-presensi/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-presensi/alat-presensi/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-presensi/registrasi-rfid/RfidTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-presensi/registrasi-rfid/RfidTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-presensi/registrasi-rfid/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-presensi/registrasi-rfid/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-presensi/rekapitulasi-kehadiran/RekapTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-presensi/rekapitulasi-kehadiran/RekapTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-presensi/rekapitulasi-kehadiran/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-presensi/rekapitulasi-kehadiran/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-presensi/rekapitulasi-kehadiran/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(admins)/admin/manajemen-presensi/rekapitulasi-kehadiran/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(main)/(auth)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(main)/(auth)/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(main)/(auth)/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(main)/(auth)/login/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(main)/(auth)/register/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(main)/(auth)/register/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(main)/detail-presensi/[slug]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(main)/detail-presensi/[slug]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(main)/jadwal-kuliah/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(main)/jadwal-kuliah/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(main)/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(main)/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(main)/presensi-kuliah/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(main)/presensi-kuliah/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(main)/pusat-bantuan/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/(main)/pusat-bantuan/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/mahasiswa/presensi/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/mahasiswa/presensi/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/rekap/file/excel/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/rekap/file/excel/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/api/rekap/file/pdf/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/api/rekap/file/pdf/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/monitoring/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/monitoring/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/features/SidebarThemeToggle.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/features/SidebarThemeToggle.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/features/ToggleTheme.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/features/ToggleTheme.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/features/dashboard/LiveFeed.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/features/dashboard/LiveFeed.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/features/dashboard/LiveSummary.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/features/dashboard/LiveSummary.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/features/dashboard/LiveSummaryProdi.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/features/dashboard/LiveSummaryProdi.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/layouts/DropdownDesktop.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layouts/DropdownDesktop.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/layouts/Footer.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layouts/Footer.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/layouts/NavbarClient.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layouts/NavbarClient.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/layouts/admin/ClientWrapper.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layouts/admin/ClientWrapper.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/layouts/admin/NavbarAdminClient.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layouts/admin/NavbarAdminClient.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/layouts/admin/Sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/layouts/admin/Sidebar.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/middleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/middleware.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 2
+}]]></component>
+  <component name="ProjectId" id="2z01JubPymlsp5iFv6B6k4i74F7" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "js.debugger.nextJs.config.created.client": "true",
+    "js.debugger.nextJs.config.created.server": "true",
+    "last_opened_file_path": "C:/Users/RIZKY-ROMADHON/Desktop/sikma-app-nextjs",
+    "nodejs_package_manager_path": "yarn",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="npm.Next.js: server-side">
+    <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
+      <method v="2" />
+    </configuration>
+    <configuration name="Next.js: server-side" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-WS-251.26927.40" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6b521452-6976-4c21-a9c3-a0a0ac33697b" name="Changes" comment="" />
+      <created>1750853108780</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1750853108780</updated>
+      <workItem from="1750853111614" duration="116000" />
+    </task>
+    <servers />
+  </component>
+</project>

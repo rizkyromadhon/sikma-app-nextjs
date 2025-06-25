@@ -57,8 +57,6 @@ export async function POST(request: Request) {
       orderBy: [{ mahasiswa: { name: "asc" } }, { waktu_presensi: "asc" }],
     });
 
-    // --- PEMBUATAN FILE PDF MODERN ---
-
     const pdfDoc = await PDFDocument.create();
     let page = pdfDoc.addPage(PageSizes.A4);
     const { height } = page.getSize();
@@ -68,7 +66,6 @@ export async function POST(request: Request) {
     let y = height - 50;
     const margin = 50;
 
-    // Judul Utama
     page.drawText("Rekapitulasi Kehadiran Mahasiswa", {
       x: margin,
       y: y,
@@ -78,7 +75,6 @@ export async function POST(request: Request) {
     });
     y -= 25;
 
-    // Info Filter
     const filterText = `${semesterInfo?.name} | ${admin.prodi?.name} | Gol. ${
       golonganInfo?.name || "Semua"
     } | ${matkulInfo?.name}`;
@@ -91,7 +87,6 @@ export async function POST(request: Request) {
     });
     y -= 30;
 
-    // const tableTopY = y;
     const tableHeaders = ["No", "NIM", "Nama Mahasiswa", "Tanggal", "Waktu", "Status"];
     const colWidths = [30, 90, 180, 100, 60, 60];
     const headerHeight = 20;
@@ -116,6 +111,21 @@ export async function POST(request: Request) {
       currentX += colWidths[i];
     });
     y -= headerHeight;
+
+    if (presensiData.length === 0) {
+      const totalTableWidth = colWidths.reduce((a, b) => a + b, 0);
+      const text = "Belum ada data presensi.";
+      const textWidth = font.widthOfTextAtSize(text, 12);
+      const centerX = margin + (totalTableWidth - textWidth) / 2;
+
+      page.drawText(text, {
+        x: centerX,
+        y: y - 20,
+        font: font,
+        size: 11,
+        color: rgb(0.5, 0.5, 0.5),
+      });
+    }
 
     presensiData.forEach((p, index) => {
       if (y < margin + 20) {

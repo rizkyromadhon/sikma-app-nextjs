@@ -7,6 +7,7 @@ import { SubmitButton } from "@/components/auth/SubmitButton";
 import { LuCircleAlert, LuCircleArrowLeft, LuCircleArrowRight } from "react-icons/lu";
 import { useDebouncedCallback } from "use-debounce";
 import Link from "next/link";
+import { BsPlusCircleDotted } from "react-icons/bs";
 
 interface Props {
   data: MataKuliah[];
@@ -59,13 +60,21 @@ export default function MatkulTable({ data, initialSearch, totalPages, currentPa
 
   return (
     <div className="space-y-6">
-      <input
-        type="text"
-        placeholder="Cari berdasarkan kode atau nama mata kuliah..."
-        defaultValue={initialSearch}
-        onChange={(e) => handleSearch(e.target.value)}
-        className="bg-white dark:bg-black/50 text-black dark:text-gray-200 border border-gray-300 dark:border-gray-800 rounded px-4 py-2 focus:outline-none text-sm w-88"
-      />
+      <div className="flex items-center justify-between">
+        <input
+          type="text"
+          placeholder="Cari berdasarkan kode atau nama mata kuliah..."
+          defaultValue={initialSearch}
+          onChange={(e) => handleSearch(e.target.value)}
+          className="bg-white dark:bg-black/50 text-black dark:text-gray-200 border border-gray-300 dark:border-gray-800 rounded px-4 py-2 focus:outline-none text-sm w-88"
+        />
+        <SubmitButton
+          text="Tambah Mata Kuliah"
+          href="/admin/manajemen-akademik/mata-kuliah/create"
+          icon={<BsPlusCircleDotted />}
+          className="bg-white dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-black/10 hover:transition-all text-sm border border-gray-300 dark:border-gray-800 flex items-center gap-2"
+        />
+      </div>
 
       <div className="overflow-auto rounded border border-gray-300 dark:border-gray-800 shadow-sm">
         <table className="min-w-full text-sm text-left text-black dark:text-gray-200">

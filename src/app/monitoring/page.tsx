@@ -19,7 +19,7 @@ export default function MonitoringPage() {
               day: "numeric",
             })}
           </span>
-          <ThemeToggle />
+          <ThemeToggle style="shadow-[0_0_12px] shadow-neutral-400 dark:shadow-neutral-700" />
         </div>
       </div>
 

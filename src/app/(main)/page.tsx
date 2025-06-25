@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import LiveFeed from "@/components/features/dashboard/LiveFeed";
 import LiveSummary from "@/components/features/dashboard/LiveSummary";
+import { startOfDay, endOfDay } from "date-fns";
 
 async function getDashboardData() {
   const latestAttendances = await prisma.presensiKuliah.findMany({
@@ -12,15 +13,73 @@ async function getDashboardData() {
       jadwal_kuliah: { select: { ruangan: { select: { name: true } } } },
     },
   });
-  const rekapPerProdi = [
-    { slug: "teknik-komputer", name: "Teknik Komputer", hadir: 25, tidakHadir: 10 },
-    { slug: "teknik-informatika", name: "Teknik Informatika", hadir: 30, tidakHadir: 5 },
-    { slug: "manajemen-informatika", name: "Manajemen Informatika", hadir: 22, tidakHadir: 8 },
-    { slug: "bisnis-digital", name: "Bisnis Digital", hadir: 40, tidakHadir: 3 },
-  ];
 
-  const totalHadir = rekapPerProdi.reduce((acc, curr) => acc + curr.hadir, 0);
-  const totalTidakHadir = rekapPerProdi.reduce((acc, curr) => acc + curr.tidakHadir, 0);
+  const todayStart = startOfDay(new Date());
+  const todayEnd = endOfDay(new Date());
+
+  const allProdi = await prisma.programStudi.findMany({
+    where: { slug: { not: null } },
+    include: {
+      users: {
+        where: {
+          role: "MAHASISWA",
+        },
+        select: { id: true },
+      },
+    },
+  });
+
+  const presensiHariIni = await prisma.presensiKuliah.findMany({
+    where: {
+      waktu_presensi: {
+        gte: todayStart,
+        lte: todayEnd,
+      },
+    },
+    select: {
+      mahasiswa: {
+        select: {
+          id: true,
+          prodi: {
+            select: { slug: true, name: true },
+          },
+        },
+      },
+    },
+  });
+
+  const hadirSetPerProdi: Record<string, Set<string>> = {};
+
+  presensiHariIni.forEach(({ mahasiswa }) => {
+    const slug = mahasiswa?.prodi?.slug;
+    const id = mahasiswa?.id;
+    if (!slug || !id) return;
+
+    if (!hadirSetPerProdi[slug]) {
+      hadirSetPerProdi[slug] = new Set();
+    }
+
+    hadirSetPerProdi[slug].add(id);
+  });
+
+  const rekapPerProdi = allProdi
+    .filter((prodi) => prodi.slug !== null)
+    .map((prodi) => {
+      const slug = prodi.slug!;
+      const total = prodi.users.length;
+      const hadir = hadirSetPerProdi[slug]?.size || 0;
+      const tidakHadir = total - hadir;
+
+      return {
+        slug,
+        name: prodi.name,
+        hadir,
+        tidakHadir,
+      };
+    });
+
+  const totalHadir = rekapPerProdi.reduce((acc, p) => acc + p.hadir, 0);
+  const totalTidakHadir = rekapPerProdi.reduce((acc, p) => acc + p.tidakHadir, 0);
 
   return {
     latestAttendances: JSON.parse(JSON.stringify(latestAttendances)),

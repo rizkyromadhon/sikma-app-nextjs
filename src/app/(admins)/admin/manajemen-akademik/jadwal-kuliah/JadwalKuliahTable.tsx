@@ -138,9 +138,6 @@ export default function JadwalKuliahTable({
       {/* --- Filter --- */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div>
-          <label htmlFor="semester" className="block text-sm font-medium mb-1">
-            Filter Semester
-          </label>
           <select
             id="semester"
             value={localSemester}
@@ -163,9 +160,6 @@ export default function JadwalKuliahTable({
           </select>
         </div>
         <div>
-          <label htmlFor="golongan" className="block text-sm font-medium mb-1">
-            Filter Golongan
-          </label>
           <select
             id="golongan"
             value={localGolongan}
@@ -198,9 +192,6 @@ export default function JadwalKuliahTable({
           </select>
         </div>
         <div>
-          <label htmlFor="search" className="block text-sm font-medium mb-1">
-            Filter Pencarian
-          </label>
           <input
             id="search"
             type="text"

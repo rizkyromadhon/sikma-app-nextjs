@@ -14,7 +14,7 @@ interface LiveSummaryProdiProps {
 export default function LiveSummaryProdi({ slug, name, hadir, tidakHadir }: LiveSummaryProdiProps) {
   return (
     <div className="relative mt-2 group">
-      <div className="absolute inset-px rounded-lg bg-white dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 ring-1 shadow-sm ring-black/5 dark:ring-white/10 lg:rounded-lg hover:transition-all group-hover:ring-gray-400 dark:group-hover:ring-gray-600"></div>
+      <div className="absolute inset-px rounded-lg bg-white dark:bg-neutral-900/50 border border-neutral-300 dark:border-neutral-800 ring-1 shadow-sm ring-black/5 dark:ring-white/10 lg:rounded-lg hover:transition-all group-hover:ring-neutral-400 dark:group-hover:ring-neutral-700"></div>
 
       <Link
         href={`/detail-presensi/${slug}`}

@@ -4,6 +4,15 @@ import { useState, useEffect, ChangeEvent, FormEvent, useMemo, useRef } from "re
 import { useRouter } from "next/navigation";
 import { SubmitButton } from "@/components/auth/SubmitButton";
 import Image from "next/image";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import Link from "next/link";
 
 interface Option {
   id: string;
@@ -141,8 +150,28 @@ export default function EditMahasiswaForm({
   };
 
   return (
-    <div className="w-full mx-auto p-8 bg-white dark:bg-black/20 rounded shadow-[0_0_10px_1px_#1a1a1a1a] dark:shadow-[0_0_20px_1px_#ffffff1a]">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Edit Mahasiswa</h1>
+    <div className="w-full mx-auto px-8 py-6 bg-white dark:bg-black/20 rounded shadow-[0_0_10px_1px_#1a1a1a1a] dark:shadow-[0_0_20px_1px_#ffffff1a]">
+      <Breadcrumb className="ml-10 mb-8">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/admin/dashboard">Admin</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbLink asChild>
+            <Link href="#">Manajemen Akademik</Link>
+          </BreadcrumbLink>
+          <BreadcrumbSeparator />
+          <BreadcrumbLink asChild>
+            <Link href="/admin/manajemen-akademik/mahasiswa">Mahasiswa</Link>
+          </BreadcrumbLink>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Edit Mahasiswa - {mahasiswa.name}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <form onSubmit={handleSubmit} className="flex items-start gap-8 w-full">
         {/* Kiri: Form */}
         <div className="space-y-4 w-3/2">

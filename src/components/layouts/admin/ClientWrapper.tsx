@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
+import { LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
+import { cn } from "@/lib/utils";
 
 export default function ClientWrapper({ children }: { children: React.ReactNode }) {
   const [isCollapsed, setIsCollapsed] = useState<boolean | null>(null);
@@ -30,11 +32,25 @@ export default function ClientWrapper({ children }: { children: React.ReactNode 
   }
 
   return (
-    <div className="flex flex-1 overflow-hidden">
+    <div className="flex flex-1 overflow-hidden relative">
+      <div
+        className={cn(
+          "absolute top-4 z-50 w-9 h-9 flex items-center justify-center rounded-md border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 cursor-pointer transition-[left] motion-safe:duration-300",
+          isCollapsed ? "left-24" : "left-68"
+        )}
+        onClick={toggleSidebar}
+        title={isCollapsed ? "Buka Sidebar" : "Tutup Sidebar"}
+      >
+        {isCollapsed ? (
+          <LuPanelLeftOpen className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+        ) : (
+          <LuPanelLeftClose className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+        )}
+      </div>
+
       <Sidebar isCollapsed={isCollapsed} onToggle={toggleSidebar} />
-      <main className="flex-1 overflow-y-auto h-full">
-        <div key={isCollapsed ? "collapsed" : "expanded"}>{children}</div>
-      </main>
+
+      <main className="flex-1 overflow-y-auto h-full bg-white dark:bg-neutral-950">{children}</main>
     </div>
   );
 }

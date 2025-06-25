@@ -7,6 +7,7 @@ import { SubmitButton } from "@/components/auth/SubmitButton";
 import { LuCircleAlert } from "react-icons/lu";
 import Link from "next/link";
 import { LuCircleArrowRight, LuCircleArrowLeft } from "react-icons/lu";
+import { BsPlusCircleDotted } from "react-icons/bs";
 
 type GolonganWithProdi = Golongan & {
   prodi: ProgramStudi;
@@ -105,44 +106,46 @@ const GolonganTable = ({
   return (
     <>
       <div className="flex items-center gap-4 mb-6">
-        <div>
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-1">
-            Filter Semester
-          </label>
-          <select
-            value={currentSemesterFilter || ""}
-            onChange={(e) => handleFilterChange("semester", e.target.value)}
-            className="w-60 px-4 py-2  border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
-          >
-            <option value="" className="bg-white dark:bg-black/90">
-              Semua Semester
-            </option>
-            {semesterList.map((smt) => (
-              <option key={smt.id} value={smt.id} className="bg-white dark:bg-black/90">
-                {smt.name}
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center gap-4">
+            <select
+              value={currentSemesterFilter || ""}
+              onChange={(e) => handleFilterChange("semester", e.target.value)}
+              className="w-60 px-4 py-2  border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+            >
+              <option value="" className="bg-white dark:bg-black/90">
+                Semua Semester
               </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label htmlFor="prodi" className="text-sm font-medium text-gray-700 dark:text-gray-300 block mb-1">
-            Filter Program Studi
-          </label>
-          <select
-            id="prodi"
-            onChange={(e) => handleFilterChange("prodi", e.target.value)}
-            value={currentProdiFilter || ""}
-            className="w-60 px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
-          >
-            <option value="" className="bg-white dark:bg-black/90">
-              Semua Program Studi
-            </option>
-            {prodiList.map((prodi) => (
-              <option key={prodi.id} value={prodi.id} className="bg-white dark:bg-black/90">
-                {prodi.name}
+              {semesterList.map((smt) => (
+                <option key={smt.id} value={smt.id} className="bg-white dark:bg-black/90">
+                  {smt.name}
+                </option>
+              ))}
+            </select>
+            <select
+              id="prodi"
+              onChange={(e) => handleFilterChange("prodi", e.target.value)}
+              value={currentProdiFilter || ""}
+              className="w-60 px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+            >
+              <option value="" className="bg-white dark:bg-black/90">
+                Semua Program Studi
               </option>
-            ))}
-          </select>
+              {prodiList.map((prodi) => (
+                <option key={prodi.id} value={prodi.id} className="bg-white dark:bg-black/90">
+                  {prodi.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <SubmitButton
+              text="Tambah Golongan"
+              href="/admin/manajemen-akademik/golongan/create"
+              icon={<BsPlusCircleDotted />}
+              className="w-fit bg-white dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-black/10 hover:transition-all text-sm border border-gray-300 dark:border-gray-800 flex items-center gap-2 cursor-pointer"
+            />
+          </div>
         </div>
       </div>
       <div className="overflow-auto rounded border border-gray-300 dark:border-gray-800 shadow-sm">

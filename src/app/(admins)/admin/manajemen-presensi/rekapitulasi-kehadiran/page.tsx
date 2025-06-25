@@ -3,6 +3,15 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import RekapTable from "./RekapTable";
 import { Prisma } from "@/generated/prisma/client";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import Link from "next/link";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -89,7 +98,26 @@ export default async function RekapKehadiranPage({
 
   return (
     <div className="p-6">
-      <h1 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Rekap Kehadiran Mahasiswa</h1>
+      <Breadcrumb className="ml-12 mb-6">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/admin/dashboard">Admin</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbLink asChild>
+            <Link href="#">Manajemen Presensi</Link>
+          </BreadcrumbLink>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Rekapitulasi Kehadiran</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+        Rekapitulasi Kehadiran Mahasiswa
+      </h1>
       <RekapTable
         data={result.mahasiswa}
         filters={{

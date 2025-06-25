@@ -94,9 +94,6 @@ export default function RfidTable({
     <div className="space-y-6">
       <div className="flex items-center gap-4">
         <div>
-          <label htmlFor="search" className="text-sm mb-1 block text-gray-700 dark:text-gray-200">
-            Filter Pencarian
-          </label>
           <input
             id="search"
             type="text"
@@ -107,9 +104,6 @@ export default function RfidTable({
           />
         </div>
         <div>
-          <label htmlFor="status" className="text-sm mb-1 block text-gray-700 dark:text-gray-200">
-            Filter Status
-          </label>
           <select
             id="status"
             value={initialStatusFilter || ""}

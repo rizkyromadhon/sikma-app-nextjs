@@ -117,85 +117,62 @@ export default function MahasiswaTable({
   return (
     <div className="space-y-6">
       {/* Filter */}
-      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-        <div>
-          <label htmlFor="semester" className="block text-sm font-medium mb-1">
-            Filter Semester
-          </label>
-          <select
-            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
-            value={filters.current.semester || ""}
-            onChange={(e) => updateFilter("semester", e.target.value)}
-          >
-            <option value="" className="bg-white dark:bg-black/90">
-              Semua Semester
+      <div className="flex items-center gap-4 w-full">
+        <select
+          className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+          value={filters.current.semester || ""}
+          onChange={(e) => updateFilter("semester", e.target.value)}
+        >
+          <option value="" className="bg-white dark:bg-black/90">
+            Semua Semester
+          </option>
+          {filters.semesters.map((s) => (
+            <option key={s.id} value={s.id} className="bg-white dark:bg-black/90">
+              {s.name}
             </option>
-            {filters.semesters.map((s) => (
-              <option key={s.id} value={s.id} className="bg-white dark:bg-black/90">
-                {s.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label htmlFor="prodi" className="block text-sm font-medium mb-1">
-            Filter Program Studi
-          </label>
-          <select
-            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
-            value={filters.current.prodi || ""}
-            onChange={(e) => updateFilter("prodi", e.target.value)}
-          >
-            <option value="" className="bg-white dark:bg-black/90">
-              Semua Prodi
+          ))}
+        </select>
+        <select
+          className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+          value={filters.current.prodi || ""}
+          onChange={(e) => updateFilter("prodi", e.target.value)}
+        >
+          <option value="" className="bg-white dark:bg-black/90">
+            Semua Prodi
+          </option>
+          {filters.prodis.map((p) => (
+            <option key={p.id} value={p.id} className="bg-white dark:bg-black/90">
+              {p.name}
             </option>
-            {filters.prodis.map((p) => (
-              <option key={p.id} value={p.id} className="bg-white dark:bg-black/90">
-                {p.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label htmlFor="golongan" className="block text-sm font-medium mb-1">
-            Filter Golongan
-          </label>
-          <select
-            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-            value={filters.current.golongan || ""}
-            onChange={(e) => updateFilter("golongan", e.target.value)}
-            // Non-aktifkan jika prodi ATAU semester belum dipilih
-            disabled={!filters.current.prodi || !filters.current.semester}
-          >
-            <option value="" className="bg-white dark:bg-black/90">
-              {!filters.current.semester
-                ? "Pilih salah satu semester"
-                : !filters.current.prodi
-                ? "Pilih salah satu prodi"
-                : "Semua Golongan"}
+          ))}
+        </select>
+        <select
+          className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+          value={filters.current.golongan || ""}
+          onChange={(e) => updateFilter("golongan", e.target.value)}
+          // Non-aktifkan jika prodi ATAU semester belum dipilih
+          disabled={!filters.current.prodi || !filters.current.semester}
+        >
+          <option value="" className="bg-white dark:bg-black/90">
+            {!filters.current.semester
+              ? "Pilih salah satu semester"
+              : !filters.current.prodi
+              ? "Pilih salah satu prodi"
+              : "Semua Golongan"}
+          </option>
+          {filteredGolongans.map((g) => (
+            <option key={g.id} value={g.id.toString()} className="bg-white dark:bg-black/90">
+              {g.name}
             </option>
-            {filteredGolongans.map((g) => (
-              <option key={g.id} value={g.id.toString()} className="bg-white dark:bg-black/90">
-                {g.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label htmlFor="search" className="block text-sm font-medium mb-1">
-            Filter Pencarian
-          </label>
-          <input
-            type="text"
-            placeholder="Cari Mahasiswa berdasarkan NIM..."
-            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-            defaultValue={filters.current.nim || ""}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => updateFilter("nim", e.target.value)}
-          />
-        </div>
+          ))}
+        </select>
+        <input
+          type="text"
+          placeholder="Cari Mahasiswa berdasarkan NIM..."
+          className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+          defaultValue={filters.current.nim || ""}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => updateFilter("nim", e.target.value)}
+        />
       </div>
 
       {/* Table */}

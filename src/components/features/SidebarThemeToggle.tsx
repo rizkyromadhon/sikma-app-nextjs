@@ -9,9 +9,7 @@ const ThemeSwitcher = ({ theme }: { theme: themeType }) => {
   return (
     <div
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      className={`w-52 h-[36px] mx-auto border border-gray-200 dark:border-gray-800 rounded-full relative overflow-hidden cursor-pointer ${
-        theme === "light" ? "border-l-0" : "border-r-0"
-      }`}
+      className={`w-52 h-[36px] mx-auto border border-gray-200 dark:border-gray-800 rounded-full relative overflow-hidden cursor-pointer `}
     >
       <p className="absolute right-1/2 translate-x-1/2 -translate-y-1/2 top-1/2 text-xs text-gray-700 dark:text-gray-300 select-none font-semibold z-8">
         {theme === "light" ? "Light" : "Dark"}
@@ -19,7 +17,7 @@ const ThemeSwitcher = ({ theme }: { theme: themeType }) => {
       <motion.div
         className="absolute z-10"
         animate={{
-          x: theme === "light" ? 0 : 170, // Geser 160px ke kanan saat dark
+          x: theme === "light" ? 3 : 172,
         }}
         initial={false}
         transition={{

@@ -20,7 +20,7 @@ export default function NavbarAdminClient({ session }: NavbarAdminClientProps) {
   return (
     <>
       <nav
-        className={`sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black`}
+        className={`sticky top-0 z-50 border-b border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/50`}
       >
         <div className="mx-auto max-w-12/13 ">
           <div className="flex h-16 items-center justify-between">

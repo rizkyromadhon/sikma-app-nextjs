@@ -24,17 +24,17 @@ export default function LiveFeed({ initialAttendances }: LiveFeedProps) {
   const [attendances] = useState(initialAttendances);
 
   return (
-    <div className="h-full rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-black p-6 shadow-[0_0_22px_rgba(0,0,0,0.10)]">
+    <div className="h-full rounded-xl border border-neutral-300 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-6 shadow-[0_0_22px_rgba(0,0,0,0.10)]">
       <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 text-center">
         Aktivitas Presensi Terkini
       </h2>
 
-      <div className="space-y-1 overflow-y-auto max-h-[400px] rounded-lg bg-white dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 ring-1 shadow-sm ring-black/5 dark:ring-white/10 lg:rounded-lg">
+      <div className="space-y-1 overflow-y-auto max-h-[400px] rounded-lg bg-white dark:bg-neutral-900/50 border border-neutral-300 dark:border-neutral-800 ring-1 shadow-sm ring-black/5 dark:ring-white/10 lg:rounded-lg">
         {attendances && attendances.length > 0 ? (
           attendances.map((item) => (
             <div
               key={item.id}
-              className="flex items-center gap-4 p-3 md:p-6 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900/50"
+              className="flex items-center gap-4 p-3 md:p-6 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-900/50"
             >
               <div className="h-10 w-10 flex-shrink-0 rounded-full">
                 {item.mahasiswa.foto ? (

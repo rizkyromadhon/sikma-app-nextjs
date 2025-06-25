@@ -52,7 +52,7 @@ export async function POST(request: Request) {
           nim: true,
           role: true,
           foto: true,
-          prodi: { select: { name: true } },
+          prodi: { select: { name: true, slug: true } },
           semester: { select: { name: true } },
           golongan: { select: { name: true } },
         },
@@ -107,6 +107,7 @@ export async function POST(request: Request) {
         semester: true,
         prodi: true,
         golongans: true,
+        ruangan: true,
       },
     });
 
@@ -122,13 +123,12 @@ export async function POST(request: Request) {
     const jadwalAktif = potentialJadwals.find((jadwal) => {
       const jamMulaiMin = timeToMinutes(jadwal.jam_mulai);
       const jamSelesaiMin = timeToMinutes(jadwal.jam_selesai);
-
       const waktuBukaPresensi = jamMulaiMin - 10;
 
       if (jamSelesaiMin <= jamMulaiMin) {
         return currentTimeInMinutes >= waktuBukaPresensi || currentTimeInMinutes < jamSelesaiMin;
       } else {
-        return currentTimeInMinutes >= waktuBukaPresensi && currentTimeInMinutes < jamSelesaiMin;
+        return currentTimeInMinutes >= waktuBukaPresensi && currentTimeInMinutes <= jamSelesaiMin;
       }
     });
 
@@ -188,6 +188,7 @@ export async function POST(request: Request) {
         presensi: { ...presensi, waktu_presensi: presensi.waktu_presensi.toISOString() },
       },
     };
+
     sendMessage({ event: "broadcast", data: payloadSukses });
 
     return NextResponse.json({

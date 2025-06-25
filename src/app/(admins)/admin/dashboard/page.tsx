@@ -1,11 +1,21 @@
 import { auth } from "@/auth";
-import  prisma  from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { LuUsers, LuUser } from "react-icons/lu";
 import StatCard from "@/components/admin/dashboard/StatCard";
 import StudentsPerSemesterChart from "@/components/admin/dashboard/StudentsPerSemesterChart";
 import StudentsByProdiChart from "@/components/admin/dashboard/StudentsByProdiChart";
 import { getTotalStudents, getTotalLecturers, getStudentsPerSemester, getStudentsByProdi } from "@/lib/data";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import BreadcrumbHeader from "@/components/admin/BreadCrumber";
+import Link from "next/link";
 
 const DashboardAdminPage = async () => {
   const session = await auth();
@@ -43,6 +53,19 @@ const DashboardAdminPage = async () => {
 
   return (
     <div className="h-20 p-8 text-gray-900 dark:text-gray-100">
+      <Breadcrumb className="ml-12 mb-6">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="#">Admin</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Dashboard</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <h1 className="text-3xl font-bold mb-4 text-black dark:text-white tracking-tight">Dashboard Admin</h1>
       <p className="text-xl text-gray-900 dark:text-gray-300 mb-8">
         Program Studi - <span className="text-blue-500 dark:text-blue-400">{adminProdiName}</span>

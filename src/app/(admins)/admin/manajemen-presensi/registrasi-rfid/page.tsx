@@ -5,6 +5,15 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import RfidTable from "./RfidTable"; // Komponen tabel yang akan kita buat
 import { Prisma } from "@/generated/prisma/client";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import Link from "next/link";
 
 const ITEMS_PER_PAGE = 15;
 
@@ -81,13 +90,24 @@ export default async function RegistrasiRfidPage({
 
   return (
     <div className="p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Registrasi Kartu RFID</h1>
-      </div>
-      <p className="text-sm text-gray-600 dark:text-gray-400 -mt-4 mb-6">
-        Daftar mahasiswa dari program studi Anda. Klik &quot;Registrasi&quot; untuk memulai proses pemindaian
-        kartu RFID untuk mahasiswa yang belum terdaftar.
-      </p>
+      <Breadcrumb className="ml-12 mb-6">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/admin/dashboard">Admin</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbLink asChild>
+            <Link href="#">Manajemen Presensi</Link>
+          </BreadcrumbLink>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Registrasi RFID</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Registrasi Kartu RFID</h1>
       <RfidTable
         data={data}
         totalPages={totalPages}

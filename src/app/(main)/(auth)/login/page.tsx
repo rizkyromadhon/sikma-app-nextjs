@@ -7,7 +7,7 @@ import React, { Suspense } from "react";
 
 const LoginPage = () => {
   return (
-    <AuthLayout className="mt-20">
+    <AuthLayout>
       <AuthHeader header="Halo, Selamat Datang" desc="Yuk masuk dulu pakai akun kamu untuk mulai." />
       <Suspense fallback={<div>Loading...</div>}>
         <LoginForm />

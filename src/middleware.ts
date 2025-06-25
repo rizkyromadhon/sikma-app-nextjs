@@ -17,7 +17,10 @@ export default auth((req) => {
   console.log("[MIDDLEWARE DEBUG] Pathname:", nextUrl.pathname);
   console.log("[MIDDLEWARE DEBUG] Is logged in:", isLoggedIn);
 
-  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+  function isPublicRoute(pathname: string) {
+    return publicRoutes.includes(pathname) || pathname.startsWith("/detail-presensi/");
+  }
+  // const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
   const isAdminRoute = nextUrl.pathname.startsWith("/admin");
   const isDosenRoute = nextUrl.pathname.startsWith("/dosen");
@@ -31,7 +34,7 @@ export default auth((req) => {
     return NextResponse.next();
   }
 
-  if (!isLoggedIn && !isPublicRoute) {
+  if (!isLoggedIn && !isPublicRoute(nextUrl.pathname)) {
     return Response.redirect(new URL("/login?login=unauthorized", nextUrl));
   }
 

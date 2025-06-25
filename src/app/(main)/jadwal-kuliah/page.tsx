@@ -64,11 +64,11 @@ const JadwalKuliahPage = () => {
   }, []);
 
   return (
-    <div className="px-8 md:px-24 py-8 md:py-12 space-y-6">
+    <div className="px-8 md:px-24 py-8 md:py-12 space-y-6 min-h-[92dvh]">
       <h1 className="text-xl md:text-3xl font-bold text-center text-foreground">Jadwal Kuliah Mahasiswa</h1>
 
       {/* Grid Header */}
-      <div className="hidden md:grid grid-cols-[100px_repeat(5,minmax(0,1fr))] gap-4 bg-neutral-200/80 dark:bg-neutral-800 rounded-lg px-4 py-2 mt-8">
+      <div className="hidden md:grid grid-cols-[100px_repeat(5,minmax(0,1fr))] gap-4 bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-2 mt-8">
         <div className="text-sm font-semibold text-center text-neutral-700 dark:text-neutral-300">Jam</div>
         {days.map((day) => (
           <div key={day} className="text-sm font-semibold text-center text-neutral-700 dark:text-neutral-300">
@@ -77,66 +77,91 @@ const JadwalKuliahPage = () => {
         ))}
       </div>
 
-      <div className="hidden md:grid grid-cols-[100px_repeat(5,minmax(0,1fr))] gap-4 relative">
-        <div className="grid grid-rows-11 gap-4">
-          {hours.map((hour) => (
-            <div
-              key={hour}
-              className="border-b border-neutral-200 dark:border-neutral-800 text-sm font-mono text-neutral-700 dark:text-neutral-300 flex items-center justify-center h-20"
-            >
-              {hour}
+      {loading ? (
+        <div className="hidden md:grid grid-cols-[100px_repeat(5,minmax(0,1fr))] gap-4 relative">
+          <div className="grid grid-rows-11 gap-4">
+            {hours.map((hour) => (
+              <div
+                key={hour}
+                className="h-20 flex items-center justify-center text-sm font-mono text-muted-foreground"
+              >
+                {hour}
+              </div>
+            ))}
+          </div>
+          {days.map((day) => (
+            <div key={day} className="grid grid-rows-11 gap-4">
+              {hours.map((_, i) => (
+                <Skeleton
+                  key={`skeleton-${day}-${i}`}
+                  className="h-20 w-full rounded-2xl bg-neutral-200 dark:bg-neutral-900"
+                />
+              ))}
             </div>
           ))}
         </div>
+      ) : (
+        <div className="hidden md:grid grid-cols-[100px_repeat(5,minmax(0,1fr))] gap-4 relative">
+          <div className="grid grid-rows-11 gap-4">
+            {hours.map((hour) => (
+              <div
+                key={hour}
+                className="border-b border-neutral-200 dark:border-neutral-800 text-sm font-mono text-neutral-700 dark:text-neutral-300 flex items-center justify-center h-20"
+              >
+                {hour}
+              </div>
+            ))}
+          </div>
 
-        {/* Kolom Hari */}
-        {days.map((day) => {
-          const events = schedule.filter((item) => item.day === day);
-          const filledRows = new Set<number>();
+          {/* Kolom Hari */}
+          {days.map((day) => {
+            const events = schedule.filter((item) => item.day === day);
+            const filledRows = new Set<number>();
 
-          return (
-            <div key={day} className="relative grid grid-rows-11 gap-4">
-              {events.map((item, idx) => {
-                const [startRow, endRow] = getRowSpan(item.start, item.end);
-                for (let i = startRow; i < endRow; i++) {
-                  filledRows.add(i);
-                }
+            return (
+              <div key={day} className="relative grid grid-rows-11 gap-4">
+                {events.map((item, idx) => {
+                  const [startRow, endRow] = getRowSpan(item.start, item.end);
+                  for (let i = startRow; i < endRow; i++) {
+                    filledRows.add(i);
+                  }
 
-                return (
-                  <div
-                    key={`event-${idx}`}
-                    style={{ gridRow: `${startRow} / ${endRow}` }}
-                    className="h-full"
-                    onClick={() => setSelectedJadwal(item)}
-                  >
-                    <JadwalCard
-                      matkul={item.matkul}
-                      dosen={item.dosen}
-                      ruangan={item.ruangan}
-                      start={item.start}
-                      end={item.end}
-                      className="h-full min-h-[80px] w-59 overflow-hidden rounded-2xl"
-                    />
-                  </div>
-                );
-              })}
+                  return (
+                    <div
+                      key={`event-${idx}`}
+                      style={{ gridRow: `${startRow} / ${endRow}` }}
+                      className="h-full"
+                      onClick={() => setSelectedJadwal(item)}
+                    >
+                      <JadwalCard
+                        matkul={item.matkul}
+                        dosen={item.dosen}
+                        ruangan={item.ruangan}
+                        start={item.start}
+                        end={item.end}
+                        className="h-full min-h-[80px] w-59 overflow-hidden rounded-2xl"
+                      />
+                    </div>
+                  );
+                })}
 
-              {hours.map((_, i) => {
-                const row = i + 1;
-                if (filledRows.has(row)) return null;
+                {hours.map((_, i) => {
+                  const row = i + 1;
+                  if (filledRows.has(row)) return null;
 
-                return (
-                  <div key={`empty-${row}`} style={{ gridRow: `${row}` }}>
-                    <Card className="min-h-[80px] w-59 text-xs rounded-2xl italic text-muted-foreground bg-muted/10 flex items-center justify-center">
-                      Kosong
-                    </Card>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
-      </div>
+                  return (
+                    <div key={`empty-${row}`} style={{ gridRow: `${row}` }}>
+                      <Card className="min-h-[80px] w-59 text-xs rounded-2xl italic text-muted-foreground bg-muted/10 flex items-center justify-center">
+                        Kosong
+                      </Card>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Tampilan Mobile: Accordion per Hari */}
       <div className="md:hidden space-y-4">
@@ -151,8 +176,8 @@ const JadwalKuliahPage = () => {
                     <Card
                       key={day + hour}
                       onClick={() => matched && setSelectedJadwal(matched)}
-                      className={`p-3 text-sm rounded-xl text-center flex flex-col gap-1 bg-muted/10 ${
-                        matched ? "cursor-pointer hover:bg-muted/20 transition" : ""
+                      className={`p-3 text-sm rounded-xl text-center flex flex-col gap-1 bg-neutral-950 ${
+                        matched ? "cursor-pointer hover:bg-neutral-950 transition" : ""
                       }`}
                     >
                       <div className="text-xs text-muted-foreground font-mono">{hour}</div>

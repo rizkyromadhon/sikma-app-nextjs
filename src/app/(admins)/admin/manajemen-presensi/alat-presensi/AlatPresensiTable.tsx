@@ -8,6 +8,7 @@ import { LuCircleAlert } from "react-icons/lu";
 import { useDebouncedCallback } from "use-debounce";
 import { AlatMode, AlatStatus } from "@/generated/prisma/client";
 import useSWR from "swr";
+import { BsPlusCircleDotted } from "react-icons/bs";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 type AlatPresensiData = {
@@ -110,16 +111,19 @@ export default function AlatPresensiTable({ data, initialSearch }: AlatPresensiT
 
   return (
     <div className="space-y-6">
-      <div>
-        <label htmlFor="search" className="block text-sm font-medium mb-1">
-          Filter Pencarian
-        </label>
+      <div className="flex items-center justify-between">
         <input
           type="text"
           placeholder="Cari berdasarkan nama alat atau kode ruangan..."
           defaultValue={initialSearch}
           onChange={(e) => handleSearch(e.target.value)}
           className="w-100 px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+        />
+        <SubmitButton
+          text="Tambah Alat"
+          href="/admin/manajemen-presensi/alat-presensi/create"
+          icon={<BsPlusCircleDotted />}
+          className="bg-white dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-black/10 hover:transition-all text-sm border border-gray-300 dark:border-gray-800 flex items-center gap-2 cursor-pointer"
         />
       </div>
 

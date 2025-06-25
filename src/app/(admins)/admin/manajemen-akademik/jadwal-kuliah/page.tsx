@@ -5,6 +5,15 @@ import { SubmitButton } from "@/components/auth/SubmitButton";
 import { BsPlusCircleDotted } from "react-icons/bs";
 import JadwalKuliahTable from "./JadwalKuliahTable";
 import { Prisma } from "@/generated/prisma/client";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import Link from "next/link";
 
 // Tentukan jumlah item per halaman
 const ITEMS_PER_PAGE = 6;
@@ -125,8 +134,25 @@ export default async function ManajemenJadwalPage({
 
   return (
     <div className="p-6">
+      <Breadcrumb className="ml-12 mb-6">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/admin/dashboard">Admin</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbLink asChild>
+            <Link href="#">Manajemen Akademik</Link>
+          </BreadcrumbLink>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Mata Kuliah</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold">Manajemen Jadwal Kuliah</h1>
+        <h1 className="text-2xl font-bold">Manajemen Jadwal Kuliah</h1>
         <SubmitButton
           text="Tambah Jadwal Kuliah"
           href="/admin/manajemen-akademik/jadwal-kuliah/create"

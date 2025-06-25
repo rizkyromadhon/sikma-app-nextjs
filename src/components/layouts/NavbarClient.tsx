@@ -64,7 +64,7 @@ export default function NavbarClient({ session }: NavbarClientProps) {
   return (
     <>
       <nav
-        className={`sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-black`}
+        className={`sticky top-0 z-50 border-b border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-950`}
       >
         <div className="mx-auto max-w-12/13 ">
           <div className="flex h-16 items-center justify-between">
@@ -93,7 +93,7 @@ export default function NavbarClient({ session }: NavbarClientProps) {
                       className={`relative text-sm font-medium transition-colors ease-out duration-200 px-3 py-1.5 rounded-full ${
                         isActive
                           ? "text-black dark:text-[#e2e2e2]"
-                          : "text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-[#c9c9c9]"
+                          : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-[#c9c9c9]"
                       }`}
                     >
                       {label}

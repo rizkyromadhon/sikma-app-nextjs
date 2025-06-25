@@ -6,7 +6,7 @@ import RegisterForm from "@/components/layouts/RegisterForm";
 
 const RegisterPage = () => {
   return (
-    <AuthLayout className="mt-10">
+    <AuthLayout>
       <AuthHeader
         header="Halo, Pengguna Baru?"
         desc="Yuk, daftar dulu biar kamu bisa akses semua layanan presensi di sini."

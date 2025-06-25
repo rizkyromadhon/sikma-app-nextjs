@@ -1,6 +1,5 @@
 "use client";
 
-// import { useState } from "react";
 import SidebarLink from "./SidebarLink";
 import { cn } from "@/lib/utils";
 import {
@@ -55,7 +54,7 @@ export default function Sidebar({ isCollapsed, onToggle }: { isCollapsed: boolea
     <div className="relative flex">
       <aside
         className={cn(
-          " h-[calc(100vh-64px)] bg-white dark:bg-black border-r border-gray-200 dark:border-gray-800 transition-[width] duration-300 ease-in-out overflow-hidden relative",
+          " h-[calc(100vh-64px)] bg-white dark:bg-neutral-900/50 border-r border-gray-200 dark:border-neutral-800 transition-[width] duration-300 ease-in-out overflow-hidden relative",
           isCollapsed ? "w-20 min-w-[5rem]" : "w-64"
         )}
       >
@@ -83,7 +82,6 @@ export default function Sidebar({ isCollapsed, onToggle }: { isCollapsed: boolea
             )}
           </div>
         </nav>
-        {/* {!isCollapsed ? <ThemeSwitcher theme={theme} /> : <ThemeToggle style="mx-auto" />} */}
         <AnimatePresence mode="wait">
           {!isCollapsed ? (
             <motion.div
@@ -109,17 +107,6 @@ export default function Sidebar({ isCollapsed, onToggle }: { isCollapsed: boolea
           )}
         </AnimatePresence>
       </aside>
-
-      <div
-        className="absolute top-6/14 -right-4 transform -translate-y-1/2 bg-white dark:bg-black shadow border border-slate-300 dark:border-slate-700 z-10 rounded-full w-8 h-8 flex items-center justify-center cursor-pointer"
-        onClick={onToggle}
-      >
-        {isCollapsed ? (
-          <LuPanelLeftOpen className="h-6 w-6 text-gray-600 dark:text-gray-400" />
-        ) : (
-          <LuPanelLeftClose className="h-6 w-6 text-gray-600 dark:text-gray-400" />
-        )}
-      </div>
     </div>
   );
 }
