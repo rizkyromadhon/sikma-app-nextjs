@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Sidebar from "./SidebarDosen";
 import { LuPanelLeftClose, LuPanelLeftOpen } from "react-icons/lu";
 import { cn } from "@/lib/utils";
-import SidebarDosen from "../dosen/SidebarDosen";
 
 export default function ClientWrapper({ children }: { children: React.ReactNode }) {
   const [isCollapsed, setIsCollapsed] = useState<boolean | null>(null);
@@ -48,7 +48,7 @@ export default function ClientWrapper({ children }: { children: React.ReactNode 
         )}
       </div>
 
-      <SidebarDosen isCollapsed={isCollapsed} onToggle={toggleSidebar} />
+      <Sidebar isCollapsed={isCollapsed} onToggle={toggleSidebar} />
 
       <main className="flex-1 overflow-y-auto h-full bg-white dark:bg-neutral-950">{children}</main>
     </div>

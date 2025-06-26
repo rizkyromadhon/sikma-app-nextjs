@@ -1,5 +1,6 @@
 const nextConfig = {
   devIndicators: false,
+  reactStrictMode: false,
   images: {
     remotePatterns: [
       {

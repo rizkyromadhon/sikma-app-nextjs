@@ -97,7 +97,25 @@ export default function DropdownDesktop({ session, onLogoutClick }: DropdownDesk
               </div>
             )}
 
-            {session?.user.role !== "ADMIN" && (
+            {session.user.role === "DOSEN" && (
+              <div>
+                <MenuItem>
+                  {({ focus }) => (
+                    <Link
+                      href="/dosen/dashboard"
+                      className={`${
+                        focus ? "bg-gray-100 dark:bg-neutral-800" : ""
+                      } group flex w-full items-center px-3 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-neutral-200 dark:hover:bg-gray-800/50`}
+                    >
+                      <LuLayoutDashboard className="mr-2 h-5 w-5" />
+                      Dashboard
+                    </Link>
+                  )}
+                </MenuItem>
+              </div>
+            )}
+
+            {session?.user.role !== "ADMIN" && session?.user.role !== "DOSEN" && (
               <div>
                 <MenuItem>
                   {({ focus }) => (

@@ -10,12 +10,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
   session: { strategy: "jwt" },
   callbacks: {
-    jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.role = user.role;
         token.prodiId = user.prodiId;
+        token.isDefaultPassword = user.isDefaultPassword ?? false;
+        token.isProfileComplete = user.isProfileComplete ?? false;
       }
+
+      if (trigger === "update" && session?.user) {
+        token.isProfileComplete = session.user.isProfileComplete ?? false;
+        token.no_hp = session.user.no_hp;
+        token.alamat = session.user.alamat;
+        token.foto = session.user.foto;
+      }
+
       return token;
     },
     session({ session, token }) {
@@ -23,6 +33,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.id = token.id as string;
         session.user.role = token.role;
         session.user.prodiId = token.prodiId;
+        session.user.isDefaultPassword = token.isDefaultPassword ?? false;
+        session.user.isProfileComplete = token.isProfileComplete ?? false;
+        session.user.no_hp = token.no_hp;
+        session.user.alamat = token.alamat;
+        session.user.foto = token.foto;
       }
       return session;
     },

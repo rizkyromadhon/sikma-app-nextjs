@@ -70,6 +70,17 @@ export const SignInCredentials = async (prevState: unknown, formData: FormData) 
       },
     });
 
+    const isDosen = await prisma.user.findUnique({
+      where: {
+        role: "DOSEN",
+        email,
+      },
+    });
+
+    if (isDosen) {
+      await signIn("credentials", { email, password, redirectTo: "/dosen/dashboard/?login=success" });
+    }
+
     if (isAdmin) {
       await signIn("credentials", { email, password, redirectTo: "/admin/dashboard/?login=success" });
     }

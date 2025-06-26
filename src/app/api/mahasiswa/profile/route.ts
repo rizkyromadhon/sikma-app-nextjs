@@ -60,9 +60,11 @@ export async function PUT(req: Request) {
   let fotoUrl: string | null = null;
   if (foto && typeof foto === "object") {
     const buffer = Buffer.from(await foto.arrayBuffer());
-    const upload = await uploadToCloudinary(buffer, "mahasiswa-profil"); // folder cloudinary
+    const upload = await uploadToCloudinary(buffer, "mahasiswa-profil");
     fotoUrl = upload.secure_url;
   }
+
+  const isProfileComplete = !!no_hp?.trim() && !!alamat?.trim();
 
   const updated = await prisma.user.update({
     where: { id: userId },
@@ -70,6 +72,7 @@ export async function PUT(req: Request) {
       no_hp,
       alamat,
       ...(fotoUrl && { foto: fotoUrl }),
+      ...(isProfileComplete && { is_profile_complete: true }),
     },
     include: {
       semester: true,
@@ -77,6 +80,22 @@ export async function PUT(req: Request) {
       golongan: true,
     },
   });
+
+  const wasIncomplete = !session?.user?.isProfileComplete;
+
+  const response = NextResponse.json({
+    ...updated,
+    semester: updated.semester?.name ?? "-",
+    prodi: updated.prodi?.name ?? "-",
+    golongan: updated.golongan?.name ?? "-",
+  });
+
+  if (isProfileComplete && wasIncomplete) {
+    response.cookies.set("session-updated", "1", {
+      httpOnly: true,
+      path: "/",
+    });
+  }
 
   return NextResponse.json({
     ...updated,

@@ -5,6 +5,8 @@ import prisma from "@/lib/prisma";
 import { compareSync } from "bcrypt-ts";
 import { jwt, session } from "@/lib/auth-callbacks";
 
+const defaultPasswordMahasiswa = "passwordmahasiswa";
+
 export default {
   providers: [
     Credentials({
@@ -23,13 +25,24 @@ export default {
               password: true,
               role: true,
               prodiId: true,
+              is_profile_complete: true,
             },
           });
 
           if (!user || !user.password) return null;
 
           const passwordsMatch = compareSync(password, user.password);
-          if (passwordsMatch) return user;
+          if (!passwordsMatch) return null;
+
+          const isDefaultPassword = compareSync(defaultPasswordMahasiswa, user.password);
+
+          if (passwordsMatch) {
+            return {
+              ...user,
+              isDefaultPassword,
+              isProfileComplete: user.is_profile_complete ?? false,
+            };
+          }
         }
         return null;
       },

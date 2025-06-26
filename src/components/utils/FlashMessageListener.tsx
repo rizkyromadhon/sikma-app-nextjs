@@ -1,5 +1,3 @@
-// src/components/util/FlashMessageListener.tsx
-
 "use client";
 
 import { useEffect } from "react";
@@ -30,6 +28,16 @@ export default function FlashMessageListener() {
     const profileStatus = searchParams.get("profile");
     const flash = searchParams.get("flash");
     const laporanStatus = searchParams.get("laporan-mahasiswa");
+    const passwordStaus = searchParams.get("ganti-password");
+
+    if (passwordStaus === "success") {
+      toast({
+        type: "success",
+        title: "Sukses!",
+        description: "Password berhasil diganti.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
 
     if (laporanStatus === "proses") {
       toast({
@@ -65,6 +73,15 @@ export default function FlashMessageListener() {
         type: "success",
         title: "Edit profil berhasil!",
         description: "Profil berhasi diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (profileStatus === "lengkapi-profil") {
+      toast({
+        type: "warning",
+        title: "Lengkapi Profil!",
+        description: "Silahkan lengkapi profil anda untuk melanjutkan.",
       });
       router.replace(pathname, { scroll: false });
     }

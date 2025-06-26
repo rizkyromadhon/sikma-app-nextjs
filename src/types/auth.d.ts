@@ -7,6 +7,11 @@ declare module "next-auth" {
     prodiId?: string | null;
     nim?: string | null;
     nip?: string | null;
+    no_hp?: string | null;
+    alamat?: string | null;
+    foto?: string | null;
+    isDefaultPassword?: boolean;
+    isProfileComplete?: boolean;
   }
 
   interface Session {
@@ -15,6 +20,11 @@ declare module "next-auth" {
       prodiId?: string | null;
       nim?: string | null;
       nip?: string | null;
+      no_hp?: string | null;
+      alamat?: string | null;
+      foto?: string | null;
+      isDefaultPassword?: boolean;
+      isProfileComplete?: boolean;
     } & DefaultSession["user"];
   }
 }
@@ -25,5 +35,10 @@ declare module "next-auth/jwt" {
     prodiId?: string | null;
     nim?: string | null;
     nip?: string | null;
+    no_hp?: string | null;
+    alamat?: string | null;
+    foto?: string | null;
+    isDefaultPassword?: boolean;
+    isProfileComplete?: boolean;
   }
 }

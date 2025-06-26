@@ -17,6 +17,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LuCircleUser } from "react-icons/lu";
+import { getSession, useSession } from "next-auth/react";
 
 export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
@@ -24,7 +25,8 @@ export default function ProfilePage() {
   const [preview, setPreview] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
+
+  const { data: session, update } = useSession();
 
   const [student, setStudent] = useState<{
     name: string;
@@ -85,9 +87,18 @@ export default function ProfilePage() {
       });
 
       if (!res.ok) throw new Error("Gagal menyimpan perubahan");
+      const updatedStudentData = await res.json();
+      await update({
+        user: {
+          ...session?.user, // Pertahankan data user yang sudah ada
+          isProfileComplete: updatedStudentData.is_profile_complete,
+          no_hp: updatedStudentData.no_hp,
+          alamat: updatedStudentData.alamat,
+          foto: updatedStudentData.foto,
+        },
+      });
 
-      const updated = await res.json();
-      setStudent(updated);
+      setStudent(updatedStudentData);
       setOpen(false);
       router.replace("/profile?profile=edit_success");
     } catch (error) {

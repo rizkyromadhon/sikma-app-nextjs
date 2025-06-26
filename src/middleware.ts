@@ -1,26 +1,19 @@
-// File: src/middleware.ts
-
-import NextAuth from "next-auth";
-import authConfig from "@/auth.config"; // <-- PENTING: Impor dari auth.config.ts
 import { NextResponse } from "next/server";
-
-const { auth } = NextAuth(authConfig);
+import { auth } from "@/auth";
 
 const publicRoutes = ["/", "/pusat-bantuan", "/monitoring"];
 const authRoutes = ["/login", "/register"];
 
-export default auth((req) => {
+export default auth(async (req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
   const role = req.auth?.user?.role;
-  console.log("[DEBUG] req.auth:", req.auth);
-  console.log("[MIDDLEWARE DEBUG] Pathname:", nextUrl.pathname);
-  console.log("[MIDDLEWARE DEBUG] Is logged in:", isLoggedIn);
+  const isProfileComplete = req.auth?.user?.isProfileComplete;
 
   function isPublicRoute(pathname: string) {
     return publicRoutes.includes(pathname) || pathname.startsWith("/detail-presensi/");
   }
-  // const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
   const isAdminRoute = nextUrl.pathname.startsWith("/admin");
   const isDosenRoute = nextUrl.pathname.startsWith("/dosen");
@@ -46,10 +39,23 @@ export default auth((req) => {
     return Response.redirect(new URL("/not-dosen", nextUrl));
   }
 
+  const mustCompleteProfile =
+    isLoggedIn &&
+    !isProfileComplete &&
+    !nextUrl.pathname.startsWith("/profile") &&
+    !nextUrl.pathname.startsWith("/api") &&
+    !nextUrl.pathname.startsWith("/logout");
+
+  if (role === "MAHASISWA" && mustCompleteProfile) {
+    const url = nextUrl.clone();
+    url.pathname = "/profile";
+    url.searchParams.set("profile", "lengkapi-profil");
+    return NextResponse.redirect(url);
+  }
+
   return NextResponse.next();
 });
 
-// Konfigurasi matcher
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
