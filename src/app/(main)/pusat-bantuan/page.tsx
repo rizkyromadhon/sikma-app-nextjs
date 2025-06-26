@@ -63,7 +63,7 @@ export default function PusatBantuanPage() {
   );
 
   return (
-    <div className="min-h-[92dvh] px-6 md:px-24 py-10 space-y-6 mb-20">
+    <div className="min-h-dvh md:min-h-[92dvh] px-6 md:px-24 py-10 space-y-6 mb-20">
       <div className="text-center space-y-2">
         <h1 className="text-2xl md:text-3xl font-bold text-foreground">Pusat Bantuan</h1>
         <p className="text-muted-foreground">Temukan Jawaban dan Panduan Seputar Sistem Presensi Mahasiswa</p>

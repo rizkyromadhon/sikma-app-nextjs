@@ -159,9 +159,9 @@ export default function DetailPresensiTable({
       </h1>
 
       {/* Filters */}
-      <div className="flex items-center gap-4 mt-6">
+      <div className="flex flex-col md:flex-row items-center gap-4 mt-6">
         <Select onValueChange={(val) => updateQuery("semester", val)} value={currentSemester}>
-          <SelectTrigger className="w-44">
+          <SelectTrigger className="w-full md:w-44">
             <SelectValue placeholder="Semua Semester" />
           </SelectTrigger>
           <SelectContent>
@@ -179,7 +179,7 @@ export default function DetailPresensiTable({
           value={currentGolongan}
           disabled={isGolonganDisabled}
         >
-          <SelectTrigger className="w-44">
+          <SelectTrigger className="w-full md:w-44">
             <SelectValue placeholder="Golongan" />
           </SelectTrigger>
           <SelectContent>
@@ -197,7 +197,7 @@ export default function DetailPresensiTable({
         </Select>
 
         <Select onValueChange={(val) => updateQuery("mataKuliah", val)} value={currentMataKuliah}>
-          <SelectTrigger className="w-44">
+          <SelectTrigger className="w-full md:w-44">
             <SelectValue placeholder="Mata Kuliah" />
           </SelectTrigger>
           <SelectContent>
@@ -211,7 +211,7 @@ export default function DetailPresensiTable({
         </Select>
 
         <Select onValueChange={(val) => updateQuery("ruangan", val)} value={currentRuangan}>
-          <SelectTrigger className="w-44">
+          <SelectTrigger className="w-full md:w-44">
             <SelectValue placeholder="Ruangan" />
           </SelectTrigger>
           <SelectContent>

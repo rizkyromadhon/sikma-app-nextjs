@@ -13,7 +13,6 @@ export default function FlashMessageListener() {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Cek apakah parameter 'login=success' ada di URL
     const loginStatus = searchParams.get("login");
     const registerStatus = searchParams.get("register");
     const logoutStatus = searchParams.get("logout");
@@ -28,6 +27,47 @@ export default function FlashMessageListener() {
     const jadwalStatus = searchParams.get("jadwal-kuliah");
     const alatStatus = searchParams.get("alat-presensi");
     const exportStatus = searchParams.get("rekapitulasi-kehadiran");
+    const profileStatus = searchParams.get("profile");
+    const flash = searchParams.get("flash");
+    const laporanStatus = searchParams.get("laporan-mahasiswa");
+
+    if (laporanStatus === "proses") {
+      toast({
+        type: "success",
+        title: "Laporan Diperbarui!",
+        description: "Status Laporan diubah ke Diproses.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (laporanStatus === "selesai") {
+      toast({
+        type: "success",
+        title: "Laporan Diperbarui!",
+        description: "Status Laporan diubah ke Selesai.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (flash === "laporan_success") {
+      toast({
+        type: "success",
+        title: "Laporan Terkirim!",
+        description: "Terima kasih telah melapor. Admin akan segera memproses laporan Anda.",
+      });
+
+      // Hapus query setelah toast muncul
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (profileStatus === "edit_success") {
+      toast({
+        type: "success",
+        title: "Edit profil berhasil!",
+        description: "Profil berhasi diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
 
     if (loginStatus === "unauthorized") {
       toast({

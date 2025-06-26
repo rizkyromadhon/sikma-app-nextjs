@@ -80,7 +80,7 @@ const PresensiKuliahPage = () => {
       .join(" ");
 
   return (
-    <div className="px-6 md:px-24 py-10 space-y-6 min-h-[92dvh]">
+    <div className="px-6 md:px-24 py-10 space-y-6 min-h-dvh md:min-h-[92dvh]">
       <h1 className="text-xl md:text-3xl font-bold text-center text-foreground">Presensi Kuliah Mahasiswa</h1>
 
       <Card className="p-4 space-y-4 mt-8 bg-white dark:bg-neutral-950">

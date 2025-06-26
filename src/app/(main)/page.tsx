@@ -4,8 +4,16 @@ import LiveSummary from "@/components/features/dashboard/LiveSummary";
 import { startOfDay, endOfDay } from "date-fns";
 
 async function getDashboardData() {
+  const todayStart = startOfDay(new Date());
+  const todayEnd = endOfDay(new Date());
   const latestAttendances = await prisma.presensiKuliah.findMany({
     take: 5,
+    where: {
+      waktu_presensi: {
+        gte: todayStart,
+        lte: todayEnd,
+      },
+    },
     orderBy: { waktu_presensi: "desc" },
     include: {
       mahasiswa: { select: { name: true, foto: true } },
@@ -13,9 +21,6 @@ async function getDashboardData() {
       jadwal_kuliah: { select: { ruangan: { select: { name: true } } } },
     },
   });
-
-  const todayStart = startOfDay(new Date());
-  const todayEnd = endOfDay(new Date());
 
   const allProdi = await prisma.programStudi.findMany({
     where: { slug: { not: null } },
@@ -93,7 +98,7 @@ export default async function HomePage() {
   const { latestAttendances, rekapPerProdi, totalHadir, totalTidakHadir } = await getDashboardData();
 
   return (
-    <div className="bg-white dark:bg-black py-2 sm:py-4 rounded-md min-h-[92dvh]">
+    <div className="bg-white dark:bg-black py-2 sm:py-4 rounded-md min-h-[92dvh] relative">
       <div className="mx-auto max-w-[90rem] mb-8">
         <p className="mx-auto text-center mt-6 md:mt-6 text-3xl font-semibold tracking-tight text-balance text-gray-950  dark:text-gray-100 lg:text-4xl lg:w-120">
           Sudahkah anda presensi hari ini?

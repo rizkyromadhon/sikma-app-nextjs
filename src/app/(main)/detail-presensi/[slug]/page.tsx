@@ -9,6 +9,8 @@ export default async function DetailPresensiPage({ params, searchParams }: any) 
   const mataKuliahId = searchParams?.mataKuliah !== "all" ? searchParams.mataKuliah : undefined;
   const ruanganId = searchParams?.ruangan !== "all" ? searchParams.ruangan : undefined;
   const golonganId = searchParams?.golongan !== "all" ? searchParams.golongan : undefined;
+  const todayStart = startOfDay(new Date());
+  const todayEnd = endOfDay(new Date());
 
   const prodi = await prisma.programStudi.findUnique({
     where: { slug },
@@ -37,6 +39,10 @@ export default async function DetailPresensiPage({ params, searchParams }: any) 
         prodiId: prodi.id,
         ...(semesterId && { semesterId: semesterId }),
         ...(ruanganId && { ruanganId: ruanganId }),
+      },
+      waktu_presensi: {
+        gte: todayStart,
+        lte: todayEnd,
       },
       mahasiswa: {
         ...(semesterId && { semesterId: semesterId }),

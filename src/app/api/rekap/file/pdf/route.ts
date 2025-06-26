@@ -8,7 +8,6 @@ import { format } from "date-fns";
 import { PDFDocument, rgb, StandardFonts, PageSizes } from "pdf-lib";
 
 export async function POST(request: Request) {
-  // 1. Otorisasi dan pengambilan data (sama seperti API Excel)
   const session = await auth();
   if (!session?.user?.id || session.user.role !== "ADMIN") {
     return NextResponse.json({ error: "Akses ditolak" }, { status: 403 });
@@ -83,7 +82,7 @@ export async function POST(request: Request) {
       y: y,
       font: font,
       size: 10,
-      color: rgb(0.4, 0.4, 0.4), // Abu-abu
+      color: rgb(0.4, 0.4, 0.4),
     });
     y -= 30;
 

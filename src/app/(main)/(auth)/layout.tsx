@@ -7,7 +7,7 @@ const AuthLayout = ({ children, className }: AuthLayoutProps) => {
   return (
     <>
       <div
-        className={`flex items-center justify-center bg-white dark:bg-black px-4 min-h-[92dvh] ${
+        className={`flex items-center justify-center bg-white dark:bg-black px-4 min-h-[84vh] md:min-h-[92dvh] ${
           className || ""
         }`}
       >

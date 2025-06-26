@@ -1,12 +1,15 @@
 "use client";
 
-import { Fragment, useState } from "react";
-import { Menu, MenuButton, MenuItem, MenuItems, Transition } from "@headlessui/react";
+import { Fragment, useRef, useState } from "react";
+import { Menu, MenuButton, MenuItem, MenuItems, Textarea, Transition } from "@headlessui/react";
 import Link from "next/link";
 import Image from "next/image";
-import { LuUser, LuLogOut, LuChevronDown, LuLayoutDashboard } from "react-icons/lu";
+import { LuUser, LuLogOut, LuChevronDown, LuLayoutDashboard, LuFlag, LuClipboardList } from "react-icons/lu";
 import type { Session } from "next-auth";
 import { FaUserCircle } from "react-icons/fa";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Button } from "../ui/button";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 interface DropdownDesktopProps {
   session: Session;
@@ -15,6 +18,12 @@ interface DropdownDesktopProps {
 
 export default function DropdownDesktop({ session, onLogoutClick }: DropdownDesktopProps) {
   const [isShowing, setIsShowing] = useState(false);
+  const [isReportOpen, setIsReportOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const formRef = useRef<HTMLFormElement>(null);
 
   return (
     <Menu as="div" className="relative inline-block text-left">
@@ -93,7 +102,7 @@ export default function DropdownDesktop({ session, onLogoutClick }: DropdownDesk
                 <MenuItem>
                   {({ focus }) => (
                     <Link
-                      href="/profil"
+                      href={"/profile"}
                       className={`${
                         focus ? "bg-neutral-100 dark:bg-neutral-800" : ""
                       } group flex w-full items-center px-3 py-3 text-sm font-medium text-gray-700 dark:text-gray-300  hover:bg-neutral-200/50 hover:transition-all dark:hover:bg-neutral-800/50 focus:outline-none`}
@@ -101,6 +110,32 @@ export default function DropdownDesktop({ session, onLogoutClick }: DropdownDesk
                       <LuUser className="mr-2 h-5 w-5" />
                       Profil Saya
                     </Link>
+                  )}
+                </MenuItem>
+                <MenuItem>
+                  {({ focus }) => (
+                    <Link
+                      href="/laporan-saya"
+                      className={`${
+                        focus ? "bg-neutral-100 dark:bg-neutral-800" : ""
+                      } group flex w-full items-center px-3 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-neutral-200/50 dark:hover:bg-neutral-800/50`}
+                    >
+                      <LuClipboardList className="h-5 w-5 mr-2" />
+                      Laporan Saya
+                    </Link>
+                  )}
+                </MenuItem>
+                <MenuItem>
+                  {({ focus }) => (
+                    <button
+                      onClick={() => setIsReportOpen(true)}
+                      className={`${
+                        focus ? "bg-neutral-100 dark:bg-neutral-800" : ""
+                      }group flex w-full items-center px-3 py-3 text-sm font-medium text-gray-700 dark:text-gray-300  hover:bg-neutral-200/50 hover:transition-all dark:hover:bg-neutral-800/50 focus:outline-none cursor-pointer`}
+                    >
+                      <LuFlag className="mr-2 h-5 w-5" />
+                      Lapor ke Admin
+                    </button>
                   )}
                 </MenuItem>
               </div>
@@ -124,6 +159,76 @@ export default function DropdownDesktop({ session, onLogoutClick }: DropdownDesk
           </MenuItems>
         </div>
       </Transition>
+      <Dialog open={isReportOpen} onOpenChange={setIsReportOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Lapor ke Admin</DialogTitle>
+          </DialogHeader>
+          <form
+            ref={formRef}
+            onSubmit={async (e) => {
+              e.preventDefault();
+              setIsSubmitting(true);
+
+              try {
+                const form = new FormData(formRef.current!);
+
+                const res = await fetch("/api/laporan", {
+                  method: "POST",
+                  body: form,
+                });
+
+                if (!res.ok) throw new Error("Gagal mengirim laporan");
+
+                setIsReportOpen(false);
+                formRef.current?.reset();
+
+                router.replace(`${pathname}?flash=laporan_success`);
+              } catch (err) {
+                console.error(err);
+              } finally {
+                setIsSubmitting(false);
+              }
+            }}
+          >
+            <div>
+              <label className="text-sm mb-1 block">Tipe Laporan</label>
+              <select
+                name="tipe"
+                required
+                className="w-full border border-border bg-muted rounded-md px-3 py-2 text-sm"
+              >
+                <option value="">Pilih tipe laporan</option>
+                <option value="Kartu RFID Hilang/Rusak">Kartu RFID Hilang/Rusak</option>
+                <option value="Lainnya">Lainnya</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="text-sm mb-1 mt-2 block">Pesan</label>
+              <Textarea
+                name="pesan"
+                required
+                placeholder="Tulis laporan atau kendala Anda..."
+                className="px-4 py-2 text-sm text-neutral-700 dark:text-neutral-400 block bg-muted/40 border border-neutral-200 dark:border-neutral-700 w-full rounded-md focus:outline-none focus:shadow-[0_0_2px_2px] shadow-neutral-400/80 transition-all duration-200 ease-in-out mb-4"
+              />
+            </div>
+
+            <DialogFooter>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <span className="flex items-center gap-2">
+                    <span className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
+                    Mengirim...
+                  </span>
+                ) : (
+                  "Kirim"
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </Menu>
   );
 }

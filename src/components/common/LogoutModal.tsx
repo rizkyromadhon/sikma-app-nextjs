@@ -44,7 +44,7 @@ export default function LogoutModal({ isOpen, onClose, onConfirm }: LogoutModalP
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-xl bg-white dark:bg-black p-6 text-left align-middle  transition-all border border-gray-200 dark:border-gray-800 shadow-[0_0_10px_rgba(0,0,0,0.2)] dark:shadow-[0_0_12px_rgba(255,255,255,0.09)]">
+              <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-xl bg-neutral-100 dark:bg-neutral-950 p-6 text-left align-middle  transition-all border border-gray-200 dark:border-neutral-800 shadow-[0_0_30px_1px] shadow-neutral-400 dark:shadow-neutral-800">
                 <div className="flex items-start gap-4">
                   <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-950/50 sm:mx-0 sm:h-10 sm:w-10">
                     <LuTriangleAlert className="h-6 w-6 text-red-600 dark:text-red-500" aria-hidden="true" />
@@ -52,12 +52,12 @@ export default function LogoutModal({ isOpen, onClose, onConfirm }: LogoutModalP
                   <div className="mt-0 flex-1">
                     <DialogTitle
                       as="h3"
-                      className="text-base font-semibold leading-6 text-gray-900 dark:text-gray-50"
+                      className="text-base font-semibold leading-6 text-neutral-900 dark:text-gray-50"
                     >
                       Konfirmasi Logout
                     </DialogTitle>
                     <div className="mt-2">
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <p className="text-sm text-neutral-600 dark:text-neutral-400">
                         Apakah anda yakin ingin keluar dari sesi ini?
                       </p>
                     </div>

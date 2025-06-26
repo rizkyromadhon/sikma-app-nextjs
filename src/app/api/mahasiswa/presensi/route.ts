@@ -184,7 +184,10 @@ export async function POST(request: Request) {
       event: "presensi-sukses",
       data: {
         mahasiswa,
-        jadwal: jadwalAktif,
+        jadwal: {
+          jadwalAktif,
+          mata_kuliah: jadwalAktif.mata_kuliah,
+        },
         presensi: { ...presensi, waktu_presensi: presensi.waktu_presensi.toISOString() },
       },
     };

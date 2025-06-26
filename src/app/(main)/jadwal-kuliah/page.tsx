@@ -64,7 +64,7 @@ const JadwalKuliahPage = () => {
   }, []);
 
   return (
-    <div className="px-8 md:px-24 py-8 md:py-12 space-y-6 min-h-[92dvh]">
+    <div className="px-8 md:px-24 py-8 md:py-12 space-y-6 min-h-dvh md:min-h-[92dvh]">
       <h1 className="text-xl md:text-3xl font-bold text-center text-foreground">Jadwal Kuliah Mahasiswa</h1>
 
       {/* Grid Header */}

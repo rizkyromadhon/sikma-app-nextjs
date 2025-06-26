@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { formatDistanceToNow } from "date-fns";
 import { id } from "date-fns/locale";
@@ -11,7 +11,6 @@ type Attendance = {
   waktu_presensi: string;
   mahasiswa: { name: string | null; foto: string | null };
   mata_kuliah: { name: string };
-  ruangan: { name: string };
   jadwal_kuliah: { ruangan: { name: string } };
 };
 
@@ -20,8 +19,48 @@ interface LiveFeedProps {
 }
 
 export default function LiveFeed({ initialAttendances }: LiveFeedProps) {
-  // Nantinya, state ini akan diupdate oleh Pusher
-  const [attendances] = useState(initialAttendances);
+  const [attendances, setAttendances] = useState<Attendance[]>(initialAttendances);
+
+  useEffect(() => {
+    const socket = new WebSocket("ws://localhost:3001");
+
+    socket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      console.log("📡 Pesan LiveFeed:", message);
+
+      if (message.event === "presensi-sukses") {
+        const { mahasiswa, jadwal, presensi } = message.data;
+
+        const adaptedItem: Attendance = {
+          id: presensi.id,
+          waktu_presensi: presensi.waktu_presensi,
+          mahasiswa: {
+            name: mahasiswa.name ?? "-",
+            foto: mahasiswa.foto,
+          },
+          mata_kuliah: {
+            name: jadwal.mata_kuliah?.name ?? "Mata Kuliah",
+          },
+          jadwal_kuliah: {
+            ruangan: {
+              name: jadwal.ruangan?.name ?? "Tanpa Ruangan",
+            },
+          },
+        };
+
+        const isToday = new Date(adaptedItem.waktu_presensi).toDateString() === new Date().toDateString();
+
+        if (isToday) {
+          setAttendances((prev) => {
+            const updated = [adaptedItem, ...prev].slice(0, 5);
+            return updated;
+          });
+        }
+      }
+    };
+
+    return () => socket.close();
+  }, []);
 
   return (
     <div className="h-full rounded-xl border border-neutral-300 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-6 shadow-[0_0_22px_rgba(0,0,0,0.10)]">

@@ -9,6 +9,7 @@ import DropdownMobile from "./DropdownMobile";
 import { signOut } from "next-auth/react";
 import LogoutModal from "../common/LogoutModal";
 import ThemeToggle from "../features/ToggleTheme";
+import NotificationBell from "../features/NotificationBell";
 
 interface NavbarClientProps {
   session: Session | null;
@@ -64,7 +65,7 @@ export default function NavbarClient({ session }: NavbarClientProps) {
   return (
     <>
       <nav
-        className={`sticky top-0 z-50 border-b border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-950`}
+        className={`sticky top-0 z-50 border-b border-gray-200 dark:border-neutral-800 bg-white dark:bg-neutral-900/50 backdrop-blur-md`}
       >
         <div className="mx-auto max-w-12/13 ">
           <div className="flex h-16 items-center justify-between">
@@ -106,7 +107,10 @@ export default function NavbarClient({ session }: NavbarClientProps) {
               {/* Desktop */}
               <div className="hidden md:block ml-4">
                 {session?.user ? (
-                  <DropdownDesktop session={session} onLogoutClick={() => setIsLogoutModalOpen(true)} />
+                  <div className="hidden md:flex items-center gap-2 ml-4">
+                    <NotificationBell userId={session.user.id!} />
+                    <DropdownDesktop session={session} onLogoutClick={() => setIsLogoutModalOpen(true)} />
+                  </div>
                 ) : (
                   <Link
                     href="/login"
@@ -119,7 +123,14 @@ export default function NavbarClient({ session }: NavbarClientProps) {
 
               {/* Mobile */}
               <div className="flex md:hidden">
-                <DropdownMobile session={session} onLogoutClick={() => setIsLogoutModalOpen(true)} />
+                {session?.user ? (
+                  <div className="flex md:hidden items-center gap-2">
+                    <NotificationBell userId={session.user.id!} />
+                    <DropdownMobile session={session} onLogoutClick={() => setIsLogoutModalOpen(true)} />
+                  </div>
+                ) : (
+                  <DropdownMobile session={session} onLogoutClick={() => setIsLogoutModalOpen(true)} />
+                )}
               </div>
             </div>
           </div>
