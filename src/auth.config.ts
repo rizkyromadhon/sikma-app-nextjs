@@ -24,6 +24,7 @@ export default {
               email: true,
               password: true,
               role: true,
+              foto: true,
               prodiId: true,
               is_profile_complete: true,
             },

@@ -14,7 +14,6 @@ async function getInitialData(mahasiswaId: string, adminProdiId: string) {
     notFound();
   }
 
-  // Cari alat presensi yang akan digunakan
   const alatPresensi = await prisma.alatPresensi.findFirst();
   if (!alatPresensi) {
     throw new Error("Tidak ada alat presensi yang ditemukan di sistem.");
@@ -23,7 +22,6 @@ async function getInitialData(mahasiswaId: string, adminProdiId: string) {
   return { mahasiswa, alatId: alatPresensi.id };
 }
 
-// Komponen Halaman Edit sekarang menjadi Client Component
 export default async function RegistrasiRfidPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const session = await auth();
@@ -49,12 +47,11 @@ export default async function RegistrasiRfidPage({ params }: { params: Promise<{
   try {
     const { mahasiswa, alatId } = await getInitialData(id, adminUser.prodiId);
 
-    // Render komponen Client dan lempar data awal sebagai props
     return <RegistrasiRfidClient initialMahasiswa={mahasiswa} alatId={alatId} />;
   } catch (error: unknown) {
     if (error instanceof Error) {
       return (
-        <div className="w-full max-w-2xl mt-10 mx-auto p-8 bg-white dark:bg-black/20 rounded-md shadow">
+        <div className="w-full max-w-2xl mt-10 mx-auto p-8 rounded-md shadow">
           <h1 className="text-2xl font-bold text-red-500 mb-6">Terjadi Kesalahan</h1>
           <p className="text-gray-600 dark:text-gray-300">{error.message}</p>
           <div className="mt-6">

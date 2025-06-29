@@ -119,7 +119,7 @@ export default function RegistrasiRfidPageClient({ initialMahasiswa, alatId }: R
   };
 
   const InfoField = ({ label, value }: { label: string; value: string | null | undefined }) => (
-    <div className="py-3 px-2 border-b border-gray-400 dark:border-gray-800 last:border-b-0">
+    <div className="py-3 px-2 border-b border-gray-400 dark:border-neutral-800 last:border-b-0">
       <p className="text-xs text-gray-500 dark:text-gray-400">{label}</p>
       <p className="font-semibold text-lg">{value || "-"}</p>
     </div>
@@ -141,18 +141,18 @@ export default function RegistrasiRfidPageClient({ initialMahasiswa, alatId }: R
         )}
       </p>
       <div className="space-y-6">
-        <div className="p-4 bg-gray-50 dark:bg-black/40 rounded-lg">
+        <div className="p-4 bg-gray-50 dark:bg-neutral-900 rounded-lg">
           <InfoField label="Nama Mahasiswa" value={initialMahasiswa.name} />
           <InfoField label="NIM" value={initialMahasiswa.nim} />
           <InfoField label="UID Kartu Terdaftar" value={currentUid} />
         </div>
 
-        <div className="p-6 text-center border-2 border-dashed dark:border-gray-700 rounded-lg min-h-[160px] flex flex-col justify-center">
+        <div className="p-6 text-center border-2 border-dashed dark:border-neutral-700 rounded-lg min-h-[160px] flex flex-col justify-center">
           {status === "viewing" && (
             <>
               <LuInfo className="h-12 w-12 text-amber-500 mx-auto" />
               <h2 className="mt-4 text-xl font-semibold text-amber-500">UID Sudah Terdaftar</h2>
-              <p className="mt-2 text-sm text-gray-500">
+              <p className="mt-2 text-sm text-neutral-500">
                 Klik tombol di bawah jika Anda ingin mengganti dengan kartu baru.
               </p>
               <div className="mt-4">
@@ -168,7 +168,7 @@ export default function RegistrasiRfidPageClient({ initialMahasiswa, alatId }: R
             <>
               <LuLoader className="animate-spin h-12 w-12 text-sky-500 mx-auto" />
               <h2 className="mt-4 text-xl font-semibold">Menunggu Kartu...</h2>
-              <p className="mt-1 text-sm text-gray-500">
+              <p className="mt-1 text-sm text-neutral-500">
                 Silakan tempelkan kartu RFID baru pada alat presensi.
               </p>
             </>
@@ -177,7 +177,7 @@ export default function RegistrasiRfidPageClient({ initialMahasiswa, alatId }: R
             <>
               <LuCircleCheck className="h-12 w-12 text-green-500 mx-auto" />
               <h2 className="mt-4 text-xl font-semibold text-green-500">Registrasi Berhasil!</h2>
-              <p className="mt-1 text-sm text-gray-500">Kartu RFID baru telah berhasil didaftarkan.</p>
+              <p className="mt-1 text-sm text-neutral-500">Kartu RFID baru telah berhasil didaftarkan.</p>
             </>
           )}
           {status === "duplicate" && (

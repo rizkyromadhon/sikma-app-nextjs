@@ -72,7 +72,7 @@ export default async function ManajemenGolonganPage({
   ]);
 
   return (
-    <div className="w-full mx-auto p-6 bg-white dark:bg-black/20 rounded-lg shadow">
+    <div className="w-full mx-auto p-6 rounded-lg shadow">
       <Breadcrumb className="ml-12 mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -90,8 +90,7 @@ export default async function ManajemenGolonganPage({
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white ">Manajemen Golongan</h1>
-      <div className="flex justify-between items-center mb-6"></div>
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Manajemen Golongan</h1>
       <GolonganTable
         initialData={data}
         totalPages={totalPages}

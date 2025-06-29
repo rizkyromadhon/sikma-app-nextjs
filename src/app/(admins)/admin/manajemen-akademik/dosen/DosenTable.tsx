@@ -1,4 +1,3 @@
-// app/(admins)/admin/manajemen-akademik/dosen/DosenTable.tsx
 "use client";
 
 import React, { useState, ChangeEvent } from "react";
@@ -9,7 +8,6 @@ import { SubmitButton } from "@/components/auth/SubmitButton";
 import { LuCircleAlert, LuCircleArrowLeft, LuCircleArrowRight } from "react-icons/lu";
 import { BsPlusCircleDotted } from "react-icons/bs";
 
-// Tipe data untuk props
 type DosenWithProdi = User & { prodi: ProgramStudi | null };
 interface FilterOption {
   id: string | number;
@@ -76,19 +74,18 @@ export default function DosenTable({
 
   return (
     <div className="space-y-6">
-      {/* --- Filter --- */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <select
-            className=" px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none w-60"
+            className=" px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/50 dark:text-white border-gray-300 dark:border-neutral-800 text-sm focus:outline-none w-60"
             value={filters.current.prodi || ""}
             onChange={(e) => updateFilter("prodi", e.target.value)}
           >
-            <option value="" className="bg-white dark:bg-black/90">
+            <option value="" className="bg-white dark:bg-neutral-900">
               Semua Program Studi
             </option>
             {filters.prodis.map((p) => (
-              <option key={p.id} value={p.id.toString()} className="bg-white dark:bg-black/90">
+              <option key={p.id} value={p.id.toString()} className="bg-white dark:bg-neutral-900">
                 {p.name}
               </option>
             ))}
@@ -96,7 +93,7 @@ export default function DosenTable({
           <input
             type="text"
             placeholder="Cari Dosen berdasarkan NIP..."
-            className="bg-white dark:bg-black/50 text-black dark:text-gray-200 border border-gray-300 dark:border-gray-800 rounded-md px-4 py-2 focus:outline-none text-sm w-80"
+            className="bg-white dark:bg-neutral-950/50 text-black dark:text-gray-200 border border-gray-300 dark:border-neutral-800 rounded-md px-4 py-2 focus:outline-none text-sm w-80"
             defaultValue={filters.current.nip || ""}
             onChange={(e: ChangeEvent<HTMLInputElement>) => updateFilter("nip", e.target.value)}
           />
@@ -105,14 +102,14 @@ export default function DosenTable({
           text="Tambah Dosen"
           href="/admin/manajemen-akademik/dosen/create"
           icon={<BsPlusCircleDotted />}
-          className="bg-white dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-black/10 hover:transition-all text-sm border border-gray-300 dark:border-gray-800 flex items-center gap-2"
+          className="bg-white dark:bg-neutral-950/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-black/10 hover:transition-all text-sm border border-gray-300 dark:border-neutral-800 flex items-center gap-2"
         />
       </div>
 
       {/* --- Tabel --- */}
-      <div className="overflow-auto rounded border border-gray-300 dark:border-gray-800 shadow-sm">
+      <div className="overflow-auto rounded border border-gray-300 dark:border-neutral-800 shadow-sm">
         <table className="min-w-full text-sm text-left text-black dark:text-gray-200">
-          <thead className="bg-gray-100 dark:bg-black/40 uppercase tracking-wide">
+          <thead className="bg-gray-100 dark:bg-neutral-950/50 uppercase tracking-wide">
             <tr>
               <th className="px-6 py-3 font-semibold">NIP</th>
               <th className="px-6 py-3 font-semibold">Nama</th>
@@ -131,7 +128,7 @@ export default function DosenTable({
               data.map((d) => (
                 <tr
                   key={d.id}
-                  className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-black/30"
+                  className="border-t border-gray-200 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-950/40"
                 >
                   <td className="px-6 py-4 font-mono">{displayValue(d.nip)}</td>
                   <td className="px-6 py-4">{displayValue(d.name)}</td>
@@ -140,7 +137,7 @@ export default function DosenTable({
                     <SubmitButton
                       text="Edit"
                       href={`/admin/manajemen-akademik/dosen/${d.id}/edit`}
-                      className="bg-white w-18 dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-[#1A1A1A] hover:transition-all text-sm border border-gray-300 dark:border-gray-800"
+                      className="bg-white w-18 dark:bg-neutral-950/40 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-[#1A1A1A] hover:transition-all text-sm border border-gray-300 dark:border-neutral-800"
                     />
                     <SubmitButton
                       text="Hapus"
@@ -189,7 +186,7 @@ export default function DosenTable({
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="bg-white dark:bg-black/80 dark:backdrop-blur-sm rounded-lg p-6 w-full max-w-lg mx-4 shadow-[0_0_30px_2px_#C10007] dark:shadow-[0_0_34px_4px_#460809]">
+          <div className="bg-white dark:bg-neutral-950 dark:backdrop-blur-sm rounded-lg p-6 w-full max-w-lg mx-4 shadow-[0_0_30px_1px_#C10007] dark:shadow-[0_0_34px_1px_#460809]">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
               <LuCircleAlert className="w-6 h-6 text-red-600" /> Konfirmasi Hapus
             </h2>
@@ -203,7 +200,7 @@ export default function DosenTable({
               <SubmitButton
                 text="Batal"
                 onClick={() => setIsModalOpen(false)}
-                className="bg-gray-200 dark:bg-black dark:border dark:border-gray-800 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-slate-800 transition-all"
+                className="bg-gray-100 dark:bg-neutral-900/50 border border-neutral-300 dark:border-neutral-800 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-neutral-900 transition-all"
               />
               <SubmitButton
                 text="Ya, Hapus"

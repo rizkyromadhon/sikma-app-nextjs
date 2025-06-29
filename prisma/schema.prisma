@@ -124,7 +124,6 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relasi
   semester           Semester?          @relation(fields: [semesterId], references: [id])
   prodi              ProgramStudi?      @relation(fields: [prodiId], references: [id])
   golongan           Golongan?          @relation(fields: [golonganId], references: [id])
@@ -133,8 +132,8 @@ model User {
   pengajuanIzin      PengajuanIzin[]
   notifikasiDiterima Notifikasi[]       @relation("NotifikasiUntukUser")
   notifikasiDikirim  Notifikasi[]       @relation("NotifikasiDariSender")
-  jadwalMengajar     JadwalKuliah[] // Dosen mengajar banyak jadwal
-  jadwalDiikuti      PesertaKuliah[] // Mahasiswa mengikuti banyak jadwal
+  jadwalMengajar     JadwalKuliah[]
+  jadwalDiikuti      PesertaKuliah[]
   account            Account[]
   session            Session[]
 
@@ -150,7 +149,6 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
-// 2. Tabel Semester
 model Semester {
   id   String       @id @default(cuid())
   name String       @unique
@@ -162,7 +160,6 @@ model Semester {
   Golongan      Golongan[]
 }
 
-// 3. Tabel Ruangan
 model Ruangan {
   id   String      @id @default(cuid())
   kode String      @unique
@@ -174,7 +171,6 @@ model Ruangan {
   alat_presensi AlatPresensi[]
 }
 
-// 4. Tabel Program Studi
 model ProgramStudi {
   id   String  @id @default(cuid())
   name String  @unique
@@ -186,10 +182,9 @@ model ProgramStudi {
   jadwal_kuliah JadwalKuliah[]
 }
 
-// 5. Tabel Presensi Kuliah (sudah diperbaiki)
 model PresensiKuliah {
   id             String         @id @default(cuid())
-  waktu_presensi DateTime       @default(now()) // Sudah termasuk tanggal & waktu
+  waktu_presensi DateTime       @default(now())
   status         StatusPresensi
   keterangan     String?
 
@@ -197,13 +192,11 @@ model PresensiKuliah {
   matkulId       String
   jadwalKuliahId String
 
-  // Relasi
   mahasiswa     User         @relation(fields: [mahasiswaId], references: [id])
   mata_kuliah   MataKuliah   @relation(fields: [matkulId], references: [id])
   jadwal_kuliah JadwalKuliah @relation(fields: [jadwalKuliahId], references: [id], onDelete: Cascade)
 }
 
-// 6. Tabel Pengajuan Izin
 model PengajuanIzin {
   id             String          @id @default(cuid())
   tanggal_izin   DateTime
@@ -219,12 +212,10 @@ model PengajuanIzin {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relasi
   mahasiswa     User         @relation(fields: [mahasiswaId], references: [id])
   jadwal_kuliah JadwalKuliah @relation(fields: [jadwalKuliahId], references: [id])
 }
 
-// 7. Tabel Notifikasi
 model Notifikasi {
   id         String    @id @default(cuid())
   tipe       String
@@ -232,24 +223,21 @@ model Notifikasi {
   url_tujuan String?
   read_at    DateTime?
 
-  userId   String // Penerima notifikasi
-  senderId String // Pengirim notifikasi
+  userId   String
+  senderId String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relasi
   user   User @relation("NotifikasiUntukUser", fields: [userId], references: [id])
   sender User @relation("NotifikasiDariSender", fields: [senderId], references: [id])
 }
 
-// 8. Tabel Mata Kuliah
 model MataKuliah {
   id   String @id @default(cuid())
   kode String @unique
   name String
 
-  // Relasi
   jadwal_kuliah JadwalKuliah[]
   presensi      PresensiKuliah[]
 }
@@ -307,7 +295,6 @@ model Golongan {
   @@unique([prodiId, semesterId, name])
 }
 
-// 12. Tabel Alat Presensi
 model AlatPresensi {
   id           String     @id @default(cuid())
   name         String
@@ -318,7 +305,6 @@ model AlatPresensi {
 
   ruanganId String
 
-  // Relasi
   ruangan           Ruangan @relation(fields: [ruanganId], references: [id])
   targetMahasiswaId String?
 }
@@ -332,10 +318,8 @@ model PesertaKuliah {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relasi
   mahasiswa     User         @relation(fields: [mahasiswaId], references: [id], onDelete: Restrict)
   jadwal_kuliah JadwalKuliah @relation(fields: [jadwalKuliahId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  // Menjamin setiap mahasiswa hanya bisa mendaftar sekali di satu jadwal
   @@unique([mahasiswaId, jadwalKuliahId])
 }

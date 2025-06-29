@@ -10,6 +10,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { CalendarCheck } from "lucide-react";
 
 interface DropdownDesktopProps {
   session: Session;
@@ -24,16 +25,17 @@ export default function DropdownDesktop({ session, onLogoutClick }: DropdownDesk
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const formRef = useRef<HTMLFormElement>(null);
+  console.log(session);
 
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div onMouseEnter={() => setIsShowing(true)} onMouseLeave={() => setIsShowing(false)}>
         <MenuButton className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 focus:outline-none transition-colors">
           <div className="relative h-6 w-6 rounded-full">
-            {session.user.image ? (
+            {session.user.foto ? (
               <Image
                 className="rounded-full object-cover"
-                src={session.user.image}
+                src={session.user.foto}
                 alt="Foto profil"
                 fill
                 sizes="24px"
@@ -127,6 +129,19 @@ export default function DropdownDesktop({ session, onLogoutClick }: DropdownDesk
                     >
                       <LuUser className="mr-2 h-5 w-5" />
                       Profil Saya
+                    </Link>
+                  )}
+                </MenuItem>
+                <MenuItem>
+                  {({ focus }) => (
+                    <Link
+                      href={"/pengajuan-izin"}
+                      className={`${
+                        focus ? "bg-neutral-100 dark:bg-neutral-800" : ""
+                      } group flex w-full items-center px-3 py-3 text-sm font-medium text-gray-700 dark:text-gray-300  hover:bg-neutral-200/50 hover:transition-all dark:hover:bg-neutral-800/50 focus:outline-none`}
+                    >
+                      <CalendarCheck className="mr-2 h-5 w-5" />
+                      Pengajuan Izin ke Dosen
                     </Link>
                   )}
                 </MenuItem>

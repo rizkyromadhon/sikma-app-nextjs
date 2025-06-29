@@ -10,6 +10,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation";
+import { CalendarCheck } from "lucide-react";
 
 interface DropdownMobileProps {
   session: Session | null;
@@ -54,10 +55,10 @@ export default function DropdownMobile({ session, onLogoutClick }: DropdownMobil
               <>
                 <div className="px-4 py-4 border-b border-gray-200 dark:border-neutral-800 flex items-center gap-3">
                   <div className="h-10 w-10 flex-shrink-0 rounded-full border-2 border-gray-300 dark:border-neutral-700">
-                    {session.user.image ? (
+                    {session.user.foto ? (
                       <Image
                         className="rounded-full"
-                        src={session.user.image}
+                        src={session.user.foto}
                         alt="Foto profil"
                         width={40}
                         height={40}
@@ -96,11 +97,22 @@ export default function DropdownMobile({ session, onLogoutClick }: DropdownMobil
                     </Link>
                   </MenuItem>
                   <MenuItem>
+                    {({ focus }) => (
+                      <Link
+                        href={"/pengajuan-izin"}
+                        className="flex items-center gap-2 w-full px-4 py-2 text-base text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                      >
+                        <CalendarCheck className="h-5 w-5 text-gray-500" />
+                        Pengajuan Izin ke Dosen
+                      </Link>
+                    )}
+                  </MenuItem>
+                  <MenuItem>
                     <Link
                       href="/laporan-saya"
                       className="flex items-center gap-2 w-full px-4 py-2 text-base text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                     >
-                      <LuClipboardList className="h-5 w-5" />
+                      <LuClipboardList className="h-5 w-5 text-gray-500" />
                       Laporan Saya
                     </Link>
                   </MenuItem>

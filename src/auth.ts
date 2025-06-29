@@ -15,6 +15,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.id = user.id;
         token.role = user.role;
         token.prodiId = user.prodiId;
+        token.foto = user.foto;
         token.isDefaultPassword = user.isDefaultPassword ?? false;
         token.isProfileComplete = user.isProfileComplete ?? false;
       }

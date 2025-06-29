@@ -9,7 +9,7 @@ const ThemeSwitcher = ({ theme }: { theme: themeType }) => {
   return (
     <div
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      className={`w-52 h-[36px] mx-auto border border-gray-200 dark:border-gray-800 rounded-full relative overflow-hidden cursor-pointer `}
+      className={`w-52 h-[36px] mx-auto border border-gray-200 dark:border-neutral-800 rounded-full relative overflow-hidden cursor-pointer `}
     >
       <p className="absolute right-1/2 translate-x-1/2 -translate-y-1/2 top-1/2 text-xs text-gray-700 dark:text-gray-300 select-none font-semibold z-8">
         {theme === "light" ? "Light" : "Dark"}

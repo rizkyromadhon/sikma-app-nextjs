@@ -3,11 +3,9 @@ import Footer from "@/components/layouts/Footer";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex flex-col flex-grow">
       <Navbar />
-
-      <main className=" bg-white text-black dark:bg-black dark:text-white flex-1">{children}</main>
-
+      <main className="bg-white text-black dark:bg-neutral-900/30 dark:text-white flex-grow">{children}</main>
       <Footer />
     </div>
   );

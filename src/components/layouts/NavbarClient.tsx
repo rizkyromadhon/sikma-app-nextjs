@@ -114,7 +114,7 @@ export default function NavbarClient({ session }: NavbarClientProps) {
                 ) : (
                   <Link
                     href="/login"
-                    className="text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-200 border-1 rounded-md px-4 py-2 border-slate-300 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-[#1f1f1f]"
+                    className="text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-200 border-1 rounded-md px-4 py-2 border-slate-300 dark:border-neutral-800 hover:bg-slate-200 dark:hover:bg-[#1f1f1f]"
                   >
                     Login
                   </Link>

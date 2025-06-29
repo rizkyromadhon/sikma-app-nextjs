@@ -6,7 +6,7 @@ interface StatCardProps {
 
 const StatCard = ({ title, value, icon }: StatCardProps) => {
   return (
-    <div className="flex items-center gap-4 p-6 rounded-lg bg-white dark:bg-black/20 border border-gray-200 dark:border-gray-800 shadow-md">
+    <div className="flex items-center gap-4 p-6 rounded-lg bg-white dark:bg-neutral-800/50 border border-gray-200 dark:border-neutral-800 shadow-md">
       <div className="p-3 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-600/20 dark:text-blue-400">
         {icon}
       </div>

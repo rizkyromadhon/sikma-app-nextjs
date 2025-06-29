@@ -29,6 +29,146 @@ export default function FlashMessageListener() {
     const flash = searchParams.get("flash");
     const laporanStatus = searchParams.get("laporan-mahasiswa");
     const passwordStaus = searchParams.get("ganti-password");
+    const profileDosenStatus = searchParams.get("dosen_profile");
+    const kelolaStatus = searchParams.get("kelola-presensi");
+    const pengajuanStatus = searchParams.get("pengajuan_izin");
+    const pengajuanDosenStatus = searchParams.get("pengajuan-dosen");
+    const rekapStatus = searchParams.get("rekap");
+
+    if (rekapStatus === "presensi_updated") {
+      toast({
+        type: "success",
+        title: "Sukses!",
+        description: "Berhasil mengubah status presensi.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (rekapStatus === "status_success") {
+      toast({
+        type: "error",
+        title: "Gagal!",
+        description: "Gagal mengubah status presensi.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (pengajuanStatus === "failed_must_complete") {
+      toast({
+        type: "error",
+        title: "Gagal!",
+        description: "Semua field harus diisi.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (pengajuanStatus === "file_important_sick") {
+      toast({
+        type: "error",
+        title: "Gagal!",
+        description: "File bukti wajib dilampirkan untuk izin sakit.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (pengajuanStatus === "success") {
+      toast({
+        type: "success",
+        title: "Berhasil!",
+        description: "Pengajuan Izin Berhasil Dikirim.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (pengajuanStatus === "error") {
+      toast({
+        type: "error",
+        title: "Gagal!",
+        description: "Terdapat kesalahan saat mengirim pengajuan.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (kelolaStatus === "update_status_success") {
+      toast({
+        type: "success",
+        title: "Sukses!",
+        description: "Status Presensi Mahasiswa berhasil diubah.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (kelolaStatus === "update_status_failed") {
+      toast({
+        type: "error",
+        title: "Gagal!",
+        description: "Ada masalah saat mengubah data presensi.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (profileDosenStatus === "success") {
+      toast({
+        type: "success",
+        title: "Edit Profil Sukses!",
+        description: "Profil Berhasil Diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (profileDosenStatus === "server_error") {
+      toast({
+        type: "error",
+        title: "Error!",
+        description: "Server error.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (profileDosenStatus === "old_password_wrong") {
+      toast({
+        type: "error",
+        title: "Gagal!",
+        description: "Password lama salah.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (profileDosenStatus === "password_not_same") {
+      toast({
+        type: "error",
+        title: "Gagal!",
+        description: "Password dan konfirmasi password tidak sama.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (profileDosenStatus === "password_6_char") {
+      toast({
+        type: "error",
+        title: "Gagal!",
+        description: "Password minimal 6 karakter.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (profileDosenStatus === "password_success") {
+      toast({
+        type: "success",
+        title: "Sukses!",
+        description: "Password berhasil diperbarui.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (profileDosenStatus === "error") {
+      toast({
+        type: "error",
+        title: "Gagal!",
+        description: "Gagal memperbarui password.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
 
     if (passwordStaus === "success") {
       toast({

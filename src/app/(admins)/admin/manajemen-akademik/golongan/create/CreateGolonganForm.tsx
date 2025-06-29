@@ -55,7 +55,7 @@ export default function CreateGolonganForm({ prodiList, semesterList }: CreateGo
             autoComplete="off"
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             placeholder="Golongan A"
-            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
             required
           />
         </div>
@@ -71,14 +71,14 @@ export default function CreateGolonganForm({ prodiList, semesterList }: CreateGo
             name="semesterId"
             value={form.semesterId}
             onChange={(e) => setForm({ ...form, semesterId: e.target.value })}
-            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
             required
           >
-            <option value="" disabled className="bg-white dark:bg-black/90">
+            <option value="" disabled className="bg-white dark:bg-neutral-900">
               Pilih Semester
             </option>
             {semesterList.map((smt) => (
-              <option key={smt.id} value={smt.id} className="bg-white dark:bg-black/90">
+              <option key={smt.id} value={smt.id} className="bg-white dark:bg-neutral-900">
                 {smt.name}
               </option>
             ))}
@@ -97,21 +97,20 @@ export default function CreateGolonganForm({ prodiList, semesterList }: CreateGo
             name="prodiId"
             value={form.prodiId}
             onChange={(e) => setForm({ ...form, prodiId: e.target.value })}
-            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
             required
           >
-            <option value="" disabled className="bg-white dark:bg-black/90">
+            <option value="" disabled className="bg-white dark:bg-neutral-900">
               Pilih Program Studi
             </option>
             {prodiList.map((prodi) => (
-              <option key={prodi.id} value={prodi.id} className="bg-white dark:bg-black/90">
+              <option key={prodi.id} value={prodi.id} className="bg-white dark:bg-neutral-900">
                 {prodi.name}
               </option>
             ))}
           </select>
         </div>
 
-        {/* Input Nama Golongan */}
 
         {error && <p className="text-sm text-red-500 dark:text-red-400">{error}</p>}
 
@@ -120,12 +119,12 @@ export default function CreateGolonganForm({ prodiList, semesterList }: CreateGo
             type="submit"
             text="Tambah"
             isLoading={isLoading}
-            className="bg-black dark:bg-white text-white dark:text-gray-900 hover:bg-slate-900 dark:hover:bg-gray-200 px-6 py-2 rounded text-sm"
+            className="bg-black dark:bg-white text-white dark:text-gray-900 hover:bg-slate-900 dark:hover:bg-gray-200 px-6 py-2 rounded-md text-sm"
           />
           <SubmitButton
             text="Batal"
             href="/admin/manajemen-akademik/golongan"
-            className="bg-white dark:bg-black text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-black/10 px-6 py-2 rounded text-sm border border-gray-300 dark:border-gray-800"
+            className="bg-white dark:bg-neutral-950/50 text-gray-900 dark:text-white dark:hover:bg-black/10 hover:bg-gray-200 px-6 py-2 rounded-md text-sm border border-gray-300 dark:border-neutral-800"
           />
         </div>
       </div>

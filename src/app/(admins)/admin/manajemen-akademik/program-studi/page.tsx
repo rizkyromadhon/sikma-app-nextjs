@@ -25,7 +25,7 @@ export default async function ManajemenProdiPage() {
   const data = await getProdi();
 
   return (
-    <div className="w-full mx-auto p-6 bg-white dark:bg-black/20 rounded-lg shadow">
+    <div className="w-full mx-auto p-6 rounded-lg shadow">
       <Breadcrumb className="ml-12 mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -49,7 +49,7 @@ export default async function ManajemenProdiPage() {
           text="Tambah Program Studi"
           href="/admin/manajemen-akademik/program-studi/create"
           icon={<BsPlusCircleDotted />}
-          className="bg-white dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-black/10 hover:transition-all text-sm border border-gray-300 dark:border-gray-800 flex items-center gap-2 cursor-pointer"
+          className="bg-white dark:bg-neutral-950/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-black/10 hover:transition-all text-sm border border-gray-300 dark:border-neutral-800 flex items-center gap-2 cursor-pointer"
         />
       </div>
       <ProdiTable data={data} />

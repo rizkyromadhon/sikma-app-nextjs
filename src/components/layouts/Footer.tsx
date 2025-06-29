@@ -1,7 +1,5 @@
 "use client";
 
-import { Github, Heart } from "lucide-react";
-import Link from "next/link";
 import FooterThemeToggle from "../features/FooterThemeToggle";
 
 export default function Footer() {

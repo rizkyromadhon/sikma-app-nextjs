@@ -158,7 +158,6 @@ export default function DetailPresensiTable({
         Detail Presensi <span className="text-neutral-800 dark:text-neutral-200">- {prodiName}</span>
       </h1>
 
-      {/* Filters */}
       <div className="flex flex-col md:flex-row items-center gap-4 mt-6">
         <Select onValueChange={(val) => updateQuery("semester", val)} value={currentSemester}>
           <SelectTrigger className="w-full md:w-44">
@@ -197,7 +196,7 @@ export default function DetailPresensiTable({
         </Select>
 
         <Select onValueChange={(val) => updateQuery("mataKuliah", val)} value={currentMataKuliah}>
-          <SelectTrigger className="w-full md:w-44">
+          <SelectTrigger className="w-full md:w-80">
             <SelectValue placeholder="Mata Kuliah" />
           </SelectTrigger>
           <SelectContent>
@@ -226,7 +225,7 @@ export default function DetailPresensiTable({
       </div>
 
       {/* TABEL */}
-      <div className="mt-6 overflow-x-auto bg-white dark:bg-neutral-950 border border-gray-200 dark:border-neutral-800 rounded-xl shadow-md">
+      <div className="mt-6 overflow-x-auto bg-white dark:bg-neutral-950/50 border border-gray-200 dark:border-neutral-800 rounded-xl shadow-md">
         <table className="min-w-full divide-y divide-gray-200 dark:divide-neutral-800">
           <thead className="bg-gray-50 dark:bg-neutral-900">
             <tr>

@@ -119,41 +119,41 @@ export default function MahasiswaTable({
       {/* Filter */}
       <div className="flex items-center gap-4 w-full">
         <select
-          className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+          className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/50 dark:text-white border-gray-300 dark:border-neutral-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
           value={filters.current.semester || ""}
           onChange={(e) => updateFilter("semester", e.target.value)}
         >
-          <option value="" className="bg-white dark:bg-black/90">
+          <option value="" className="bg-white dark:bg-neutral-900">
             Semua Semester
           </option>
           {filters.semesters.map((s) => (
-            <option key={s.id} value={s.id} className="bg-white dark:bg-black/90">
+            <option key={s.id} value={s.id} className="bg-white dark:bg-neutral-900">
               {s.name}
             </option>
           ))}
         </select>
         <select
-          className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+          className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/50 dark:text-white border-gray-300 dark:border-neutral-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
           value={filters.current.prodi || ""}
           onChange={(e) => updateFilter("prodi", e.target.value)}
         >
-          <option value="" className="bg-white dark:bg-black/90">
+          <option value="" className="bg-white dark:bg-neutral-900">
             Semua Prodi
           </option>
           {filters.prodis.map((p) => (
-            <option key={p.id} value={p.id} className="bg-white dark:bg-black/90">
+            <option key={p.id} value={p.id} className="bg-white dark:bg-neutral-900">
               {p.name}
             </option>
           ))}
         </select>
         <select
-          className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/50 dark:text-white border-gray-300 dark:border-neutral-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           value={filters.current.golongan || ""}
           onChange={(e) => updateFilter("golongan", e.target.value)}
           // Non-aktifkan jika prodi ATAU semester belum dipilih
           disabled={!filters.current.prodi || !filters.current.semester}
         >
-          <option value="" className="bg-white dark:bg-black/90">
+          <option value="" className="bg-white dark:bg-neutral-900">
             {!filters.current.semester
               ? "Pilih salah satu semester"
               : !filters.current.prodi
@@ -161,7 +161,7 @@ export default function MahasiswaTable({
               : "Semua Golongan"}
           </option>
           {filteredGolongans.map((g) => (
-            <option key={g.id} value={g.id.toString()} className="bg-white dark:bg-black/90">
+            <option key={g.id} value={g.id.toString()} className="bg-white dark:bg-neutral-900">
               {g.name}
             </option>
           ))}
@@ -169,16 +169,16 @@ export default function MahasiswaTable({
         <input
           type="text"
           placeholder="Cari Mahasiswa berdasarkan NIM..."
-          className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/50 dark:text-white border-gray-300 dark:border-neutral-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           defaultValue={filters.current.nim || ""}
           onChange={(e: ChangeEvent<HTMLInputElement>) => updateFilter("nim", e.target.value)}
         />
       </div>
 
       {/* Table */}
-      <div className="overflow-auto rounded border border-gray-300 dark:border-gray-800 shadow-sm">
+      <div className="overflow-auto rounded border border-gray-300 dark:border-neutral-800 shadow-sm">
         <table className="min-w-full text-sm text-left text-black dark:text-gray-200">
-          <thead className="bg-gray-100 dark:bg-black/40 uppercase tracking-wide text-gray-600 dark:text-gray-300">
+          <thead className="bg-neutral-100 dark:bg-neutral-950/50 uppercase tracking-wide text-gray-600 dark:text-gray-300">
             <tr>
               <th className="px-6 py-3 font-semibold">NIM</th>
               <th className="px-6 py-3 font-semibold">Nama</th>
@@ -199,7 +199,7 @@ export default function MahasiswaTable({
               data.map((m) => (
                 <tr
                   key={m.id}
-                  className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-black/30 transition-colors duration-150 bg-black/10"
+                  className="border-t border-gray-200 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-900 bg-white dark:bg-neutral-800/10"
                 >
                   <td className="px-6 py-4 font-mono">{displayValue(m.nim)}</td>
                   <td className="px-6 py-4">{displayValue(m.name)}</td>
@@ -210,7 +210,7 @@ export default function MahasiswaTable({
                     <SubmitButton
                       text="Edit"
                       href={`/admin/manajemen-akademik/mahasiswa/${m.id}/edit`}
-                      className="bg-white w-18 dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-[#1A1A1A] hover:transition-all text-sm border border-gray-300 dark:border-gray-800 flex items-center justify-center gap-2 cursor-pointer"
+                      className="bg-white w-18 dark:bg-neutral-950/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-[#1A1A1A] hover:transition-all text-sm border border-gray-300 dark:border-neutral-800 flex items-center justify-center gap-2 cursor-pointer"
                     />
                     <SubmitButton
                       text="Hapus"
@@ -235,8 +235,8 @@ export default function MahasiswaTable({
               href={createPageURL(currentPage - 1)}
               className={`px-3 py-1 text-sm rounded-md flex items-center gap-2 ${
                 currentPage <= 1
-                  ? "pointer-events-none bg-transparent dark:bg-black/80 border border-gray-300 dark:border-gray-800 text-gray-400"
-                  : "bg-gray-100 dark:bg-gray-200 border border-gray-300 dark:border-gray-800 text-gray-800 dark:text-gray-800 hover:bg-gray-200 dark:hover:bg-gray-300 hover:transition-all"
+                  ? "pointer-events-none bg-transparent dark:bg-black/80 border border-gray-300 dark:border-neutral-800 text-gray-400"
+                  : "bg-gray-100 dark:bg-gray-200 border border-gray-300 dark:border-neutral-800 text-gray-800 dark:text-gray-800 hover:bg-gray-200 dark:hover:bg-gray-300 hover:transition-all"
               }`}
             >
               <LuCircleArrowLeft /> Sebelumnya
@@ -245,8 +245,8 @@ export default function MahasiswaTable({
               href={createPageURL(currentPage + 1)}
               className={`px-3 py-1 text-sm rounded-md flex items-center gap-2 ${
                 currentPage >= totalPages
-                  ? "pointer-events-none bg-transparent dark:bg-black/80 border border-gray-300 dark:border-gray-800 text-gray-400"
-                  : "bg-gray-100 dark:bg-gray-200 border border-gray-300 dark:border-gray-800 text-gray-800 dark:text-gray-800 hover:bg-gray-200 dark:hover:bg-gray-300 hover:transition-all"
+                  ? "pointer-events-none bg-transparent dark:bg-black/80 border border-gray-300 dark:border-neutral-800 text-gray-400"
+                  : "bg-gray-100 dark:bg-gray-200 border border-gray-300 dark:border-neutral-800 text-gray-800 dark:text-gray-800 hover:bg-gray-200 dark:hover:bg-gray-300 hover:transition-all"
               }`}
             >
               Selanjutnya <LuCircleArrowRight />
@@ -257,7 +257,7 @@ export default function MahasiswaTable({
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="bg-white dark:bg-black/80 dark:backdrop-blur-sm rounded-lg p-6 w-full max-w-lg mx-4 shadow-[0_0_30px_2px_#C10007] dark:shadow-[0_0_34px_4px_#460809]">
+          <div className="bg-white dark:bg-neutral-950 dark:backdrop-blur-sm rounded-lg p-6 w-full max-w-lg mx-4 shadow-[0_0_30px_1px_#C10007] dark:shadow-[0_0_34px_1px_#460809]">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
               <LuCircleAlert className="w-6 h-6 text-red-600" /> Konfirmasi Hapus
             </h2>
@@ -276,7 +276,7 @@ export default function MahasiswaTable({
               <SubmitButton
                 text="Batal"
                 onClick={() => setIsModalOpen(false)}
-                className="bg-gray-200 dark:bg-black dark:border dark:border-gray-800 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-slate-800 transition-all"
+                className="bg-gray-200 dark:bg-neutral-900/50 dark:border dark:border-neutral-800 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-neutral-700 transition-all"
               />
               <SubmitButton
                 text="Ya, Hapus"

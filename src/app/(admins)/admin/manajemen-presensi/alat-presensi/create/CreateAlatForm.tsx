@@ -14,8 +14,8 @@ export default function CreateAlatForm({ ruangans }: CreateAlatFormProps) {
 
   const [form, setForm] = useState({
     name: "",
-    jadwal_nyala: "", // Format "HH:mm"
-    jadwal_mati: "", // Format "HH:mm"
+    jadwal_nyala: "",
+    jadwal_mati: "",
     ruanganId: "",
   });
 
@@ -86,7 +86,7 @@ export default function CreateAlatForm({ ruangans }: CreateAlatFormProps) {
             value={form.name}
             onChange={handleChange}
             placeholder="Contoh: Alat Presensi Lab Jaringan"
-            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
             required
           />
         </div>
@@ -103,14 +103,14 @@ export default function CreateAlatForm({ ruangans }: CreateAlatFormProps) {
             name="ruanganId"
             value={form.ruanganId}
             onChange={handleChange}
-            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
             required
           >
-            <option value="" disabled className="bg-white dark:bg-black/90">
+            <option value="" disabled className="bg-white dark:bg-neutral-900">
               Pilih Ruangan
             </option>
             {ruangans.map((r) => (
-              <option key={r.id} value={r.id.toString()} className="bg-white dark:bg-black/90">
+              <option key={r.id} value={r.id.toString()} className="bg-white dark:bg-neutral-900">
                 {r.kode} - {r.name}
               </option>
             ))}
@@ -131,7 +131,7 @@ export default function CreateAlatForm({ ruangans }: CreateAlatFormProps) {
               value={form.jadwal_nyala}
               onChange={handleChange}
               type="time"
-              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
             />
           </div>
           <div>
@@ -147,7 +147,7 @@ export default function CreateAlatForm({ ruangans }: CreateAlatFormProps) {
               value={form.jadwal_mati}
               onChange={handleChange}
               type="time"
-              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
             />
           </div>
         </div>
@@ -159,12 +159,12 @@ export default function CreateAlatForm({ ruangans }: CreateAlatFormProps) {
             type="submit"
             text="Tambah"
             isLoading={isLoading}
-            className="bg-black dark:bg-white text-white dark:text-gray-900 hover:bg-slate-900 dark:hover:bg-gray-200 px-6 py-2 rounded text-sm"
+            className="bg-black dark:bg-white text-white dark:text-gray-900 hover:bg-slate-900 dark:hover:bg-gray-200 px-6 py-2 rounded-md text-sm"
           />
           <SubmitButton
             text="Batal"
             href="/admin/manajemen-presensi/alat-presensi"
-            className="bg-white dark:bg-black text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-black/10 px-6 py-2 rounded text-sm border border-gray-300 dark:border-gray-800"
+            className="bg-white dark:bg-neutral-950/50 text-gray-900 dark:text-white dark:hover:bg-black/10 hover:bg-gray-200 px-6 py-2 rounded-md text-sm border border-gray-300 dark:border-neutral-800"
           />
         </div>
       </div>

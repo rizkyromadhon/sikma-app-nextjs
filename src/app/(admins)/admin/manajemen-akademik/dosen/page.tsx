@@ -1,6 +1,4 @@
 import prisma from "@/lib/prisma";
-import { SubmitButton } from "@/components/auth/SubmitButton";
-import { BsPlusCircleDotted } from "react-icons/bs";
 import DosenTable from "./DosenTable";
 import { Prisma } from "@/generated/prisma/client";
 import {
@@ -57,7 +55,6 @@ export default async function ManajemenDosenPage({
 }) {
   const { prodi, nip, page } = await searchParams;
   const currentPage = page ?? 1;
-  // const currentPage = Number(searchParams?.page) || 1;
 
   const [{ data, totalPages }, prodis] = await Promise.all([
     getDosen(prodi, nip, currentPage),

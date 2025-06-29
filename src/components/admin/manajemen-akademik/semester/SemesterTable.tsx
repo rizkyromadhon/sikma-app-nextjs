@@ -52,10 +52,10 @@ const SemesterTable = ({ data }: SemesterTableProps) => {
     }
   };
   return (
-    <div className="overflow-auto rounded border border-gray-300 dark:border-gray-800 shadow-sm">
+    <div className="overflow-auto rounded border border-gray-300 dark:border-neutral-800 shadow-sm">
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm text-left text-black dark:text-gray-200">
-          <thead className="bg-gray-100 dark:bg-black/40 uppercase tracking-wide text-gray-600 dark:text-gray-300">
+          <thead className="bg-gray-100 dark:bg-neutral-950/50 uppercase tracking-wide text-gray-600 dark:text-gray-300">
             <tr>
               <th className="px-6 py-3 font-semibold text-center">Nama Semester</th>
               <th className="px-6 py-3 font-semibold text-center">Tipe</th>
@@ -73,7 +73,7 @@ const SemesterTable = ({ data }: SemesterTableProps) => {
               data.map((semester) => (
                 <tr
                   key={semester.id}
-                  className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-black/30 hover:transition-all bg-white dark:bg-black/10"
+                  className="border-t border-gray-200 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-950/40 hover:transition-all"
                 >
                   <td className="px-6 py-4 text-center">{semester.name}</td>
                   <td className="px-6 py-4 text-center">{semester.tipe}</td>
@@ -81,7 +81,7 @@ const SemesterTable = ({ data }: SemesterTableProps) => {
                     <SubmitButton
                       text="Edit"
                       href={`/admin/manajemen-akademik/semester/${semester.id}/edit`}
-                      className="bg-white w-18 dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-[#1A1A1A] hover:transition-all text-sm border border-gray-300 dark:border-gray-800 flex items-center justify-center gap-2 cursor-pointer"
+                      className="bg-white w-18 dark:bg-neutral-950/40 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-[#1A1A1A] hover:transition-all text-sm border border-gray-300 dark:border-neutral-800 flex items-center justify-center gap-2 cursor-pointer"
                     />
                     <SubmitButton
                       text="Hapus"
@@ -96,9 +96,8 @@ const SemesterTable = ({ data }: SemesterTableProps) => {
         </table>
       </div>
       {isModalOpen && (
-        // 0e0e0e
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs">
-          <div className="bg-white dark:bg-black/80 dark:backdrop-blur-sm rounded-lg  p-6 w-full max-w-md mx-4 shadow-[0_0_30px_2px_#C10007] dark:shadow-[0_0_34px_4px_#460809]">
+          <div className="bg-white dark:bg-neutral-950 dark:backdrop-blur-sm rounded-lg p-6 w-full max-w-lg mx-4 shadow-[0_0_30px_1px_#C10007] dark:shadow-[0_0_34px_1px_#460809]">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">Konfirmasi Hapus</h2>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
               Apakah Anda yakin ingin menghapus{" "}
@@ -109,7 +108,7 @@ const SemesterTable = ({ data }: SemesterTableProps) => {
               <SubmitButton
                 text="Batal"
                 onClick={handleCloseModal}
-                className="bg-gray-200 dark:bg-black dark:border dark:border-gray-800 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-slate-800 transition-all"
+                className="bg-gray-200 dark:bg-neutral-900/50 dark:border dark:border-neutral-800 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-neutral-900 transition-all"
               />
               <SubmitButton
                 text="Ya, Hapus"

@@ -60,7 +60,7 @@ export async function PUT(req: Request) {
   let fotoUrl: string | null = null;
   if (foto && typeof foto === "object") {
     const buffer = Buffer.from(await foto.arrayBuffer());
-    const upload = await uploadToCloudinary(buffer, "mahasiswa-profil");
+    const upload = await uploadToCloudinary(buffer, "mahasiswa");
     fotoUrl = upload.secure_url;
   }
 

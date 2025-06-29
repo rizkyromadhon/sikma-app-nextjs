@@ -117,19 +117,19 @@ export default function AlatPresensiTable({ data, initialSearch }: AlatPresensiT
           placeholder="Cari berdasarkan nama alat atau kode ruangan..."
           defaultValue={initialSearch}
           onChange={(e) => handleSearch(e.target.value)}
-          className="w-100 px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+          className="bg-white dark:bg-neutral-950/50 text-black dark:text-gray-200 border border-gray-300 dark:border-neutral-800 rounded-md px-4 py-2 focus:outline-none text-sm w-100"
         />
         <SubmitButton
           text="Tambah Alat"
           href="/admin/manajemen-presensi/alat-presensi/create"
           icon={<BsPlusCircleDotted />}
-          className="bg-white dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-black/10 hover:transition-all text-sm border border-gray-300 dark:border-gray-800 flex items-center gap-2 cursor-pointer"
+          className="bg-white dark:bg-neutral-950/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-black/10 hover:transition-all text-sm border border-gray-300 dark:border-neutral-800 flex items-center gap-2"
         />
       </div>
 
-      <div className="overflow-auto rounded border border-gray-300 dark:border-gray-800 shadow-sm">
+      <div className="overflow-auto rounded border border-gray-300 dark:border-neutral-800 shadow-sm">
         <table className="min-w-full text-sm text-left text-black dark:text-gray-200">
-          <thead className="bg-gray-100 dark:bg-black/40 uppercase tracking-wide">
+          <thead className="bg-gray-100 dark:bg-neutral-950/50 uppercase tracking-wide">
             <tr>
               <th className="px-6 py-3 font-semibold text-center">Nama Alat</th>
               <th className="px-6 py-3 font-semibold text-center">Lokasi (Ruangan)</th>
@@ -150,7 +150,7 @@ export default function AlatPresensiTable({ data, initialSearch }: AlatPresensiT
               data?.map((alat) => (
                 <tr
                   key={alat.id}
-                  className="border-t dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-black/30"
+                  className="border-t border-gray-200 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-950/40"
                 >
                   <td className="px-6 py-4 font-semibold text-center">{alat.name}</td>
                   <td className="px-6 py-4 text-center">
@@ -171,7 +171,7 @@ export default function AlatPresensiTable({ data, initialSearch }: AlatPresensiT
                     <SubmitButton
                       text="Edit"
                       href={`/admin/manajemen-presensi/alat-presensi/${alat.id}/edit`}
-                      className="bg-white w-18 dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-[#1A1A1A] hover:transition-all text-sm border border-gray-300 dark:border-gray-800"
+                      className="bg-white w-18 dark:bg-neutral-950/40 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-[#1A1A1A] hover:transition-all text-sm border border-gray-300 dark:border-neutral-800"
                     />
                     <SubmitButton
                       text="Hapus"
@@ -188,7 +188,7 @@ export default function AlatPresensiTable({ data, initialSearch }: AlatPresensiT
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="bg-white dark:bg-black/80 dark:backdrop-blur-sm rounded-lg p-6 w-full max-w-lg mx-4 shadow-[0_0_30px_2px_#C10007] dark:shadow-[0_0_34px_4px_#460809]">
+          <div className="bg-white dark:bg-neutral-950 dark:backdrop-blur-sm rounded-lg p-6 w-full max-w-lg mx-4 shadow-[0_0_30px_1px_#C10007] dark:shadow-[0_0_34px_1px_#460809]">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
               <LuCircleAlert className="w-6 h-6 text-red-600" />
               Konfirmasi Hapus
@@ -204,7 +204,7 @@ export default function AlatPresensiTable({ data, initialSearch }: AlatPresensiT
               <SubmitButton
                 text="Batal"
                 onClick={() => setIsModalOpen(false)}
-                className="bg-gray-200 dark:bg-black dark:border dark:border-gray-800 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-slate-800 transition-all"
+                className="bg-gray-100 dark:bg-neutral-900/50 border border-neutral-300 dark:border-neutral-800 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-neutral-900 transition-all"
               />
               <SubmitButton
                 text="Ya, Hapus"

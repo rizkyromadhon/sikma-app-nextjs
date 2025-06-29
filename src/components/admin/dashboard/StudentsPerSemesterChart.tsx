@@ -14,7 +14,7 @@ const StudentsPerSemesterChart = ({ data }: StudentsPerSemesterChartProps) => {
 
   const isDark = resolvedTheme === "dark";
   return (
-    <div className="p-6 rounded-lg bg-white dark:bg-black/20 border border-gray-200 dark:border-gray-800 shadow-md h-96">
+    <div className="p-6 rounded-lg bg-white dark:bg-neutral-800/50 border border-gray-200 dark:border-neutral-800 shadow-md h-96">
       <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
         Jumlah Mahasiswa per Semester
       </h2>

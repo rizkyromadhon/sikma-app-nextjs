@@ -27,22 +27,39 @@ export const getStudentsPerSemester = async (prodiId: string) => {
       prodiId: prodiId,
     },
     select: {
-      semesterId: true,
+      id: true,
+      nim: true,
+      semester: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
     },
   });
 
   const counts: { [key: number]: number } = {};
   students.forEach((s) => {
-    if (s.semesterId !== null) {
-      const semesterNum = Number(s.semesterId);
-      if (!isNaN(semesterNum)) {
-        counts[semesterNum] = (counts[semesterNum] || 0) + 1;
+    if (s.semester?.name) {
+      const match = s.semester.name.match(/Semester (\d+)/);
+      if (match && match[1]) {
+        const semesterNum = Number(match[1]);
+        if (!isNaN(semesterNum)) {
+          counts[semesterNum] = (counts[semesterNum] || 0) + 1;
+        }
+      } else {
+        console.warn(
+          `Semester name "${s.semester.name}" for user ${s.semester} did not match "Semester N" format.`
+        );
       }
+    } else {
+      console.warn(`User ${s.id} (NIM: ${s.nim}) has no associated semester.`);
     }
   });
 
   const result = [];
   for (let i = 1; i <= 8; i++) {
+    // Asumsi ada 8 semester yang ingin ditampilkan
     result.push({ semester: i, count: counts[i] || 0 });
   }
   return result;

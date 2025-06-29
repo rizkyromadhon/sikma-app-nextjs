@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { format, parseISO } from "date-fns";
 import { SubmitButton } from "@/components/auth/SubmitButton";
@@ -19,8 +19,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-
-// Type Definitions
+import { Router } from "lucide-react";
 
 type Mahasiswa = {
   id: string;
@@ -31,7 +30,7 @@ type Mahasiswa = {
   golongan?: { name: string };
 };
 
-type PresensiStatus = "HADIR" | "TIDAK_HADIR" | "IZIN" | "SAKIT";
+type PresensiStatus = "HADIR" | "TIDAK_HADIR" | "IZIN" | "SAKIT" | "TERLAMBAT";
 
 type PresensiItem = {
   id: string;
@@ -50,29 +49,35 @@ export default function PresensiDetailPage() {
   const [mahasiswa, setMahasiswa] = useState<Mahasiswa | null>(null);
   const [presensi, setPresensi] = useState<PresensiItem[]>([]);
   const [matkuls, setMatkuls] = useState<Matkul[]>([]);
-  const [selectedMatkul, setSelectedMatkul] = useState<string>("");
+  const [selectedMatkul, setSelectedMatkul] = useState<string>("all");
   const [filter, setFilter] = useState({ from: "", to: "" });
   const [loading, setLoading] = useState(false);
   const [updating, setUpdating] = useState(false);
   const [changed, setChanged] = useState<Record<string, PresensiStatus>>({});
   const [loadingMahasiswa, setLoadingMahasiswa] = useState(true);
+  const router = useRouter();
 
   const fetchData = useCallback(async () => {
     setLoading(true);
-    setLoadingMahasiswa(true);
     try {
+      const params: any = {
+        from: filter.from,
+        to: filter.to,
+      };
+
+      if (selectedMatkul !== "all") {
+        params.matkulId = selectedMatkul;
+      }
+
       const res = await axios.get(`/api/rekap/${mahasiswaId}`, {
-        params: {
-          from: filter.from,
-          to: filter.to,
-          matkulId: selectedMatkul || undefined,
-        },
+        params: params,
       });
 
       const { mahasiswa, presensi, semesterId } = res.data;
 
       setMahasiswa(mahasiswa);
       setPresensi(presensi);
+      setChanged({});
 
       if (semesterId) {
         const matkulRes = await axios.get(`/api/rekap/get-matkul-options?semesterId=${semesterId}`);
@@ -105,16 +110,31 @@ export default function PresensiDetailPage() {
 
       await axios.post("/api/rekap/update-presensi", updates);
       setChanged({});
-      alert("Perubahan berhasil disimpan.");
+      router.push("?rekap=presensi_updated");
     } catch (err) {
       console.error("Gagal menyimpan:", err);
-      alert("Gagal menyimpan data.");
+      router.push("?rekap=error_updated");
     } finally {
       setUpdating(false);
     }
   };
 
-  const statusOptions: PresensiStatus[] = ["HADIR", "TIDAK_HADIR", "IZIN", "SAKIT"];
+  const statusOptions: PresensiStatus[] = ["HADIR", "TIDAK_HADIR", "IZIN", "SAKIT", "TERLAMBAT"];
+
+  const getStatusClasses = (status: PresensiStatus) => {
+    switch (status) {
+      case "HADIR":
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+      case "TIDAK_HADIR":
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+      case "IZIN":
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
+      case "SAKIT":
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+      default:
+        return "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300";
+    }
+  };
 
   return (
     <div className="w-full mx-auto py-6">
@@ -187,6 +207,7 @@ export default function PresensiDetailPage() {
                 <SelectValue placeholder="Semua Mata Kuliah" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="all">Semua Mata Kuliah</SelectItem>
                 {matkuls.map((m) => (
                   <SelectItem key={m.id} value={m.id}>
                     {m.name}
@@ -227,7 +248,15 @@ export default function PresensiDetailPage() {
                     <td className="p-2 text-center">{format(parseISO(p.waktu_presensi), "dd/MM/yyyy")}</td>
                     <td className="p-2 text-center">{format(parseISO(p.waktu_presensi), "HH:mm:ss")}</td>
                     <td className="p-2 text-center">{p.matkul?.name}</td>
-                    <td className="p-2 text-center">{p.status}</td>
+                    <td className="p-2 text-center">
+                      <span
+                        className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${getStatusClasses(
+                          p.status
+                        )}`}
+                      >
+                        {p.status.replace(/_/g, " ")}
+                      </span>
+                    </td>
                     <td className="p-2 text-center">
                       <select
                         value={p.status}
@@ -235,8 +264,8 @@ export default function PresensiDetailPage() {
                         className="border px-2 py-1 rounded"
                       >
                         {statusOptions.map((s) => (
-                          <option key={s} value={s} className="bg-white dark:bg-neutral-950">
-                            {s}
+                          <option key={s} value={s} className="bg-white dark:bg-neutral-900">
+                            {s.replace(/_/g, " ")}
                           </option>
                         ))}
                       </select>
@@ -254,7 +283,7 @@ export default function PresensiDetailPage() {
               text={updating ? "Menyimpan..." : "Simpan Perubahan"}
               onClick={handleSave}
               isLoading={updating}
-              className="bg-green-600 text-white px-4 py-2 rounded"
+              className="bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-800 dark:hover:bg-emerald-900 hover:transition-all text-white px-4 py-2 rounded-md text-sm"
             />
           </div>
         )}

@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { auth } from "@/auth"; // pastikan ini tersedia
+import { auth } from "@/auth";
 
 type UpdatePresensiPayload = {
   id: string;
-  status: "HADIR" | "TIDAK_HADIR" | "IZIN" | "SAKIT";
+  status: "HADIR" | "TIDAK_HADIR" | "IZIN" | "SAKIT" | "TERLAMBAT";
 }[];
 
 export async function POST(req: Request) {

@@ -66,19 +66,19 @@ export default function MatkulTable({ data, initialSearch, totalPages, currentPa
           placeholder="Cari berdasarkan kode atau nama mata kuliah..."
           defaultValue={initialSearch}
           onChange={(e) => handleSearch(e.target.value)}
-          className="bg-white dark:bg-black/50 text-black dark:text-gray-200 border border-gray-300 dark:border-gray-800 rounded px-4 py-2 focus:outline-none text-sm w-88"
+          className="bg-white dark:bg-neutral-950/50 text-black dark:text-gray-200 border border-gray-300 dark:border-neutral-800 rounded-md px-4 py-2 focus:outline-none text-sm w-88"
         />
         <SubmitButton
           text="Tambah Mata Kuliah"
           href="/admin/manajemen-akademik/mata-kuliah/create"
           icon={<BsPlusCircleDotted />}
-          className="bg-white dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-black/10 hover:transition-all text-sm border border-gray-300 dark:border-gray-800 flex items-center gap-2"
+          className="bg-white dark:bg-neutral-950/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-black/10 hover:transition-all text-sm border border-gray-300 dark:border-neutral-800 flex items-center gap-2"
         />
       </div>
 
-      <div className="overflow-auto rounded border border-gray-300 dark:border-gray-800 shadow-sm">
+      <div className="overflow-auto rounded border border-gray-300 dark:border-neutral-800 shadow-sm">
         <table className="min-w-full text-sm text-left text-black dark:text-gray-200">
-          <thead className="bg-gray-100 dark:bg-black/40 uppercase tracking-wide">
+          <thead className="bg-gray-100 dark:bg-neutral-950/50 uppercase tracking-wide">
             <tr>
               <th className="px-6 py-3 font-semibold">Kode</th>
               <th className="px-6 py-3 font-semibold">Nama Mata Kuliah</th>
@@ -96,7 +96,7 @@ export default function MatkulTable({ data, initialSearch, totalPages, currentPa
               data.map((matkul) => (
                 <tr
                   key={matkul.id}
-                  className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-black/30"
+                  className="border-t border-gray-200 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-950/40"
                 >
                   <td className="px-6 py-4 font-mono">{matkul.kode}</td>
                   <td className="px-6 py-4">{matkul.name}</td>
@@ -104,7 +104,7 @@ export default function MatkulTable({ data, initialSearch, totalPages, currentPa
                     <SubmitButton
                       text="Edit"
                       href={`/admin/manajemen-akademik/mata-kuliah/${matkul.id}/edit`}
-                      className="bg-white w-18 dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-[#1A1A1A] hover:transition-all text-sm border border-gray-300 dark:border-gray-800"
+                      className="bg-white w-18 dark:bg-neutral-950/40 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-[#1A1A1A] hover:transition-all text-sm border border-gray-300 dark:border-neutral-800"
                     />
                     <SubmitButton
                       text="Hapus"
@@ -129,8 +129,8 @@ export default function MatkulTable({ data, initialSearch, totalPages, currentPa
               href={`?page=${currentPage - 1}`}
               className={`px-3 py-1 text-sm rounded-md flex items-center gap-2 ${
                 currentPage <= 1
-                  ? "pointer-events-none bg-transparent dark:bg-black/80 border border-gray-300 dark:border-gray-800 text-gray-400"
-                  : "bg-gray-100 dark:bg-gray-200 border border-gray-300 dark:border-gray-800 text-gray-800 dark:text-gray-800 hover:bg-gray-200 dark:hover:bg-gray-300 hover:transition-all"
+                  ? "pointer-events-none bg-transparent dark:bg-black/80 border border-gray-300 dark:border-neutral-800 text-gray-400"
+                  : "bg-gray-100 dark:bg-gray-200 border border-gray-300 dark:border-neutral-800 text-gray-800 dark:text-gray-800 hover:bg-gray-200 dark:hover:bg-gray-300 hover:transition-all"
               }`}
             >
               <LuCircleArrowLeft />
@@ -140,8 +140,8 @@ export default function MatkulTable({ data, initialSearch, totalPages, currentPa
               href={`?page=${currentPage + 1}`}
               className={`px-3 py-1 text-sm rounded-md flex items-center gap-2 ${
                 currentPage >= totalPages
-                  ? "pointer-events-none bg-transparent dark:bg-black/80 border border-gray-300 dark:border-gray-800 text-gray-400"
-                  : "bg-gray-100 dark:bg-gray-200 border border-gray-300 dark:border-gray-800 text-gray-800 dark:text-gray-800 hover:bg-gray-200 dark:hover:bg-gray-300 hover:transition-all"
+                  ? "pointer-events-none bg-transparent dark:bg-black/80 border border-gray-300 dark:border-neutral-800 text-gray-400"
+                  : "bg-gray-100 dark:bg-gray-200 border border-gray-300 dark:border-neutral-800 text-gray-800 dark:text-gray-800 hover:bg-gray-200 dark:hover:bg-gray-300 hover:transition-all"
               }`}
             >
               Selanjutnya
@@ -153,7 +153,7 @@ export default function MatkulTable({ data, initialSearch, totalPages, currentPa
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="bg-white dark:bg-black/80 dark:backdrop-blur-sm rounded-lg p-6 w-full max-w-lg mx-4 shadow-[0_0_30px_2px_#C10007] dark:shadow-[0_0_34px_4px_#460809]">
+          <div className="bg-white dark:bg-neutral-950 dark:backdrop-blur-sm rounded-lg p-6 w-full max-w-lg mx-4 shadow-[0_0_30px_1px_#C10007] dark:shadow-[0_0_34px_1px_#460809]">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
               <LuCircleAlert className="w-6 h-6 text-red-600" /> Konfirmasi Hapus
             </h2>
@@ -166,7 +166,7 @@ export default function MatkulTable({ data, initialSearch, totalPages, currentPa
               <SubmitButton
                 text="Batal"
                 onClick={() => setIsModalOpen(false)}
-                className="bg-gray-200 dark:bg-black dark:border dark:border-gray-800 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-slate-800 transition-all"
+                className="bg-gray-100 dark:bg-neutral-900/50 border border-neutral-300 dark:border-neutral-800 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-neutral-900 transition-all"
               />
               <SubmitButton
                 text="Ya, Hapus"

@@ -111,13 +111,13 @@ const GolonganTable = ({
             <select
               value={currentSemesterFilter || ""}
               onChange={(e) => handleFilterChange("semester", e.target.value)}
-              className="w-60 px-4 py-2  border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-60 px-4 py-2  border rounded-md bg-gray-50 dark:bg-neutral-950/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
             >
-              <option value="" className="bg-white dark:bg-black/90">
+              <option value="" className="bg-white dark:bg-neutral-900">
                 Semua Semester
               </option>
               {semesterList.map((smt) => (
-                <option key={smt.id} value={smt.id} className="bg-white dark:bg-black/90">
+                <option key={smt.id} value={smt.id} className="bg-white dark:bg-neutral-900">
                   {smt.name}
                 </option>
               ))}
@@ -126,13 +126,13 @@ const GolonganTable = ({
               id="prodi"
               onChange={(e) => handleFilterChange("prodi", e.target.value)}
               value={currentProdiFilter || ""}
-              className="w-60 px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-60 px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
             >
-              <option value="" className="bg-white dark:bg-black/90">
+              <option value="" className="bg-white dark:bg-neutral-900">
                 Semua Program Studi
               </option>
               {prodiList.map((prodi) => (
-                <option key={prodi.id} value={prodi.id} className="bg-white dark:bg-black/90">
+                <option key={prodi.id} value={prodi.id} className="bg-white dark:bg-neutral-900">
                   {prodi.name}
                 </option>
               ))}
@@ -143,14 +143,14 @@ const GolonganTable = ({
               text="Tambah Golongan"
               href="/admin/manajemen-akademik/golongan/create"
               icon={<BsPlusCircleDotted />}
-              className="w-fit bg-white dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-black/10 hover:transition-all text-sm border border-gray-300 dark:border-gray-800 flex items-center gap-2 cursor-pointer"
+              className="bg-white dark:bg-neutral-950/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-black/10 hover:transition-all text-sm border border-gray-300 dark:border-neutral-800 flex items-center gap-2 cursor-pointer"
             />
           </div>
         </div>
       </div>
-      <div className="overflow-auto rounded border border-gray-300 dark:border-gray-800 shadow-sm">
+      <div className="overflow-auto rounded border border-gray-300 dark:border-neutral-800 shadow-sm">
         <table className="min-w-full text-sm text-left text-black dark:text-gray-200">
-          <thead className="bg-gray-100 dark:bg-black/40 uppercase tracking-wide text-gray-600 dark:text-gray-300">
+          <thead className="bg-gray-100 dark:bg-neutral-950/50 uppercase tracking-wide text-gray-600 dark:text-gray-300">
             <tr>
               <th className="px-6 py-3 font-semibold">Semester</th>
               <th className="px-6 py-3 font-semibold ">Program Studi</th>
@@ -169,7 +169,7 @@ const GolonganTable = ({
               initialData?.map((golongan) => (
                 <tr
                   key={golongan.id}
-                  className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-100 dark:hover:bg-black/30 hover:transition-all bg-white dark:bg-black/10"
+                  className="border-t border-gray-200 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-950/40"
                 >
                   <td className="px-6 py-4">{golongan.semester?.name ?? "-"}</td>
                   <td className="px-6 py-4">{golongan.prodi.name}</td>
@@ -178,7 +178,7 @@ const GolonganTable = ({
                     <SubmitButton
                       href={`/admin/manajemen-akademik/golongan/${golongan.id}/edit`}
                       text="Edit"
-                      className="bg-white w-18 dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-[#1A1A1A] hover:transition-all text-sm border border-gray-300 dark:border-gray-800"
+                      className="bg-white w-18 dark:bg-neutral-950/40 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-[#1A1A1A] hover:transition-all text-sm border border-gray-300 dark:border-neutral-800"
                     />
                     <SubmitButton
                       text="Hapus"
@@ -227,7 +227,7 @@ const GolonganTable = ({
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="bg-white dark:bg-black/80 dark:backdrop-blur-sm rounded-lg p-6 w-full max-w-lg mx-4 shadow-[0_0_30px_2px_#C10007] dark:shadow-[0_0_34px_4px_#460809]">
+          <div className="bg-white dark:bg-neutral-950 dark:backdrop-blur-sm rounded-lg p-6 w-full max-w-lg mx-4 shadow-[0_0_30px_1px_#C10007] dark:shadow-[0_0_34px_1px_#460809]">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
               <LuCircleAlert className="w-6 h-6 text-red-600" /> Konfirmasi Hapus
             </h2>

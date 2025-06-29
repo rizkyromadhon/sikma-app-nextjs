@@ -122,7 +122,7 @@ export default function EditMahasiswaForm({ dosen, prodis }: EditDosenFormProps)
   };
 
   return (
-    <div className="w-full mx-auto px-8 py-6 bg-white dark:bg-black/20 rounded shadow-[0_0_10px_1px_#1a1a1a1a] dark:shadow-[0_0_20px_1px_#ffffff1a]">
+    <div className="w-full mx-auto px-8 py-6 bg-white dark:bg-neutral-900 rounded shadow-[0_0_10px_1px_#1a1a1a1a] dark:shadow-[0_0_20px_1px_#ffffff1a]">
       <Breadcrumb className="ml-10 mb-8">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -153,7 +153,7 @@ export default function EditMahasiswaForm({ dosen, prodis }: EditDosenFormProps)
               onChange={handleChange}
               placeholder="Nama Lengkap"
               autoComplete="off"
-              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
               required
             />
             <input
@@ -162,7 +162,7 @@ export default function EditMahasiswaForm({ dosen, prodis }: EditDosenFormProps)
               onChange={handleChange}
               placeholder="NIP"
               autoComplete="off"
-              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
               required
             />
           </div>
@@ -176,7 +176,7 @@ export default function EditMahasiswaForm({ dosen, prodis }: EditDosenFormProps)
               onChange={handleChange}
               placeholder="Email"
               autoComplete="off"
-              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
               required
             />
             <input
@@ -185,7 +185,7 @@ export default function EditMahasiswaForm({ dosen, prodis }: EditDosenFormProps)
               onChange={handleChange}
               placeholder="No HP"
               autoComplete="new-password"
-              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
             />
           </div>
 
@@ -196,7 +196,7 @@ export default function EditMahasiswaForm({ dosen, prodis }: EditDosenFormProps)
             onChange={handleChange}
             placeholder="Alamat"
             autoComplete="new-password"
-            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
             rows={2}
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -204,14 +204,14 @@ export default function EditMahasiswaForm({ dosen, prodis }: EditDosenFormProps)
               name="prodi"
               value={form.prodi}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
               required
             >
-              <option value="" disabled className="bg-white dark:bg-black/95">
+              <option value="" disabled className="bg-white dark:bg-neutral-900">
                 Pilih Program Studi
               </option>
               {prodis.map((p) => (
-                <option key={p.id} value={p.id} className="bg-white dark:bg-black/95">
+                <option key={p.id} value={p.id} className="bg-white dark:bg-neutral-900">
                   {p.name}
                 </option>
               ))}
@@ -220,16 +220,16 @@ export default function EditMahasiswaForm({ dosen, prodis }: EditDosenFormProps)
               name="gender"
               value={form.gender}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
               required
             >
-              <option value="" disabled className="bg-white dark:bg-black/95">
+              <option value="" disabled className="bg-white dark:bg-neutral-900">
                 Pilih Gender
               </option>
-              <option value="LAKI-LAKI" className="bg-white dark:bg-black/95">
+              <option value="LAKI-LAKI" className="bg-white dark:bg-neutral-900">
                 Laki-laki
               </option>
-              <option value="PEREMPUAN" className="bg-white dark:bg-black/95">
+              <option value="PEREMPUAN" className="bg-white dark:bg-neutral-900">
                 Perempuan
               </option>
             </select>
@@ -241,21 +241,21 @@ export default function EditMahasiswaForm({ dosen, prodis }: EditDosenFormProps)
               type="submit"
               text="Simpan"
               isLoading={isSubmitting}
-              className="bg-black dark:bg-white text-white dark:text-gray-900 dark:hover:bg-gray-200 hover:bg-black/80 px-6 py-2 rounded text-sm"
+              className="bg-black dark:bg-white text-white dark:text-gray-900 dark:hover:bg-gray-200 hover:bg-black/80 px-6 py-2 rounded-md text-sm"
             />
             <SubmitButton
               text="Batal"
               href="/admin/manajemen-akademik/dosen"
-              className="bg-white dark:bg-black text-text-gray-900 dark:white dark:hover:bg-black/10 hover:bg-gray-200 px-6 py-2 rounded text-sm border border-gray-300 dark:border-gray-800"
+              className="bg-white dark:bg-neutral-950/50 text-text-gray-900 dark:white dark:hover:bg-black/10 hover:bg-gray-200 px-6 py-2 rounded-md text-sm border border-gray-300 dark:border-neutral-800"
             />
           </div>
         </div>
 
         {/* Kanan: Foto */}
         <div className="flex flex-col items-center gap-2 w-1/3">
-          <div className="w-50 h-61 border border-dashed border-gray-400 dark:border-gray-600 rounded-md flex items-center justify-center overflow-hidden bg-transparent transition-opacity duration-300 will-change-opacity">
+          <div className="w-50 h-61 border border-dashed border-gray-400 dark:border-neutral-600 rounded-md flex items-center justify-center overflow-hidden bg-transparent transition-opacity duration-300 will-change-opacity">
             {imagePreview ?? (
-              <span className="text-sm text-gray-400 dark:text-gray-500 text-center">Belum ada foto</span>
+              <span className="text-sm text-gray-400 dark:text-neutral-500 text-center">Belum ada foto</span>
             )}
           </div>
 
@@ -263,7 +263,7 @@ export default function EditMahasiswaForm({ dosen, prodis }: EditDosenFormProps)
             type="button"
             text={form.foto ? "Ganti Foto" : "Upload Foto"}
             isLoading={isUploading}
-            className="w-50 text-center mt-2 px-4 py-2 text-sm rounded border bg-gray-100 dark:bg-black text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-800 hover:bg-gray-200 dark:hover:bg-black/20"
+            className="w-50 text-center mt-2 px-4 py-2 text-sm rounded border bg-gray-100 dark:bg-neutral-950/50 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-neutral-800 hover:bg-gray-200 dark:hover:bg-black/20"
             onClick={handleUploadClick}
           />
 

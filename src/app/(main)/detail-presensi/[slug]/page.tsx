@@ -39,6 +39,7 @@ export default async function DetailPresensiPage({ params, searchParams }: any) 
         prodiId: prodi.id,
         ...(semesterId && { semesterId: semesterId }),
         ...(ruanganId && { ruanganId: ruanganId }),
+        ...(mataKuliahId && { matkulId: mataKuliahId }),
       },
       waktu_presensi: {
         gte: todayStart,
@@ -48,10 +49,9 @@ export default async function DetailPresensiPage({ params, searchParams }: any) 
         ...(semesterId && { semesterId: semesterId }),
         ...(golonganId && { golonganId: golonganId }),
       },
-      ...(mataKuliahId && { mataKuliahId: mataKuliahId }),
     },
     include: {
-      mahasiswa: { include: { golongan: true, semester: true } }, // Pastikan golongan di-include
+      mahasiswa: { include: { golongan: true, semester: true } },
       mata_kuliah: true,
       jadwal_kuliah: {
         include: { ruangan: true, semester: true },

@@ -1,9 +1,8 @@
-// app/(admins)/admin/manajemen-presensi/registrasi-rfid/page.tsx
 
 import prisma from "@/lib/prisma";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import RfidTable from "./RfidTable"; // Komponen tabel yang akan kita buat
+import RfidTable from "./RfidTable"; 
 import { Prisma } from "@/generated/prisma/client";
 import {
   Breadcrumb,
@@ -43,11 +42,10 @@ async function getMahasiswa(adminProdiId: string, search?: string, statusRfid?: 
       take: ITEMS_PER_PAGE,
       skip: (page - 1) * ITEMS_PER_PAGE,
       select: {
-        // Pilih hanya data yang dibutuhkan untuk tabel
         id: true,
         nim: true,
         name: true,
-        uid: true, // WAJIB: ambil UID untuk logika tombol
+        uid: true, 
         semester: { select: { name: true } },
         golongan: { select: { name: true } },
       },

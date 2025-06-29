@@ -11,7 +11,7 @@ interface FormOptions {
 }
 
 interface RuanganOption {
-  id: string; // Diubah dari number menjadi string
+  id: string;
   kode: string;
   name: string;
 }
@@ -65,7 +65,7 @@ export default function CreateJadwalForm({
         setFilteredGolongans(data);
       } catch (err) {
         console.error(err);
-        setFilteredGolongans([]); // Kosongkan jika error
+        setFilteredGolongans([]);
       } finally {
         setIsLoadingGolongan(false);
       }
@@ -95,13 +95,11 @@ export default function CreateJadwalForm({
       return;
     }
 
-    // PERBAIKAN 2: Logika utama untuk menyiapkan data ke API
     let golonganIdsToSend: string[] = [];
     let isKelasBesar = false;
 
     if (form.golonganSelection === "__KELAS_BESAR__") {
       isKelasBesar = true;
-      // Ambil semua ID dari golongan yang telah difilter
       golonganIdsToSend = filteredGolongans.map((g) => g.id);
     } else if (form.golonganSelection) {
       isKelasBesar = false;
@@ -156,14 +154,14 @@ export default function CreateJadwalForm({
               name="hari"
               value={form.hari}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
               required
             >
-              <option value="" className="bg-white dark:bg-black/95" disabled>
+              <option value="" className="bg-white dark:bg-neutral-900" disabled>
                 Pilih Hari
               </option>
               {Object.values(Hari).map((hari) => (
-                <option key={hari} value={hari} className="bg-white dark:bg-black/95">
+                <option key={hari} value={hari} className="bg-white dark:bg-neutral-900">
                   {hari}
                 </option>
               ))}
@@ -180,14 +178,14 @@ export default function CreateJadwalForm({
               name="matkulId"
               value={form.matkulId}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
               required
             >
-              <option value="" className="bg-white dark:bg-black/95" disabled>
+              <option value="" className="bg-white dark:bg-neutral-900" disabled>
                 Pilih Mata Kuliah
               </option>
               {mataKuliahs.map((mk) => (
-                <option key={mk.id} value={mk.id.toString()} className="bg-white dark:bg-black/95">
+                <option key={mk.id} value={mk.id.toString()} className="bg-white dark:bg-neutral-900">
                   {mk.name}
                 </option>
               ))}
@@ -205,14 +203,14 @@ export default function CreateJadwalForm({
               name="ruanganId"
               value={form.ruanganId}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
               required
             >
-              <option value="" className="bg-white dark:bg-black/95" disabled>
+              <option value="" className="bg-white dark:bg-neutral-900" disabled>
                 Pilih Ruangan
               </option>
               {ruangans.map((r) => (
-                <option key={r.id} value={r.id.toString()} className="bg-white dark:bg-black/95">
+                <option key={r.id} value={r.id.toString()} className="bg-white dark:bg-neutral-900">
                   {r.kode} - {r.name}
                 </option>
               ))}
@@ -230,14 +228,14 @@ export default function CreateJadwalForm({
               name="dosenId"
               value={form.dosenId}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
               required
             >
-              <option value="" className="bg-white dark:bg-black/95" disabled>
+              <option value="" className="bg-white dark:bg-neutral-900" disabled>
                 Pilih Dosen
               </option>
               {dosens.map((dosen) => (
-                <option key={dosen.id} value={dosen.id.toString()} className="bg-white dark:bg-black/95">
+                <option key={dosen.id} value={dosen.id.toString()} className="bg-white dark:bg-neutral-900">
                   {dosen.name}
                 </option>
               ))}
@@ -254,14 +252,14 @@ export default function CreateJadwalForm({
               name="semesterId"
               value={form.semesterId}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
               required
             >
-              <option value="" className="bg-white dark:bg-black/95" disabled>
+              <option value="" className="bg-white dark:bg-neutral-900" disabled>
                 Pilih Semester
               </option>
               {semesters.map((s) => (
-                <option key={s.id} value={s.id.toString()} className="bg-white dark:bg-black/95">
+                <option key={s.id} value={s.id.toString()} className="bg-white dark:bg-neutral-900">
                   {s.name}
                 </option>
               ))}
@@ -287,7 +285,7 @@ export default function CreateJadwalForm({
               value={form.jam_mulai}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
             />
           </div>
           <div>
@@ -300,26 +298,26 @@ export default function CreateJadwalForm({
               value={form.golonganSelection}
               onChange={handleChange}
               disabled={!form.semesterId || isLoadingGolongan || filteredGolongans.length === 0}
-              className="w-full px-4 py-2 border rounded bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm disabled:cursor-not-allowed disabled:opacity-50 placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm disabled:cursor-not-allowed disabled:opacity-50 placeholder-gray-700/50 dark:placeholder-neutral-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
               required
             >
               {/* Opsi saat loading */}
               {isLoadingGolongan && (
-                <option value="" disabled className="bg-white dark:bg-black/95">
+                <option value="" disabled className="bg-white dark:bg-neutral-900">
                   Memuat golongan...
                 </option>
               )}
 
               {/* Opsi saat belum pilih semester */}
               {!isLoadingGolongan && !form.semesterId && (
-                <option value="" disabled className="bg-white dark:bg-black/95">
+                <option value="" disabled className="bg-white dark:bg-neutral-900">
                   Pilih semester terlebih dahulu
                 </option>
               )}
 
               {/* Opsi saat tidak ada golongan */}
               {!isLoadingGolongan && form.semesterId && filteredGolongans.length === 0 && (
-                <option value="" disabled className="bg-white dark:bg-black/95">
+                <option value="" disabled className="bg-white dark:bg-neutral-900">
                   Tidak ada golongan di semester ini
                 </option>
               )}
@@ -327,14 +325,14 @@ export default function CreateJadwalForm({
               {/* Opsi default + data golongan */}
               {filteredGolongans.length > 0 && (
                 <>
-                  <option value="" disabled className="bg-white dark:bg-black/95">
+                  <option value="" disabled className="bg-white dark:bg-neutral-900">
                     Pilih Golongan
                   </option>
-                  <option value="__KELAS_BESAR__" className="font-semibold bg-white dark:bg-black/95">
+                  <option value="__KELAS_BESAR__" className="font-semibold bg-white dark:bg-neutral-900">
                     Kelas Besar (Gabungan Semua Golongan)
                   </option>
                   {filteredGolongans.map((g) => (
-                    <option key={g.id} value={g.id} className="bg-white dark:bg-black/95">
+                    <option key={g.id} value={g.id} className="bg-white dark:bg-neutral-900">
                       {g.name}
                     </option>
                   ))}
@@ -356,7 +354,7 @@ export default function CreateJadwalForm({
               value={form.jam_selesai}
               onChange={handleChange}
               required
-              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
             />
           </div>
         </div>
@@ -365,14 +363,14 @@ export default function CreateJadwalForm({
         <div className="flex items-center gap-4 pt-4">
           <SubmitButton
             type="submit"
-            text="Tambah Jadwal"
+            text="Tambah"
             isLoading={isSubmitting}
-            className="bg-black dark:bg-white text-white dark:text-gray-900 dark:hover:bg-gray-200 hover:bg-black/80 px-6 py-2 rounded text-sm"
+            className="bg-black dark:bg-white text-white dark:text-gray-900 dark:hover:bg-gray-200 hover:bg-black/80 px-6 py-2 rounded-md text-sm"
           />
           <SubmitButton
             text="Batal"
             href="/admin/manajemen-akademik/jadwal-kuliah"
-            className="bg-white dark:bg-black text-text-gray-900 dark:white dark:hover:bg-black/10 hover:bg-gray-200 px-6 py-2 rounded text-sm border border-gray-300 dark:border-gray-800"
+            className="bg-white dark:bg-neutral-950/50 text-gray-900 dark:text-white dark:hover:bg-black/10 hover:bg-gray-200 px-6 py-2 rounded-md text-sm border border-gray-300 dark:border-neutral-800"
           />
         </div>
       </div>

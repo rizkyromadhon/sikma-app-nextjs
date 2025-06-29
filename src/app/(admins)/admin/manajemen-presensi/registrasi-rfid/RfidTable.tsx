@@ -1,4 +1,3 @@
-// app/(admins)/admin/manajemen-presensi/registrasi-rfid/RfidTable.tsx
 "use client";
 
 import React, { Fragment, useState } from "react";
@@ -8,7 +7,7 @@ import { SubmitButton } from "@/components/auth/SubmitButton";
 import { useDebouncedCallback } from "use-debounce";
 import { LuCircleArrowLeft, LuCircleArrowRight, LuLoader } from "react-icons/lu";
 import axios from "axios";
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from "@headlessui/react";
 
 type AlatType = { id: string; name: string; mode: string; status: "AKTIF" | "NONAKTIF" };
 type MahasiswaData = {
@@ -100,7 +99,7 @@ export default function RfidTable({
             placeholder="Cari berdasarkan nama atau NIM mahasiswa..."
             defaultValue={initialSearch}
             onChange={(e) => handleSearch(e.target.value)}
-            className="w-100 px-4 py-2 border border-gray-200 dark:border-gray-800 rounded-md bg-gray-50 dark:bg-black/50 text-sm focus:outline-none focus:shadow-[0_0_15px_0.5px] shadow-gray-400/60 dark:shadow-gray-600/50"
+            className="bg-white dark:bg-neutral-950/50 text-black dark:text-gray-200 border border-gray-300 dark:border-neutral-800 rounded-md px-4 py-2 focus:outline-none text-sm w-100"
           />
         </div>
         <div>
@@ -108,24 +107,24 @@ export default function RfidTable({
             id="status"
             value={initialStatusFilter || ""}
             onChange={(e) => updateFilter("statusRfid", e.target.value)}
-            className="w-80 px-4 py-2 border border-gray-200 dark:border-gray-800 rounded-md bg-gray-50 dark:bg-black/50 text-sm focus:outline-none focus:shadow-[0_0_15px_0.5px] shadow-gray-400/60 dark:shadow-gray-600/50"
+            className=" px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/50 dark:text-white border-gray-300 dark:border-neutral-800 text-sm focus:outline-none w-80"
           >
-            <option value="" className="bg-white dark:bg-black/90">
+            <option value="" className="bg-white dark:bg-neutral-900">
               Semua Status
             </option>
-            <option value="terdaftar" className="bg-white dark:bg-black/90">
+            <option value="terdaftar" className="bg-white dark:bg-neutral-900">
               Sudah Terdaftar
             </option>
-            <option value="belum_terdaftar" className="bg-white dark:bg-black/90">
+            <option value="belum_terdaftar" className="bg-white dark:bg-neutral-900">
               Belum Terdaftar
             </option>
           </select>
         </div>
       </div>
 
-      <div className="overflow-auto rounded border border-gray-300 dark:border-gray-800 shadow-sm">
+      <div className="overflow-auto rounded border border-gray-300 dark:border-neutral-800 shadow-sm">
         <table className="min-w-full text-sm text-left text-black dark:text-gray-200">
-          <thead className="bg-gray-100 dark:bg-black/40 uppercase tracking-wide">
+          <thead className="bg-gray-100 dark:bg-neutral-950/50 uppercase tracking-wide">
             <tr>
               <th className="px-6 py-3 font-semibold">NIM</th>
               <th className="px-6 py-3 font-semibold">Nama Mahasiswa</th>
@@ -145,7 +144,7 @@ export default function RfidTable({
               data.map((mhs) => (
                 <tr
                   key={mhs.id}
-                  className="border-t border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-black/30"
+                  className="border-t border-gray-200 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-950/40"
                 >
                   <td className="px-6 py-4 font-mono">{displayValue(mhs.nim)}</td>
                   <td className="px-6 py-4 font-semibold">{displayValue(mhs.name)}</td>
@@ -158,13 +157,13 @@ export default function RfidTable({
                       <SubmitButton
                         text="Edit"
                         onClick={() => openModal(mhs)}
-                        className="w-22 px-4 py-2 bg-neutral-700 text-neutral-100 dark:text-neutral-100 rounded-lg shadow-[0_0_20px_1px] shadow-neutral-800 dark:shadow-neutral-700 hover:transition-all hover:bg-neutral-800 hover:shadow-[0_0_20px_1px] hover:shadow-neutral-800 hover:dark:shadow-neutral-600"
+                        className="w-22 px-4 py-2 bg-black dark:bg-neutral-700 text-neutral-100 dark:text-neutral-100 rounded-md hover:bg-black/70 dark:hover:bg-neutral-800 hover:transition-all"
                       />
                     ) : (
                       <SubmitButton
                         text="Registrasi"
                         onClick={() => openModal(mhs)}
-                        className="w-22 px-4 py-2 bg-green-700 dark:bg-emerald-700 text-green-100 dark:text-emerald-100 rounded-lg shadow-[0_0_20px_1px] shadow-green-800 dark:shadow-emerald-700 hover:transition-all hover:bg-green-800 hover:shadow-[0_0_20px_1px] hover:shadow-emerald-800 hover:dark:shadow-emerald-600"
+                        className="w-22 px-4 py-2 bg-green-700 dark:bg-emerald-700 text-green-100 dark:text-emerald-100 rounded-md hover:bg-green-800 dark:hover:bg-emerald-800 hover:transition-all"
                       />
                     )}
                   </td>
@@ -178,7 +177,7 @@ export default function RfidTable({
       <Transition appear show={isModalOpen} as={Fragment}>
         <Dialog as="div" className="relative z-50" onClose={() => setIsModalOpen(false)}>
           {/* Backdrop */}
-          <Transition.Child
+          <TransitionChild
             as={Fragment}
             enter="ease-out duration-300"
             enterFrom="opacity-0"
@@ -188,12 +187,12 @@ export default function RfidTable({
             leaveTo="opacity-0"
           >
             <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" />
-          </Transition.Child>
+          </TransitionChild>
 
           {/* Konten Modal */}
           <div className="fixed inset-0 overflow-y-auto">
             <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
+              <TransitionChild
                 as={Fragment}
                 enter="ease-out duration-300"
                 enterFrom="opacity-0 scale-95"
@@ -202,13 +201,13 @@ export default function RfidTable({
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-lg bg-white dark:bg-[#111111] dark:border dark:border-gray-800 p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
+                <DialogPanel className="w-full max-w-md transform overflow-hidden rounded-lg bg-white dark:bg-[#111111] dark:border dark:border-neutral-800 p-6 text-left align-middle shadow-xl transition-all">
+                  <DialogTitle
                     as="h3"
                     className="text-lg font-semibold leading-6 text-gray-900 dark:text-gray-50"
                   >
                     Pilih Alat Presensi
-                  </Dialog.Title>
+                  </DialogTitle>
                   <div className="mt-1">
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                       Pilih alat yang akan digunakan untuk meregistrasi kartu RFID {""}
@@ -216,7 +215,7 @@ export default function RfidTable({
                     </p>
                   </div>
 
-                  <div className="mt-4 space-y-2 max-h-60 overflow-auto border-t border-b border-gray-200 dark:border-gray-800 py-2">
+                  <div className="mt-4 space-y-2 max-h-60 overflow-auto border-t border-b border-gray-200 dark:border-neutral-800 py-2">
                     {loadingAlat ? (
                       <div className="flex items-center justify-center gap-2 py-4">
                         <LuLoader className="animate-spin" /> Memuat daftar alat...
@@ -227,7 +226,7 @@ export default function RfidTable({
                       alatList.map((alat) => (
                         <div
                           key={alat.id}
-                          className="flex justify-between items-center p-3 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800/80 cursor-pointer transition-colors"
+                          className="flex justify-between items-center p-3 rounded-md hover:bg-gray-100 dark:hover:bg-neutral-800/80 cursor-pointer transition-colors"
                           onClick={() => selectedMahasiswa && handleChooseAlat(alat.id, selectedMahasiswa.id)}
                         >
                           <div>
@@ -245,14 +244,14 @@ export default function RfidTable({
                   <div className="mt-5 sm:mt-6 text-right">
                     <button
                       type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-gray-100 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-gray-100 px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 dark:bg-neutral-800 dark:text-gray-200 dark:hover:bg-neutral-700 cursor-pointer"
                       onClick={() => setIsModalOpen(false)}
                     >
                       Batal
                     </button>
                   </div>
-                </Dialog.Panel>
-              </Transition.Child>
+                </DialogPanel>
+              </TransitionChild>
             </div>
           </div>
         </Dialog>
@@ -269,8 +268,8 @@ export default function RfidTable({
               href={createPageURL(currentPage - 1)}
               className={`px-3 py-1 text-sm rounded-md flex items-center gap-2 ${
                 currentPage <= 1
-                  ? "pointer-events-none bg-transparent dark:bg-black/80 border border-gray-300 dark:border-gray-800 text-gray-400"
-                  : "bg-gray-100 dark:bg-gray-200 border border-gray-300 dark:border-gray-800 text-gray-800 dark:text-gray-800 hover:bg-gray-200 dark:hover:bg-gray-300 hover:transition-all"
+                  ? "pointer-events-none bg-transparent dark:bg-black/80 border border-gray-300 dark:border-neutral-800 text-gray-400"
+                  : "bg-gray-100 dark:bg-gray-200 border border-gray-300 dark:border-neutral-800 text-gray-800 dark:text-gray-800 hover:bg-gray-200 dark:hover:bg-gray-300 hover:transition-all"
               }`}
             >
               <LuCircleArrowLeft /> Sebelumnya
@@ -279,8 +278,8 @@ export default function RfidTable({
               href={createPageURL(currentPage + 1)}
               className={`px-3 py-1 text-sm rounded-md flex items-center gap-2 ${
                 currentPage >= totalPages
-                  ? "pointer-events-none bg-transparent dark:bg-black/80 border border-gray-300 dark:border-gray-800 text-gray-400"
-                  : "bg-gray-100 dark:bg-gray-200 border border-gray-300 dark:border-gray-800 text-gray-800 dark:text-gray-800 hover:bg-gray-200 dark:hover:bg-gray-300 hover:transition-all"
+                  ? "pointer-events-none bg-transparent dark:bg-black/80 border border-gray-300 dark:border-neutral-800 text-gray-400"
+                  : "bg-gray-100 dark:bg-gray-200 border border-gray-300 dark:border-neutral-800 text-gray-800 dark:text-gray-800 hover:bg-gray-200 dark:hover:bg-gray-300 hover:transition-all"
               }`}
             >
               Selanjutnya <LuCircleArrowRight />

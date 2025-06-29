@@ -63,7 +63,7 @@ export default function LiveFeed({ initialAttendances }: LiveFeedProps) {
   }, []);
 
   return (
-    <div className="h-full rounded-xl border border-neutral-300 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-6 shadow-[0_0_22px_rgba(0,0,0,0.10)]">
+    <div className="h-full rounded-xl border border-neutral-300 dark:border-neutral-800 bg-white dark:bg-neutral-950/50 p-6 shadow-[0_0_22px_rgba(0,0,0,0.10)]">
       <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 text-center">
         Aktivitas Presensi Terkini
       </h2>

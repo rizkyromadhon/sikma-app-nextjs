@@ -100,30 +100,27 @@ export default function CreateMahasiswaForm({ semesters, prodis, golongans }: Cr
       return;
     }
 
-    // Handler default untuk semua input lainnya
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleUploadClick = () => {
     if (fileInputRef.current) {
-      fileInputRef.current.value = ""; // Reset input file
-      setIsUploading(true); // Spinner langsung muncul
+      fileInputRef.current.value = "";
+      setIsUploading(true);
 
-      // Buat handler untuk deteksi user balik ke window (setelah pilih/cancel file)
       const handleWindowFocus = () => {
-        // Tunggu sedikit supaya fileInput.files kebaca dengan benar
         setTimeout(() => {
           const file = fileInputRef.current?.files?.[0];
           if (!file) {
-            setIsUploading(false); // Cancel, karena tidak ada file
+            setIsUploading(false);
           }
-          window.removeEventListener("focus", handleWindowFocus); // Bersihkan listener
+          window.removeEventListener("focus", handleWindowFocus);
         }, 100);
       };
 
-      window.addEventListener("focus", handleWindowFocus); // Tambahkan listener
+      window.addEventListener("focus", handleWindowFocus);
 
-      fileInputRef.current.click(); // Munculkan file picker
+      fileInputRef.current.click();
     }
   };
 
@@ -141,7 +138,6 @@ export default function CreateMahasiswaForm({ semesters, prodis, golongans }: Cr
     );
   }, [preview]);
 
-  // Fungsi handleSubmit sudah benar
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -165,7 +161,6 @@ export default function CreateMahasiswaForm({ semesters, prodis, golongans }: Cr
 
       router.push("/admin/manajemen-akademik/mahasiswa?mahasiswa=create_success");
       router.refresh();
-      // Hapus localStorage jika ada
       localStorage.removeItem("foto-preview");
       localStorage.removeItem("foto-preview-expiry");
     } catch (error) {
@@ -178,7 +173,7 @@ export default function CreateMahasiswaForm({ semesters, prodis, golongans }: Cr
   };
 
   return (
-    <div className="w-full mx-auto px-8 py-6 bg-white dark:bg-black/20 rounded shadow-[0_0_10px_1px_#1a1a1a1a] dark:shadow-[0_0_20px_1px_#ffffff1a]">
+    <div className="w-full mx-auto px-8 py-6 bg-white dark:bg-neutral-900 rounded shadow-[0_0_10px_1px_#1a1a1a1a] dark:shadow-[0_0_20px_1px_#ffffff1a]">
       <Breadcrumb className="ml-10 mb-8">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -211,7 +206,7 @@ export default function CreateMahasiswaForm({ semesters, prodis, golongans }: Cr
               value={form.name}
               onChange={handleChange}
               placeholder="Nama Lengkap"
-              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
               required
             />
             <input
@@ -219,7 +214,7 @@ export default function CreateMahasiswaForm({ semesters, prodis, golongans }: Cr
               value={form.nim}
               onChange={handleChange}
               placeholder="NIM"
-              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
               required
             />
           </div>
@@ -232,7 +227,7 @@ export default function CreateMahasiswaForm({ semesters, prodis, golongans }: Cr
               value={form.email}
               onChange={handleChange}
               placeholder="Email"
-              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
               required
             />
             <input
@@ -240,7 +235,7 @@ export default function CreateMahasiswaForm({ semesters, prodis, golongans }: Cr
               value={form.no_hp}
               onChange={handleChange}
               placeholder="No HP"
-              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
             />
           </div>
 
@@ -250,7 +245,7 @@ export default function CreateMahasiswaForm({ semesters, prodis, golongans }: Cr
             value={form.alamat}
             onChange={handleChange}
             placeholder="Alamat"
-            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+            className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
             rows={2}
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -258,14 +253,14 @@ export default function CreateMahasiswaForm({ semesters, prodis, golongans }: Cr
               name="semester"
               value={form.semester}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
               required
             >
-              <option value="" disabled className="bg-white dark:bg-black/95">
+              <option value="" disabled className="bg-white dark:bg-neutral-900">
                 Pilih Semester
               </option>
               {semesters.map((s) => (
-                <option key={s.id} value={s.id} className="bg-white dark:bg-black/95">
+                <option key={s.id} value={s.id} className="bg-white dark:bg-neutral-900">
                   {s.name}
                 </option>
               ))}
@@ -274,14 +269,14 @@ export default function CreateMahasiswaForm({ semesters, prodis, golongans }: Cr
               name="prodi"
               value={form.prodi}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
               required
             >
-              <option value="" disabled className="bg-white dark:bg-black/95">
+              <option value="" disabled className="bg-white dark:bg-neutral-900">
                 Pilih Program Studi
               </option>
               {prodis.map((p) => (
-                <option key={p.id} value={p.id} className="bg-white dark:bg-black/95">
+                <option key={p.id} value={p.id} className="bg-white dark:bg-neutral-900">
                   {p.name}
                 </option>
               ))}
@@ -293,16 +288,16 @@ export default function CreateMahasiswaForm({ semesters, prodis, golongans }: Cr
               name="gender"
               value={form.gender}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
+              className="w-full px-4 py-2 border rounded bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
               required
             >
-              <option value="" disabled className="bg-white dark:bg-black/95">
+              <option value="" disabled className="bg-white dark:bg-neutral-900">
                 Pilih Gender
               </option>
-              <option value="LAKI-LAKI" className="bg-white dark:bg-black/95">
+              <option value="LAKI-LAKI" className="bg-white dark:bg-neutral-900">
                 Laki-laki
               </option>
-              <option value="PEREMPUAN" className="bg-white dark:bg-black/95">
+              <option value="PEREMPUAN" className="bg-white dark:bg-neutral-900">
                 Perempuan
               </option>
             </select>
@@ -311,10 +306,10 @@ export default function CreateMahasiswaForm({ semesters, prodis, golongans }: Cr
               value={form.golongan}
               onChange={handleChange}
               disabled={!form.prodi || !form.semester}
-              className="w-full px-4 py-2 border rounded bg-gray-50 dark:bg-black/50 dark:text-white border-gray-300 dark:border-gray-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+              className="w-full px-4 py-2 border rounded bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
               required
             >
-              <option value="" disabled className="bg-white dark:bg-black/95">
+              <option value="" disabled className="bg-white dark:bg-neutral-900">
                 {!form.semester
                   ? "Pilih Semester Dulu"
                   : !form.prodi
@@ -324,34 +319,34 @@ export default function CreateMahasiswaForm({ semesters, prodis, golongans }: Cr
                   : "Pilih Golongan"}
               </option>
               {filteredGolongans.map((g) => (
-                <option key={g.id} value={g.id} className="bg-white dark:bg-black/95">
+                <option key={g.id} value={g.id} className="bg-white dark:bg-neutral-900">
                   {g.name}
                 </option>
               ))}
             </select>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 mt-6">
             {/* Submit */}
             <SubmitButton
               type="submit"
               text="Tambah"
               isLoading={isSubmitting}
-              className="bg-black dark:bg-white text-white dark:text-gray-900 dark:hover:bg-gray-200 hover:bg-black/80 px-6 py-2 rounded text-sm"
+              className="bg-black dark:bg-white text-white dark:text-gray-900 dark:hover:bg-gray-200 hover:bg-black/80 px-6 py-2 rounded-md text-sm"
             />
             <SubmitButton
               text="Batal"
               href="/admin/manajemen-akademik/mahasiswa"
-              className="bg-white dark:bg-black text-text-gray-900 dark:white dark:hover:bg-black/10 hover:bg-gray-200 px-6 py-2 rounded text-sm border border-gray-300 dark:border-gray-800"
+              className="bg-white dark:bg-neutral-950/50 text-text-gray-900 dark:white dark:hover:bg-black/10 hover:bg-gray-200 px-6 py-2 rounded-md text-sm border border-gray-300 dark:border-neutral-800"
             />
           </div>
         </div>
 
         {/* Kanan: Foto */}
         <div className="flex flex-col items-center gap-2 w-1/3">
-          <div className="w-50 h-61 border border-dashed border-gray-400 dark:border-gray-600 rounded-md flex items-center justify-center overflow-hidden bg-transparent transition-opacity duration-300 will-change-opacity">
+          <div className="w-50 h-61 border border-dashed border-gray-400 dark:border-neutral-600 rounded-md flex items-center justify-center overflow-hidden bg-transparent transition-opacity duration-300 will-change-opacity">
             {imagePreview ?? (
-              <span className="text-sm text-gray-400 dark:text-gray-500 text-center">Belum ada foto</span>
+              <span className="text-sm text-gray-400 dark:text-neutral-500 text-center">Belum ada foto</span>
             )}
           </div>
 
@@ -359,7 +354,7 @@ export default function CreateMahasiswaForm({ semesters, prodis, golongans }: Cr
             type="button"
             text={form.foto ? "Ganti Foto" : "Upload Foto"}
             isLoading={isUploading}
-            className="w-50 text-center mt-2 px-4 py-2 text-sm rounded border bg-gray-100 dark:bg-black text-gray-700 dark:text-gray-200 border-gray-300 dark:border-gray-800 hover:bg-gray-200 dark:hover:bg-black/20"
+            className="w-50 text-center mt-2 px-4 py-2 text-sm rounded-md border bg-gray-100 dark:bg-neutral-950/50 text-gray-700 dark:text-gray-200 border-gray-300 dark:border-neutral-800 hover:bg-gray-200 dark:hover:bg-black/20"
             onClick={handleUploadClick}
           />
 

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -76,7 +75,7 @@ export default function PusatBantuanPage() {
         className="w-full md:w-1/2 mx-auto"
       />
 
-      <ScrollArea className="max-h-[60vh] max-w-[50rem] mx-auto">
+      <ScrollArea className=" max-w-[50rem] mx-auto">
         <Accordion type="single" collapsible className="w-full">
           {(filtered.length > 0
             ? filtered

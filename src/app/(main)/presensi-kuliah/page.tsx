@@ -83,7 +83,7 @@ const PresensiKuliahPage = () => {
     <div className="px-6 md:px-24 py-10 space-y-6 min-h-dvh md:min-h-[92dvh]">
       <h1 className="text-xl md:text-3xl font-bold text-center text-foreground">Presensi Kuliah Mahasiswa</h1>
 
-      <Card className="p-4 space-y-4 mt-8 bg-white dark:bg-neutral-950">
+      <Card className="p-4 space-y-4 mt-8 bg-white dark:bg-neutral-900">
         <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
           {/* Filter tanggal */}
           <Popover>
@@ -117,7 +117,7 @@ const PresensiKuliahPage = () => {
         {/* Tabel presensi */}
         <div className="overflow-x-auto">
           <Table>
-            <TableHeader className="bg-neutral-100 dark:bg-neutral-900">
+            <TableHeader className="bg-neutral-100 dark:bg-neutral-800">
               <TableRow>
                 <TableHead className="w-[160px] text-center">Tanggal</TableHead>
                 <TableHead className="text-center">Mata Kuliah</TableHead>
@@ -126,7 +126,7 @@ const PresensiKuliahPage = () => {
                 <TableHead className="text-center">Keterangan</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody className="bg-white dark:bg-neutral-950 hover:bg-neutral-100 dark:hover:bg-neutral-900">
+            <TableBody className="bg-white dark:bg-neutral-900">
               {loading ? (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center italic text-muted-foreground">
@@ -141,7 +141,7 @@ const PresensiKuliahPage = () => {
                 </TableRow>
               ) : (
                 filteredPresensi.map((p) => (
-                  <TableRow key={p.id}>
+                  <TableRow key={p.id} className="hover:bg-neutral-100 dark:hover:bg-neutral-800">
                     <TableCell className="text-center">
                       {format(new Date(p.waktu_presensi), "dd MMM yyyy")}
                     </TableCell>

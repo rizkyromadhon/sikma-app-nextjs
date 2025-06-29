@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 
-// Tentukan jumlah item per halaman
 const ITEMS_PER_PAGE = 6;
 
 async function getJadwalData(
@@ -115,10 +114,8 @@ export default async function ManajemenJadwalPage({
 
   const adminProdiId = adminUser.prodiId;
 
-  // PERBAIKAN 3: Ambil 'page' dari searchParams
   const currentPage = Number(page) || 1;
 
-  // Panggil getJadwalData dengan semua parameter yang dibutuhkan
   const { jadwalKuliah, semesters, golongans, totalPages } = await getJadwalData(
     adminProdiId,
     { semester, golongan, search },
@@ -157,7 +154,7 @@ export default async function ManajemenJadwalPage({
           text="Tambah Jadwal Kuliah"
           href="/admin/manajemen-akademik/jadwal-kuliah/create"
           icon={<BsPlusCircleDotted />}
-          className="bg-white dark:bg-black/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full text-sm border border-gray-300 dark:border-gray-800 hover:bg-gray-200 dark:hover:bg-black/20 flex items-center gap-2"
+          className="bg-white dark:bg-neutral-950/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-black/10 hover:transition-all text-sm border border-gray-300 dark:border-neutral-800 flex items-center gap-2"
         />
       </div>
 

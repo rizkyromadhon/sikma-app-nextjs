@@ -64,7 +64,7 @@ export default function CollapsibleSidebarDosenLink({
 
       {isOpen && !isCollapsed && (
         <div className="mt-2 space-y-1 pl-5">
-          <div className="mt-2 space-y-1 ml-2 pl-3 border-l border-gray-200 dark:border-gray-700">
+          <div className="mt-2 space-y-1 ml-2 pl-3 border-l border-neutral-300 dark:border-neutral-800">
             {subLinks.map((link) => {
               const isActive = pathname === link.href;
               return (

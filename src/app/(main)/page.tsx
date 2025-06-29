@@ -98,7 +98,7 @@ export default async function HomePage() {
   const { latestAttendances, rekapPerProdi, totalHadir, totalTidakHadir } = await getDashboardData();
 
   return (
-    <div className="bg-white dark:bg-black py-2 sm:py-4 rounded-md min-h-[92dvh] relative">
+    <div className="bg-white dark:bg-neutral-900/60 py-2 sm:py-4 rounded-md min-h-[92dvh] relative">
       <div className="mx-auto max-w-[90rem] mb-8">
         <p className="mx-auto text-center mt-6 md:mt-6 text-3xl font-semibold tracking-tight text-balance text-gray-950  dark:text-gray-100 lg:text-4xl lg:w-120">
           Sudahkah anda presensi hari ini?

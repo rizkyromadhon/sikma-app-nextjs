@@ -176,7 +176,7 @@ export async function POST(request: Request) {
         mahasiswaId: mahasiswa.id,
         jadwalKuliahId: jadwalAktif.id,
         matkulId: jadwalAktif.matkulId,
-        waktu_presensi: now,
+        waktu_presensi: nowInWib,
       },
     });
 

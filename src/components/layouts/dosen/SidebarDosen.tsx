@@ -2,12 +2,7 @@
 
 import SidebarLink from "./SidebarLinkDosen";
 import { cn } from "@/lib/utils";
-import {
-  LuLayoutDashboard,
-  LuUsers,
-  LuUserRound,
-  LuGraduationCap,
-} from "react-icons/lu";
+import { LuLayoutDashboard, LuUsers, LuUserRound, LuGraduationCap } from "react-icons/lu";
 import CollapsibleSidebarLink from "./CollapsibleSidebarDosenLink";
 import { FaRegCommentDots } from "react-icons/fa";
 import { useTheme } from "next-themes";
@@ -31,14 +26,14 @@ const navLinks = [
     icon: LuGraduationCap,
     subLinks: [
       {
-        href: "/dosen/jadwal-kuliah",
+        href: "/dosen/akademik/jadwal-kuliah",
         label: "Jadwal Kuliah",
       },
-      { href: "/dosen/presensi/kelola-presensi", label: "Kelola Presensi" },
-      { href: "/dosen/presensi/pengajuan-izin", label: "Pengajuan Izin/Sakit" },
+      { href: "/dosen/akademik/kelola-presensi", label: "Kelola Presensi" },
+      { href: "/dosen/akademik/pengajuan-izin", label: "Pengajuan Izin/Sakit" },
     ],
   },
-  { href: "/dosen/pengumuman", label: "Pengumuman", icon: FaRegCommentDots },
+  // { href: "/dosen/pengumuman", label: "Pengumuman", icon: FaRegCommentDots },
 ];
 
 export default function SidebarDosen({

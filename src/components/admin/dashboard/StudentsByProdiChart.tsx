@@ -83,7 +83,7 @@ const StudentsByProdiChart = ({ data, sidebarCollapsed }: StudentsByProdiChartPr
   const barData = [{ name: current.name, male: current.male, female: current.female }];
 
   return (
-    <div className="grid grid-cols-2 gap-4 p-6 rounded-lg bg-white dark:bg-black/20 border border-gray-200 dark:border-gray-800 shadow-md">
+    <div className="grid grid-cols-2 gap-4 p-6 rounded-lg bg-white dark:bg-neutral-800/50 border border-gray-200 dark:border-neutral-800 shadow-md">
       {/* Bar Chart */}
       <div className="flex flex-col h-full">
         <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">

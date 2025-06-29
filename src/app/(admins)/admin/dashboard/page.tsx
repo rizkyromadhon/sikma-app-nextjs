@@ -14,7 +14,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import BreadcrumbHeader from "@/components/admin/BreadCrumber";
 import Link from "next/link";
 
 const DashboardAdminPage = async () => {
@@ -51,27 +50,31 @@ const DashboardAdminPage = async () => {
     getStudentsByProdi(adminProdiId, adminProdiName),
   ]);
 
+  console.log("Data from getStudentsPerSemester (Server):", studentsPerSemester);
+  console.log("Data from getStudentsByProdi (Server):", studentsByProdi);
+
   return (
-    <div className="h-20 p-8 text-gray-900 dark:text-gray-100">
-      <Breadcrumb className="ml-12 mb-6">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="#">Admin</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Dashboard</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-      <h1 className="text-3xl font-bold mb-4 text-black dark:text-white tracking-tight">Dashboard Admin</h1>
-      <p className="text-xl text-gray-900 dark:text-gray-300 mb-8">
+    <div className="h-20 p-6 text-gray-900 dark:text-gray-100">
+      <div className="ml-12 mb-6">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="#">Admin</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Dashboard</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
+      <h1 className="text-2xl font-bold mb-2 text-black dark:text-white tracking-tight">Dashboard Admin</h1>
+      <p className="text-sm text-gray-900 dark:text-gray-300 mb-8">
         Program Studi - <span className="text-blue-500 dark:text-blue-400">{adminProdiName}</span>
       </p>
 
-      {/* Baris Statistik */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <StatCard
           title={`Total Mahasiswa ${adminProdiName}`}
@@ -85,7 +88,6 @@ const DashboardAdminPage = async () => {
         />
       </div>
 
-      {/* Baris Grafik Mahasiswa */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <StudentsPerSemesterChart data={studentsPerSemester} />
         <StudentsByProdiChart data={studentsByProdi} />
