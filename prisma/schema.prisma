@@ -124,18 +124,22 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  semester           Semester?          @relation(fields: [semesterId], references: [id])
-  prodi              ProgramStudi?      @relation(fields: [prodiId], references: [id])
-  golongan           Golongan?          @relation(fields: [golonganId], references: [id])
-  laporans           LaporanMahasiswa[] @relation("LaporanDariUser")
-  presensi           PresensiKuliah[]
-  pengajuanIzin      PengajuanIzin[]
-  notifikasiDiterima Notifikasi[]       @relation("NotifikasiUntukUser")
-  notifikasiDikirim  Notifikasi[]       @relation("NotifikasiDariSender")
-  jadwalMengajar     JadwalKuliah[]
-  jadwalDiikuti      PesertaKuliah[]
-  account            Account[]
-  session            Session[]
+  semester Semester?     @relation(fields: [semesterId], references: [id])
+  prodi    ProgramStudi? @relation(fields: [prodiId], references: [id])
+  golongan Golongan?     @relation(fields: [golonganId], references: [id])
+
+  // --- PERBAIKAN: HAPUS onDelete dari sisi User (induk) ---
+  laporans           LaporanMahasiswa[] @relation("LaporanDariUser") // Hapus onDelete: Cascade
+  presensi           PresensiKuliah[]   @relation // Hapus onDelete: Cascade
+  pengajuanIzin      PengajuanIzin[]    @relation // Hapus onDelete: Cascade
+  notifikasiDiterima Notifikasi[]       @relation("NotifikasiUntukUser") // Hapus onDelete: Cascade
+  notifikasiDikirim  Notifikasi[]       @relation("NotifikasiDariSender") // Hapus onDelete: Cascade
+  jadwalMengajar     JadwalKuliah[]     @relation // Hapus onDelete: SetNull
+  jadwalDiikuti      PesertaKuliah[]    @relation // Hapus onDelete: Cascade
+  // --- AKHIR PERBAIKAN ---
+
+  account Account[]
+  session Session[]
 
   @@map("user")
 }
@@ -192,9 +196,9 @@ model PresensiKuliah {
   matkulId       String
   jadwalKuliahId String
 
-  mahasiswa     User         @relation(fields: [mahasiswaId], references: [id])
+  mahasiswa     User         @relation(fields: [mahasiswaId], references: [id], onDelete: Cascade) // BENAR: onDelete di sisi anak
   mata_kuliah   MataKuliah   @relation(fields: [matkulId], references: [id])
-  jadwal_kuliah JadwalKuliah @relation(fields: [jadwalKuliahId], references: [id], onDelete: Cascade)
+  jadwal_kuliah JadwalKuliah @relation(fields: [jadwalKuliahId], references: [id], onDelete: Cascade) // BENAR: onDelete di sisi anak
 }
 
 model PengajuanIzin {
@@ -212,7 +216,7 @@ model PengajuanIzin {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  mahasiswa     User         @relation(fields: [mahasiswaId], references: [id])
+  mahasiswa     User         @relation(fields: [mahasiswaId], references: [id], onDelete: Cascade) // BENAR: onDelete di sisi anak
   jadwal_kuliah JadwalKuliah @relation(fields: [jadwalKuliahId], references: [id])
 }
 
@@ -229,8 +233,8 @@ model Notifikasi {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user   User @relation("NotifikasiUntukUser", fields: [userId], references: [id])
-  sender User @relation("NotifikasiDariSender", fields: [senderId], references: [id])
+  user   User @relation("NotifikasiUntukUser", fields: [userId], references: [id], onDelete: Cascade) // BENAR: onDelete di sisi anak
+  sender User @relation("NotifikasiDariSender", fields: [senderId], references: [id], onDelete: Cascade) // BENAR: onDelete di sisi anak
 }
 
 model MataKuliah {
@@ -254,7 +258,7 @@ model LaporanMahasiswa {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user User @relation("LaporanDariUser", fields: [userId], references: [id])
+  user User @relation("LaporanDariUser", fields: [userId], references: [id], onDelete: Cascade) // BENAR: onDelete di sisi anak
 }
 
 model JadwalKuliah {
@@ -264,13 +268,13 @@ model JadwalKuliah {
   jam_mulai      String
   jam_selesai    String
 
-  dosenId    String
+  dosenId    String? // <-- Jika onDelete: SetNull, harus nullable
   matkulId   String
   semesterId String
   prodiId    String
   ruanganId  String
 
-  dosen         User             @relation(fields: [dosenId], references: [id])
+  dosen         User?            @relation(fields: [dosenId], references: [id], onDelete: SetNull) // BENAR: onDelete di sisi anak
   mata_kuliah   MataKuliah       @relation(fields: [matkulId], references: [id])
   semester      Semester         @relation(fields: [semesterId], references: [id])
   prodi         ProgramStudi     @relation(fields: [prodiId], references: [id])
@@ -318,7 +322,7 @@ model PesertaKuliah {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  mahasiswa     User         @relation(fields: [mahasiswaId], references: [id], onDelete: Restrict)
+  mahasiswa     User         @relation(fields: [mahasiswaId], references: [id], onDelete: Cascade)
   jadwal_kuliah JadwalKuliah @relation(fields: [jadwalKuliahId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@unique([mahasiswaId, jadwalKuliahId])

@@ -12,13 +12,14 @@ type Props = {
   icon?: React.ReactNode;
   isLoading?: boolean;
   href?: string;
+  disabled?: boolean;
 };
 
-export const SubmitButton = ({ text, type, className, icon, onClick, isLoading, href }: Props) => {
+export const SubmitButton = ({ text, type, className, icon, onClick, isLoading, href, disabled }: Props) => {
   const { pending } = useFormStatus();
   const router = useRouter();
   const [manualLoading, setManualLoading] = useState(false);
-  const isSubmitting = isLoading || pending || manualLoading;
+  const isSubmitting = disabled || isLoading || pending || manualLoading;
 
   const handleClick = () => {
     if (isSubmitting) return;

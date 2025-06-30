@@ -59,20 +59,25 @@ export default function GantiPasswordPage() {
     setLoading(false);
 
     if (res.ok) {
-      toast.success("Password berhasil diganti.");
-      await signIn("credentials", {
+      const result = await signIn("credentials", {
         redirect: false,
         email: session?.user?.email,
         password: newPassword,
       });
-      router.replace("/?ganti-password=success");
+      if (result?.ok) {
+        router.replace("/?ganti-password=success");
+        router.refresh();
+      } else {
+        console.error("Login ulang gagal");
+        toast.error("Gagal login ulang setelah mengganti password.");
+      }
     } else {
       const data = await res.json();
-      toast.error(data.message || "Gagal mengganti password.");
+      router.replace("/?ganti-password=error");
       if (data.message === "Password lama salah.") {
         setErrors((prev) => ({ ...prev, oldPassword: data.message }));
       } else {
-        toast.error(data.message || "Gagal mengganti password.");
+        console.error("Gagal mengubah password");
       }
       return;
     }
@@ -80,7 +85,7 @@ export default function GantiPasswordPage() {
 
   return (
     <div className="min-h-[92dvh] flex items-center justify-center px-4">
-      <Card className="w-full max-w-md bg-neutral-950 border border-neutral-800">
+      <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-center">Ganti Password</CardTitle>
         </CardHeader>
@@ -139,7 +144,7 @@ export default function GantiPasswordPage() {
               )}
             </div>
 
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full cursor-pointer" disabled={loading}>
               {loading ? "Menyimpan..." : "Simpan"}
             </Button>
           </form>

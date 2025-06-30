@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const NotAdminPage = () => {
+const NotDosenPage = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white dark:bg-black px-4">
       <div className="max-w-md w-full text-center">
@@ -20,7 +20,7 @@ const NotAdminPage = () => {
 
         <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-200">Akses Ditolak</h1>
         <p className="mt-3 text-gray-600 dark:text-gray-200">
-          Anda tidak memiliki izin untuk mengakses halaman ini. Halaman ini hanya bisa diakses oleh admin.
+          Anda tidak memiliki izin untuk mengakses halaman ini. Halaman ini hanya bisa diakses oleh dosen.
         </p>
 
         <div className="mt-6">
@@ -36,4 +36,4 @@ const NotAdminPage = () => {
   );
 };
 
-export default NotAdminPage;
+export default NotDosenPage;

@@ -379,6 +379,15 @@ export default function FlashMessageListener() {
       router.replace(pathname, { scroll: false });
     }
 
+    if (mahasiswaStatus === "reset_success") {
+      toast({
+        type: "success",
+        title: "Sukses!",
+        description: "Password Mahasiswa berhasil direset.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
     if (mahasiswaStatus === "create_success") {
       toast({
         type: "success",

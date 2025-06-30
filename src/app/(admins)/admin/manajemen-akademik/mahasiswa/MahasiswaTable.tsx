@@ -50,6 +50,10 @@ export default function MahasiswaTable({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMahasiswa, setSelectedMahasiswa] = useState<MahasiswaData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
+  const [resetInput, setResetInput] = useState("");
+  const [isResetValid, setIsResetValid] = useState(false);
 
   const [filteredGolongans, setFilteredGolongans] = useState<FilterOption[]>([]);
 
@@ -106,6 +110,13 @@ export default function MahasiswaTable({
     }
   };
 
+  const handleResetPasswordModal = (mahasiswa: MahasiswaData) => {
+    setSelectedMahasiswa(mahasiswa);
+    setResetInput("");
+    setIsResetValid(false);
+    setIsResetModalOpen(true);
+  };
+
   const displayValue = (val?: string | null) => (val && val.trim() !== "" ? val : "-");
 
   const createPageURL = (pageNumber: number) => {
@@ -150,7 +161,6 @@ export default function MahasiswaTable({
           className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/50 dark:text-white border-gray-300 dark:border-neutral-800 text-sm focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           value={filters.current.golongan || ""}
           onChange={(e) => updateFilter("golongan", e.target.value)}
-          // Non-aktifkan jika prodi ATAU semester belum dipilih
           disabled={!filters.current.prodi || !filters.current.semester}
         >
           <option value="" className="bg-white dark:bg-neutral-900">
@@ -184,7 +194,7 @@ export default function MahasiswaTable({
               <th className="px-6 py-3 font-semibold">Nama</th>
               <th className="px-6 py-3 font-semibold">Prodi</th>
               <th className="px-6 py-3 font-semibold">Semester</th>
-              <th className="px-6 py-3 font-semibold">Golongan</th>
+              <th className="px-6 py-3 font-semibold text-center">Golongan</th>
               <th className="px-6 py-3 font-semibold text-center w-px whitespace-nowrap">Aksi</th>
             </tr>
           </thead>
@@ -205,12 +215,17 @@ export default function MahasiswaTable({
                   <td className="px-6 py-4">{displayValue(m.name)}</td>
                   <td className="px-6 py-4">{displayValue(m.prodi?.name)}</td>
                   <td className="px-6 py-4">{displayValue(m.semester?.name)}</td>
-                  <td className="px-6 py-4">{displayValue(m.golongan?.name)}</td>
+                  <td className="px-6 py-4 text-center">{displayValue(m.golongan?.name)}</td>
                   <td className="px-6 py-4 flex items-center gap-4 justify-center">
                     <SubmitButton
                       text="Edit"
                       href={`/admin/manajemen-akademik/mahasiswa/${m.id}/edit`}
                       className="bg-white w-18 dark:bg-neutral-950/50 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-[#1A1A1A] hover:transition-all text-sm border border-gray-300 dark:border-neutral-800 flex items-center justify-center gap-2 cursor-pointer"
+                    />
+                    <SubmitButton
+                      text="Reset Password"
+                      onClick={() => handleResetPasswordModal(m)}
+                      className="bg-emerald-700/80 w-36 dark:bg-emerald-900/50 text-white dark:text-emerald-200 px-4 py-2 rounded-md hover:bg-emerald-700 dark:hover:bg-emerald-950 hover:transition-all text-sm border-none flex items-center justify-center gap-2 cursor-pointer"
                     />
                     <SubmitButton
                       text="Hapus"
@@ -283,6 +298,111 @@ export default function MahasiswaTable({
                 isLoading={isLoading}
                 onClick={handleConfirmDelete}
                 className="bg-red-600 dark:bg-red-800 text-white px-4 py-2 rounded-md text-sm hover:bg-red-700 dark:hover:bg-red-950 transition-all"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isResetModalOpen && selectedMahasiswa && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-neutral-950 rounded-lg p-6 w-full max-w-lg mx-4 shadow-lg">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+              <LuCircleAlert className="w-6 h-6 text-yellow-500" /> Konfirmasi Reset Password
+            </h2>
+            <div className="mt-4 text-sm text-gray-600 dark:text-gray-300">
+              <p>
+                Anda akan mereset password mahasiswa{" "}
+                <span className="font-bold">{selectedMahasiswa.name}</span> menjadi password default. Anda
+                yakin ingin melanjutkan?
+              </p>
+            </div>
+            <div className="mt-6 flex justify-end gap-4">
+              <SubmitButton
+                text="Batal"
+                onClick={() => setIsResetModalOpen(false)}
+                className="bg-gray-200 dark:bg-neutral-900/50 dark:border dark:border-neutral-800 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-neutral-700 transition-all"
+              />
+              <SubmitButton
+                text="Lanjut"
+                onClick={() => {
+                  setIsResetModalOpen(false);
+                  setIsResetConfirmOpen(true);
+                }}
+                className="bg-emerald-700 dark:bg-emerald-800 text-white px-4 py-2 rounded-md text-sm hover:bg-emerald-800 dark:hover:bg-emerald-950 transition-all"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isResetConfirmOpen && selectedMahasiswa && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="bg-white dark:bg-neutral-950 rounded-lg p-6 w-full max-w-lg mx-4 shadow-lg">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+              <LuCircleAlert className="w-6 h-6 text-yellow-500" /> Verifikasi NIM
+            </h2>
+            <div className="mt-4 text-sm text-gray-600 dark:text-gray-300">
+              <p>
+                Silakan ketikkan NIM mahasiswa <span className="font-bold">{selectedMahasiswa.name}</span>{" "}
+                untuk mengonfirmasi reset password.
+              </p>
+              <input
+                type="text"
+                className={`w-full mt-4 px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-900/50 dark:text-white border-gray-300 dark:border-neutral-800 text-sm focus:outline-none focus:ring-2 
+                  ${
+                    isResetValid
+                      ? "focus:ring-emerald-600 dark:focus:ring-emerald-500"
+                      : "focus:ring-red-600 dark:focus:ring-red-500"
+                  }`}
+                placeholder="Ketik NIM mahasiswa di sini..."
+                value={resetInput}
+                onChange={(e) => {
+                  setResetInput(e.target.value);
+                  setIsResetValid(e.target.value.trim() === selectedMahasiswa.nim);
+                }}
+              />
+              <p
+                className={`mt-2 text-sm ${
+                  resetInput === "" ? "text-gray-500" : isResetValid ? "text-emerald-600" : "text-red-600"
+                }`}
+              >
+                {resetInput === ""
+                  ? "Ketikkan NIM mahasiswa."
+                  : isResetValid
+                  ? "NIM cocok, Anda bisa mereset password."
+                  : "NIM tidak cocok."}
+              </p>
+            </div>
+            <div className="mt-6 flex justify-end gap-4">
+              <SubmitButton
+                text="Batal"
+                onClick={() => setIsResetConfirmOpen(false)}
+                className="bg-gray-200 dark:bg-neutral-900/50 dark:border dark:border-neutral-800 text-gray-800 dark:text-gray-200 px-4 py-2 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-neutral-700 transition-all"
+              />
+              <SubmitButton
+                text="Reset"
+                disabled={!isResetValid}
+                onClick={async () => {
+                  try {
+                    const response = await fetch(`/api/mahasiswa/${selectedMahasiswa.id}/reset-password`, {
+                      method: "POST",
+                    });
+                    if (!response.ok) throw new Error("Gagal mereset password.");
+                    setIsResetConfirmOpen(false);
+                    const params = new URLSearchParams(searchParams.toString());
+                    params.set("mahasiswa", "reset_success");
+                    router.replace(`?${params.toString()}`, { scroll: false });
+                    router.refresh();
+                  } catch (error) {
+                    if (error instanceof Error) alert(`Error: ${error.message}`);
+                  }
+                }}
+                className={`${
+                  isResetValid
+                    ? "bg-emerald-700 dark:bg-emerald-800 hover:bg-emerald-800 dark:hover:bg-emerald-950"
+                    : "bg-gray-400 dark:bg-neutral-700 cursor-not-allowed"
+                } text-white px-4 py-2 rounded-md text-sm transition-all`}
               />
             </div>
           </div>

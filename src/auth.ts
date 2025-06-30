@@ -22,6 +22,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       if (trigger === "update" && session?.user) {
         token.isProfileComplete = session.user.isProfileComplete ?? false;
+        token.isDefaultPassword = user.isDefaultPassword ?? false;
         token.no_hp = session.user.no_hp;
         token.alamat = session.user.alamat;
         token.foto = session.user.foto;
