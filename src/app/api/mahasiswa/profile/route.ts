@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/auth"; // Sesuaikan dengan auth-mu
+import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { uploadToCloudinary } from "@/lib/uploadToCloudinary";
 
@@ -52,7 +52,6 @@ export async function PUT(req: Request) {
   }
 
   const userId = session.user.id;
-
   const no_hp = form.get("no_hp") as string;
   const alamat = form.get("alamat") as string;
   const foto = form.get("foto") as File | null;
@@ -65,6 +64,7 @@ export async function PUT(req: Request) {
   }
 
   const isProfileComplete = !!no_hp?.trim() && !!alamat?.trim();
+  const wasIncomplete = !session?.user?.isProfileComplete;
 
   const updated = await prisma.user.update({
     where: { id: userId },
@@ -81,20 +81,15 @@ export async function PUT(req: Request) {
     },
   });
 
-  const wasIncomplete = !session?.user?.isProfileComplete;
-
-  const response = NextResponse.json({
-    ...updated,
-    semester: updated.semester?.name ?? "-",
-    prodi: updated.prodi?.name ?? "-",
-    golongan: updated.golongan?.name ?? "-",
-  });
-
   if (isProfileComplete && wasIncomplete) {
-    response.cookies.set("session-updated", "1", {
-      httpOnly: true,
-      path: "/",
+    const response = NextResponse.json({
+      ...updated,
+      semester: updated.semester?.name ?? "-",
+      prodi: updated.prodi?.name ?? "-",
+      golongan: updated.golongan?.name ?? "-",
     });
+    response.cookies.set("session-updated", "1", { httpOnly: true, path: "/" });
+    return response;
   }
 
   return NextResponse.json({

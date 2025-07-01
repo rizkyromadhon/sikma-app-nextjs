@@ -3,12 +3,10 @@ import { auth } from "@/auth";
 import { redirect, notFound } from "next/navigation";
 import EditJadwalForm from "./EditJadwalForm";
 
-// Fungsi untuk mengambil semua data yang dibutuhkan untuk form
 async function getFormData(adminProdiId: string, jadwalId: string) {
   const [jadwal, semesters, dosens, mataKuliahs, ruangans] = await Promise.all([
-    // Ambil data jadwal spesifik, sertakan relasi golongans
     prisma.jadwalKuliah.findUnique({
-      where: { id: jadwalId, prodiId: adminProdiId }, // Pastikan admin hanya bisa edit jadwal prodinya
+      where: { id: jadwalId, prodiId: adminProdiId }, 
       include: {
         golongans: { select: { id: true } },
         prodi: true,
@@ -23,7 +21,6 @@ async function getFormData(adminProdiId: string, jadwalId: string) {
     prisma.ruangan.findMany({ orderBy: { kode: "asc" } }),
   ]);
 
-  // Jika jadwal tidak ditemukan atau bukan milik prodi admin, tampilkan 404
   if (!jadwal) {
     notFound();
   }

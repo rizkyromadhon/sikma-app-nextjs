@@ -2,9 +2,6 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import ExcelJS from "exceljs";
 import { auth } from "@/auth";
-import { Prisma } from "@/generated/prisma/client";
-import { format } from "date-fns";
-import { id as localeID } from "date-fns/locale";
 
 export async function POST(request: Request) {
   const session = await auth();
@@ -23,12 +20,10 @@ export async function POST(request: Request) {
 
   try {
     const filters = await request.json();
-
     if (!filters.semesterId || !filters.matkulId) {
       return NextResponse.json({ error: "Semester dan Mata Kuliah wajib dipilih." }, { status: 400 });
     }
 
-    // Mengambil nama filter untuk ditampilkan di header Excel
     const [semesterInfo, matkulInfo, golonganInfo] = await Promise.all([
       prisma.semester.findUnique({ where: { id: filters.semesterId } }),
       prisma.mataKuliah.findUnique({ where: { id: filters.matkulId } }),
@@ -36,112 +31,211 @@ export async function POST(request: Request) {
         ? prisma.golongan.findUnique({ where: { id: filters.golonganId } })
         : Promise.resolve(null),
     ]);
+    if (!semesterInfo || !matkulInfo) {
+      return NextResponse.json({ error: "Semester atau Mata Kuliah tidak ditemukan." }, { status: 404 });
+    }
 
-    const whereClause: Prisma.PresensiKuliahWhereInput = {
-      jadwal_kuliah: {
+    const jadwals = await prisma.jadwalKuliah.findMany({
+      where: {
         semesterId: filters.semesterId,
         matkulId: filters.matkulId,
         prodiId: admin.prodiId,
-        ...(filters.golonganId && {
-          golongans: { some: { id: filters.golonganId } },
-        }),
+        ...(filters.golonganId && { golongans: { some: { id: filters.golonganId } } }),
       },
-    };
+      select: { id: true },
+    });
+    const jadwalIds = jadwals.map((j) => j.id);
 
-    const presensiData = await prisma.presensiKuliah.findMany({
-      where: whereClause,
-      include: {
-        mahasiswa: { select: { name: true, nim: true } },
-      },
-      orderBy: [{ mahasiswa: { name: "asc" } }, { waktu_presensi: "asc" }],
+    const peserta = await prisma.pesertaKuliah.findMany({
+      where: { jadwalKuliahId: { in: jadwalIds } },
+      include: { mahasiswa: { select: { id: true, name: true, nim: true } } },
     });
 
-    // --- PEMBUATAN FILE EXCEL MODERN ---
+    const presensiRecords = await prisma.presensiKuliah.findMany({
+      where: {
+        mahasiswaId: { in: peserta.map((p) => p.mahasiswa.id) },
+        jadwalKuliahId: { in: jadwalIds },
+      },
+      orderBy: { waktu_presensi: "asc" },
+    });
+
+    const presensiMap = new Map<string, Map<number, string>>();
+    const mingguKe = new Map<string, number>();
+    let currentMinggu = 1;
+
+    for (const jadwalId of jadwalIds) {
+      mingguKe.set(jadwalId, currentMinggu++);
+    }
+
+    presensiRecords.forEach((p) => {
+      if (!presensiMap.has(p.mahasiswaId)) {
+        presensiMap.set(p.mahasiswaId, new Map<number, string>());
+      }
+      const mingguIndex = mingguKe.get(p.jadwalKuliahId);
+      if (mingguIndex !== undefined) {
+        let statusChar = "-";
+        if (p.status === "HADIR") statusChar = "H";
+        else if (p.status === "TIDAK_HADIR") statusChar = "TH";
+        else if (p.status === "TERLAMBAT") statusChar = "T";
+        else if (["IZIN", "SAKIT"].includes(p.status)) statusChar = "I/S";
+
+        presensiMap.get(p.mahasiswaId)?.set(mingguIndex, statusChar);
+      }
+    });
+
     const workbook = new ExcelJS.Workbook();
-    workbook.creator = "Sistem Kehadiran Mahasiswa";
-    workbook.created = new Date();
+    const worksheet = workbook.addWorksheet("Detail Kehadiran");
 
-    const worksheet = workbook.addWorksheet("Rekap Kehadiran");
+    worksheet.views = [{ state: "frozen", ySplit: 5, xSplit: 0 }];
 
-    // 1. Judul Utama
-    worksheet.mergeCells("A1:F1");
+    worksheet.mergeCells("A1:U1");
     const titleCell = worksheet.getCell("A1");
-    titleCell.value = "Rekapitulasi Kehadiran Mahasiswa";
+    titleCell.value = "Rekapitulasi Detail Kehadiran Mahasiswa";
     titleCell.font = { name: "Arial", size: 16, bold: true };
-    titleCell.alignment = { horizontal: "center" };
+    titleCell.alignment = { horizontal: "center", vertical: "middle" };
 
-    // 2. Info Filter
-    worksheet.mergeCells("A2:F2");
-    const filterInfoCell = worksheet.getCell("A2");
-    const filterText = `${semesterInfo?.name} | Program Studi : ${admin.prodi?.name} | Golongan : ${
+    worksheet.mergeCells("A2:U2");
+    const filterCell = worksheet.getCell("A2");
+    filterCell.value = `${semesterInfo.name} | Program Studi: ${admin.prodi?.name} | Golongan: ${
       golonganInfo?.name || "Semua"
-    } | Mata Kuliah : ${matkulInfo?.name}`;
-    filterInfoCell.value = filterText;
-    filterInfoCell.font = { name: "Arial", size: 10, italic: true };
-    filterInfoCell.alignment = { horizontal: "center" };
-    worksheet.getCell("A3").value = ""; // Baris kosong untuk spasi
+    } | Mata Kuliah: ${matkulInfo.name}`;
+    filterCell.font = { name: "Arial", size: 10, italic: true };
+    filterCell.alignment = { horizontal: "center", vertical: "middle" };
 
-    // 3. Header Tabel
-    const headerRow = worksheet.addRow([
+    worksheet.addRow([]);
+
+    const headerRow1 = worksheet.addRow([
       "No.",
       "NIM",
       "Nama Mahasiswa",
-      "Tanggal",
-      "Waktu Presensi",
-      "Status",
+      "Minggu",
+      ...Array(15).fill(""),
+      "Total",
+      "Persentase",
     ]);
-    headerRow.eachCell((cell) => {
-      cell.font = { bold: true, color: { argb: "FFFFFFFF" } };
-      cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF22272E" } };
-      cell.alignment = { horizontal: "center", vertical: "middle" };
-      cell.border = {
-        top: { style: "thin" },
-        left: { style: "thin" },
-        bottom: { style: "thin" },
-        right: { style: "thin" },
-      };
-    });
 
-    // 4. Isi Data
-    presensiData.forEach((p, index) => {
-      const row = worksheet.addRow([
-        index + 1,
-        p.mahasiswa.nim ?? "-",
-        p.mahasiswa.name ?? "-",
-        format(p.waktu_presensi, "eeee, dd LLLL yyyy", { locale: localeID }),
-        format(p.waktu_presensi, "HH:mm:ss"),
-        p.status,
-      ]);
-      // Beri border pada setiap sel di baris data
+    const headerRow2 = worksheet.addRow(["", "", "", ...Array.from({ length: 16 }, (_, i) => i + 1), "", ""]);
+
+    worksheet.mergeCells("A4:A5");
+    worksheet.mergeCells("B4:B5");
+    worksheet.mergeCells("C4:C5");
+    worksheet.mergeCells("T4:T5");
+    worksheet.mergeCells("U4:U5");
+    worksheet.mergeCells("D4:S4");
+
+    [headerRow1, headerRow2].forEach((row) => {
       row.eachCell({ includeEmpty: true }, (cell) => {
+        cell.font = { bold: true, color: { argb: "FFFFFFFF" } };
+        cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF22272E" } };
+        cell.alignment = { horizontal: "center", vertical: "middle" };
         cell.border = {
-          top: { style: "thin" },
-          left: { style: "thin" },
-          bottom: { style: "thin" },
-          right: { style: "thin" },
+          top: { style: "thin", color: { argb: "FF000000" } },
+          left: { style: "thin", color: { argb: "FF000000" } },
+          bottom: { style: "thin", color: { argb: "FF000000" } },
+          right: { style: "thin", color: { argb: "FF000000" } },
         };
       });
     });
 
-    // 5. Sesuaikan Lebar Kolom
-    worksheet.getColumn("A").width = 5;
-    worksheet.getColumn("B").width = 15;
-    worksheet.getColumn("C").width = 35;
-    worksheet.getColumn("D").width = 25;
-    worksheet.getColumn("E").width = 15;
-    worksheet.getColumn("F").width = 15;
+    let currentExcelRow = 6;
+    for (const [index, p] of peserta.entries()) {
+      const rowData = [index + 1, p.mahasiswa.nim ?? "-", p.mahasiswa.name ?? "-"];
+
+      const mahasiswaPresensi = presensiMap.get(p.mahasiswa.id) || new Map<number, string>();
+      const statusPerMingguArray = Array(16).fill("-");
+      let totalValid = 0;
+
+      for (let i = 1; i <= 16; i++) {
+        const statusChar = mahasiswaPresensi.get(i) || "-";
+        statusPerMingguArray[i - 1] = statusChar;
+        if (["H", "T", "I/S"].includes(statusChar)) {
+          totalValid++;
+        }
+      }
+
+      const totalText = `${totalValid}/${16}`;
+      const persentase = ((totalValid / 16) * 100).toFixed(1) + "%";
+
+      rowData.push(...statusPerMingguArray, totalText, persentase);
+
+      const row = worksheet.addRow(rowData);
+
+      row.eachCell({ includeEmpty: true }, (cell) => {
+        cell.border = {
+          top: { style: "thin", color: { argb: "FF000000" } },
+          left: { style: "thin", color: { argb: "FF000000" } },
+          bottom: { style: "thin", color: { argb: "FF000000" } },
+          right: { style: "thin", color: { argb: "FF000000" } },
+        };
+        cell.alignment = { horizontal: "center", vertical: "middle" };
+      });
+      worksheet.getCell(`B${currentExcelRow}`).alignment = { horizontal: "left", vertical: "middle" };
+      worksheet.getCell(`C${currentExcelRow}`).alignment = { horizontal: "left", vertical: "middle" };
+      currentExcelRow++;
+    }
+
+    worksheet.addRow([]);
+    let keteranganStartRow = 6;
+    const keteranganStartCol = 23;
+
+    worksheet.mergeCells(keteranganStartRow, keteranganStartCol, keteranganStartRow, keteranganStartCol + 2);
+    const keteranganHeaderCell = worksheet.getCell(keteranganStartRow, keteranganStartCol);
+    keteranganHeaderCell.value = "Keterangan :";
+    keteranganHeaderCell.font = { italic: true, bold: true };
+    keteranganHeaderCell.alignment = { horizontal: "left", vertical: "middle" };
+
+    const keteranganList = [
+      { code: "H", desc: "Hadir" },
+      { code: "TH", desc: "Tidak Hadir" },
+      { code: "T", desc: "Terlambat" },
+      { code: "I/S", desc: "Izin atau Sakit" },
+    ];
+
+    keteranganList.forEach((item) => {
+      keteranganStartRow++;
+      const row = worksheet.getRow(keteranganStartRow);
+
+      row.getCell(keteranganStartCol).value = item.code;
+      row.getCell(keteranganStartCol + 1).value = "=";
+      row.getCell(keteranganStartCol + 2).value = item.desc;
+
+      row.getCell(keteranganStartCol).font = { italic: true };
+      row.getCell(keteranganStartCol + 1).font = { italic: true };
+      row.getCell(keteranganStartCol + 2).font = { italic: true };
+
+      row.getCell(keteranganStartCol).alignment = { horizontal: "right", vertical: "middle" };
+      row.getCell(keteranganStartCol + 1).alignment = { horizontal: "center", vertical: "middle" };
+      row.getCell(keteranganStartCol + 2).alignment = { horizontal: "left", vertical: "middle" };
+    });
+
+    const existingColumns = [
+      { key: "No", width: 5 },
+      { key: "NIM", width: 15 },
+      { key: "Nama", width: 35 },
+      ...Array(16).fill({ width: 6 }),
+      { key: "Total", width: 10 },
+      { key: "Persentase", width: 12 },
+    ];
+
+    const keteranganColumns = [
+      { key: `SpacingCol${keteranganStartCol - 1}`, width: 3 },
+      { key: "KeteranganCode", width: 5 },
+      { key: "KeteranganEquals", width: 3 },
+      { key: "KeteranganDesc", width: 15 },
+    ];
+
+    worksheet.columns = [...existingColumns, ...keteranganColumns];
 
     const buffer = await workbook.xlsx.writeBuffer();
-
     return new Response(buffer, {
       status: 200,
       headers: {
         "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "Content-Disposition": `attachment; filename="rekap-kehadiran.xlsx"`,
+        "Content-Disposition": `attachment; filename="rekap-detail-kehadiran-${semesterInfo.name}-${matkulInfo.name}.xlsx"`,
       },
     });
   } catch (error) {
-    console.error("Gagal ekspor ke Excel:", error);
+    console.error("Gagal ekspor detail ke Excel:", error);
     return NextResponse.json({ error: "Terjadi kesalahan pada server." }, { status: 500 });
   }
 }

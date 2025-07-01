@@ -57,35 +57,22 @@ export const SignInCredentials = async (prevState: unknown, formData: FormData) 
   try {
     const user = await prisma.user.findUnique({
       where: { email },
+      select: { role: true },
     });
 
     if (!user) {
       return redirect(`/login?login=notfound&email=${encodeURIComponent(email)}`);
     }
 
-    const isAdmin = await prisma.user.findUnique({
-      where: {
-        role: "ADMIN",
-        email,
-      },
-    });
-
-    const isDosen = await prisma.user.findUnique({
-      where: {
-        role: "DOSEN",
-        email,
-      },
-    });
-
-    if (isDosen) {
-      await signIn("credentials", { email, password, redirectTo: "/dosen/dashboard/?login=success" });
+    if (user?.role === "DOSEN") {
+      return await signIn("credentials", { email, password, redirectTo: "/dosen/dashboard/?login=success" });
     }
 
-    if (isAdmin) {
-      await signIn("credentials", { email, password, redirectTo: "/admin/dashboard/?login=success" });
+    if (user?.role === "ADMIN") {
+      return await signIn("credentials", { email, password, redirectTo: "/admin/dashboard/?login=success" });
     }
 
-    await signIn("credentials", { email, password, redirectTo: "/?login=success" });
+    return await signIn("credentials", { email, password, redirectTo: "/?login=success" });
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {

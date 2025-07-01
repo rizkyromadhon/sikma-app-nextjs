@@ -14,7 +14,7 @@ type JadwalKuliahData = {
   jam_mulai: string;
   jam_selesai: string;
   mata_kuliah: { name: string };
-  dosen: { name: string };
+  dosen: { name: string } | null;
   semester: { name: string };
   golongans: { name: string }[];
   ruangan: { name: string };
@@ -234,7 +234,7 @@ export default function JadwalKuliahTable({
                     </div>
                   </td>
                   <td className="px-4 py-3 text-center">{jadwal.mata_kuliah.name}</td>
-                  <td className="px-4 py-3 text-center">{jadwal.dosen.name}</td>
+                  <td className="px-4 py-3 text-center">{jadwal?.dosen?.name}</td>
                   <td className="px-4 py-3 text-center">
                     {jadwal.semester.name} / {jadwal.golongans.map((g) => g.name).join(", ")}
                   </td>

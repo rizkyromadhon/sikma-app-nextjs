@@ -50,9 +50,9 @@ export const GET = async () => {
     start: j.jam_mulai,
     end: j.jam_selesai,
     matkul: j.mata_kuliah.name,
-    dosen: j.dosen.name,
+    dosen: j.dosen?.name,
     ruangan: j.ruangan.name,
-    foto: j.dosen.foto,
+    foto: j.dosen?.foto,
   }));
 
   return NextResponse.json(formatted);

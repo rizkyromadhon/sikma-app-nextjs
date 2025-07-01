@@ -3,14 +3,15 @@ import prisma from "@/lib/prisma";
 import { hashSync } from "bcrypt-ts";
 import { NextRequest } from "next/server";
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
+  const { id } = await params;
 
   if (!session?.user || session.user.role !== "ADMIN") {
     return new Response(JSON.stringify({ message: "Unauthorized" }), { status: 401 });
   }
 
-  const mahasiswaId = params.id;
+  const mahasiswaId = id;
 
   const mahasiswa = await prisma.user.findUnique({
     where: { id: mahasiswaId },

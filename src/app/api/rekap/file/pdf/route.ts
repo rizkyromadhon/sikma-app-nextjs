@@ -1,11 +1,8 @@
-// File: app/api/rekap/export/pdf/route.ts
-
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { auth } from "@/auth";
-import { Prisma } from "@/generated/prisma/client";
-import { format } from "date-fns";
 import { PDFDocument, rgb, StandardFonts, PageSizes } from "pdf-lib";
+import { TipePengajuan } from "@/generated/prisma";
 
 export async function POST(request: Request) {
   const session = await auth();
@@ -17,28 +14,29 @@ export async function POST(request: Request) {
     where: { id: session.user.id },
     select: { prodiId: true, prodi: { select: { name: true } } },
   });
-
   if (!admin?.prodiId) {
     return NextResponse.json({ error: "Admin tidak terkait prodi" }, { status: 400 });
   }
 
+  const filters = await request.json();
+  if (!filters.semesterId || !filters.matkulId) {
+    return NextResponse.json({ error: "Semester dan Mata Kuliah wajib dipilih." }, { status: 400 });
+  }
+
   try {
-    const filters = await request.json();
-
-    if (!filters.semesterId || !filters.matkulId) {
-      return NextResponse.json({ error: "Semester dan Mata Kuliah wajib dipilih." }, { status: 400 });
-    }
-
     const [semesterInfo, matkulInfo, golonganInfo] = await Promise.all([
       prisma.semester.findUnique({ where: { id: filters.semesterId } }),
       prisma.mataKuliah.findUnique({ where: { id: filters.matkulId } }),
-      filters.golonganId
-        ? prisma.golongan.findUnique({ where: { id: filters.golonganId } })
-        : Promise.resolve(null),
+      prisma.golongan.findUnique({ where: { id: filters.golonganId } }),
     ]);
 
-    const whereClause: Prisma.PresensiKuliahWhereInput = {
-      jadwal_kuliah: {
+    if (!semesterInfo || !matkulInfo) {
+      return NextResponse.json({ error: "Semester atau Mata Kuliah tidak ditemukan." }, { status: 404 });
+    }
+
+    // Ambil info jadwal
+    const jadwals = await prisma.jadwalKuliah.findMany({
+      where: {
         semesterId: filters.semesterId,
         matkulId: filters.matkulId,
         prodiId: admin.prodiId,
@@ -46,22 +44,23 @@ export async function POST(request: Request) {
           golongans: { some: { id: filters.golonganId } },
         }),
       },
-    };
+      select: { id: true },
+    });
+    const jadwalIds = jadwals.map((j) => j.id);
 
-    const presensiData = await prisma.presensiKuliah.findMany({
-      where: whereClause,
+    const peserta = await prisma.pesertaKuliah.findMany({
+      where: { jadwalKuliahId: { in: jadwalIds } },
       include: {
-        mahasiswa: { select: { name: true, nim: true } },
+        mahasiswa: { select: { id: true, name: true, nim: true } },
       },
-      orderBy: [{ mahasiswa: { name: "asc" } }, { waktu_presensi: "asc" }],
     });
 
+    // Siapkan PDF
     const pdfDoc = await PDFDocument.create();
     let page = pdfDoc.addPage(PageSizes.A4);
     const { height } = page.getSize();
     const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-
     let y = height - 50;
     const margin = 50;
 
@@ -74,20 +73,28 @@ export async function POST(request: Request) {
     });
     y -= 25;
 
-    const filterText = `${semesterInfo?.name} | ${admin.prodi?.name} | Gol. ${
-      golonganInfo?.name || "Semua"
-    } | ${matkulInfo?.name}`;
+    const filterText = `${semesterInfo.name} | ${admin.prodi?.name} | Gol. ${golonganInfo?.name} | ${matkulInfo.name}`;
     page.drawText(filterText, {
       x: margin,
-      y: y,
-      font: font,
+      y,
+      font,
       size: 10,
       color: rgb(0.4, 0.4, 0.4),
     });
     y -= 30;
-
-    const tableHeaders = ["No", "NIM", "Nama Mahasiswa", "Tanggal", "Waktu", "Status"];
-    const colWidths = [30, 90, 180, 100, 60, 60];
+    const tableHeaders = [
+      "No",
+      "NIM",
+      "Nama",
+      "H",
+      "TH",
+      "T",
+      "I/S Disetujui",
+      "I/S Ditolak",
+      "Total",
+      "Persentase",
+    ];
+    const colWidths = [25, 65, 140, 25, 25, 25, 50, 50, 55, 55];
     const headerHeight = 20;
 
     page.drawRectangle({
@@ -96,68 +103,115 @@ export async function POST(request: Request) {
       width: colWidths.reduce((a, b) => a + b, 0),
       height: headerHeight,
       color: rgb(0.1, 0.1, 0.1),
+      borderWidth: 1,
+      borderColor: rgb(0, 0, 0),
     });
 
     let currentX = margin;
     tableHeaders.forEach((header, i) => {
+      const textWidth = fontBold.widthOfTextAtSize(header, 8);
+      const centerX = currentX + (colWidths[i] - textWidth) / 2;
       page.drawText(header, {
-        x: currentX + 5,
+        x: centerX,
         y: y - 14,
         font: fontBold,
-        size: 9,
+        size: 8,
         color: rgb(1, 1, 1),
       });
       currentX += colWidths[i];
     });
     y -= headerHeight;
 
-    if (presensiData.length === 0) {
-      const totalTableWidth = colWidths.reduce((a, b) => a + b, 0);
-      const text = "Belum ada data presensi.";
-      const textWidth = font.widthOfTextAtSize(text, 12);
-      const centerX = margin + (totalTableWidth - textWidth) / 2;
-
-      page.drawText(text, {
-        x: centerX,
-        y: y - 20,
-        font: font,
-        size: 11,
-        color: rgb(0.5, 0.5, 0.5),
-      });
-    }
-
-    presensiData.forEach((p, index) => {
-      if (y < margin + 20) {
+    let nomor = 1;
+    for (const p of peserta) {
+      if (y < margin + 60) {
         page = pdfDoc.addPage(PageSizes.A4);
         y = height - 50;
       }
 
-      const rowData = [
-        (index + 1).toString(),
+      const presensiMahasiswa = await prisma.presensiKuliah.findMany({
+        where: { mahasiswaId: p.mahasiswa.id, jadwalKuliahId: { in: jadwalIds } },
+      });
+
+      const jumlah = { HADIR: 0, TERLAMBAT: 0, IZIN_DISETUJUI: 0, IZIN_DITOLAK: 0, TIDAK_HADIR: 0 };
+      for (const presensi of presensiMahasiswa) {
+        if (["IZIN", "SAKIT"].includes(presensi.status)) {
+          const pengajuan = await prisma.pengajuanIzin.findFirst({
+            where: {
+              mahasiswaId: p.mahasiswa.id,
+              jadwalKuliahId: { in: jadwalIds },
+              tipe_pengajuan: presensi.status as TipePengajuan,
+            },
+          });
+          if (pengajuan?.status === "DISETUJUI") jumlah.IZIN_DISETUJUI++;
+          else jumlah.IZIN_DITOLAK++;
+        } else if (presensi.status === "HADIR") jumlah.HADIR++;
+        else if (presensi.status === "TERLAMBAT") jumlah.TERLAMBAT++;
+        else if (presensi.status === "TIDAK_HADIR") jumlah.TIDAK_HADIR++;
+      }
+
+      const totalValid = jumlah.HADIR + jumlah.TERLAMBAT + jumlah.IZIN_DISETUJUI;
+      const persentase = ((totalValid / 16) * 100).toFixed(1) + "%";
+      const totalText = `${totalValid}/16`;
+
+      const row = [
+        nomor.toString(),
         p.mahasiswa.nim ?? "-",
         p.mahasiswa.name ?? "-",
-        format(p.waktu_presensi, "dd/MM/yyyy"),
-        format(p.waktu_presensi, "HH:mm:ss"),
-        p.status,
+        jumlah.HADIR.toString(),
+        jumlah.TIDAK_HADIR.toString(),
+        jumlah.TERLAMBAT.toString(),
+        jumlah.IZIN_DISETUJUI.toString(),
+        jumlah.IZIN_DITOLAK.toString(),
+        totalText,
+        persentase,
       ];
-      const rowHeight = 20;
-      currentX = margin;
 
-      rowData.forEach((text, i) => {
+      currentX = margin;
+      row.forEach((text, i) => {
+        let textX;
+        if (i === 1 || i === 2) {
+          textX = currentX + 2;
+        } else {
+          const textWidth = font.widthOfTextAtSize(text, 8);
+          textX = currentX + (colWidths[i] - textWidth) / 2;
+        }
         page.drawText(text, {
-          x: currentX + 5,
+          x: textX,
           y: y - 14,
-          font: font,
-          size: 9,
+          font,
+          size: 8,
           color: rgb(0.2, 0.2, 0.2),
         });
         currentX += colWidths[i];
       });
-      y -= rowHeight;
+      y -= 20;
+      nomor++;
+    }
+
+    if (y < margin + 50) {
+      page = pdfDoc.addPage(PageSizes.A4);
+      y = height - 50;
+    }
+
+    const keterangan = [
+      "Keterangan :",
+      "H   = Hadir",
+      "TH = Tidak Hadir",
+      "T    = Terlambat",
+      "I/S = Izin atau Sakit",
+    ];
+    keterangan.forEach((line, i) => {
+      page.drawText(line, {
+        x: margin,
+        y: y - 30 - i * 14,
+        font,
+        size: 9,
+        color: rgb(0.3, 0.3, 0.3),
+      });
     });
 
     const pdfBytes = await pdfDoc.save();
-
     const pdfBuffer = Buffer.from(pdfBytes);
 
     return new Response(pdfBuffer, {
@@ -167,8 +221,8 @@ export async function POST(request: Request) {
         "Content-Disposition": `attachment; filename="rekap-kehadiran.pdf"`,
       },
     });
-  } catch (error) {
-    console.error("Gagal ekspor ke PDF:", error);
-    return NextResponse.json({ error: "Terjadi kesalahan pada server." }, { status: 500 });
+  } catch (err) {
+    console.error("Gagal ekspor:", err);
+    return NextResponse.json({ error: "Terjadi kesalahan server" }, { status: 500 });
   }
 }

@@ -25,7 +25,7 @@ interface Jadwal {
   id: string;
   mataKuliah: string;
   jam: string;
-  dosen: string;
+  dosen: string | undefined;
   hari: string;
 }
 

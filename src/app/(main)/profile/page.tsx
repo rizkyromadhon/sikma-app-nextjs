@@ -88,9 +88,12 @@ export default function ProfilePage() {
 
       if (!res.ok) throw new Error("Gagal menyimpan perubahan");
       const updatedStudentData = await res.json();
+      if (!updatedStudentData || !updatedStudentData.id) {
+        throw new Error("Invalid response data");
+      }
       await update({
         user: {
-          ...session?.user, // Pertahankan data user yang sudah ada
+          ...session?.user,
           isProfileComplete: updatedStudentData.is_profile_complete,
           no_hp: updatedStudentData.no_hp,
           alamat: updatedStudentData.alamat,
@@ -100,7 +103,9 @@ export default function ProfilePage() {
 
       setStudent(updatedStudentData);
       setOpen(false);
-      router.replace("/profile?profile=edit_success");
+      // router.replace("");
+      window.location.replace("/?profile=edit_success");
+      // window.location.reload();
     } catch (error) {
       console.error("Gagal update profil:", error);
     } finally {

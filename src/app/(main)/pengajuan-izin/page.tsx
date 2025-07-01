@@ -27,7 +27,7 @@ export default async function PengajuanIzinPage() {
     hari: p.jadwal_kuliah.hari,
     mataKuliah: p.jadwal_kuliah.mata_kuliah.name,
     jam: `${p.jadwal_kuliah.jam_mulai} - ${p.jadwal_kuliah.jam_selesai}`,
-    dosen: p.jadwal_kuliah.dosen.name,
+    dosen: p?.jadwal_kuliah?.dosen?.name,
   }));
 
   return <PengajuanIzinClient jadwals={mappedJadwals} />;

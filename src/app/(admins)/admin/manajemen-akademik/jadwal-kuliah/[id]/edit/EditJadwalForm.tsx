@@ -23,7 +23,7 @@ type JadwalData = {
   jam_selesai: string;
   is_kelas_besar: boolean;
   matkulId: string;
-  dosenId: string;
+  dosenId: string | null;
   semesterId: string;
   prodiId: string;
   ruanganId: string;
