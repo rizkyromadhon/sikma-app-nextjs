@@ -34,6 +34,7 @@ const navLinks = [
       { href: "/admin/manajemen-akademik/ruangan", label: "Ruangan" },
       { href: "/admin/manajemen-akademik/mata-kuliah", label: "Mata Kuliah" },
       { href: "/admin/manajemen-akademik/jadwal-kuliah", label: "Jadwal Kuliah" },
+      { href: "/admin/manajemen-akademik/peserta-kuliah", label: "Peserta Kuliah" },
     ],
   },
   {

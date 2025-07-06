@@ -9,6 +9,7 @@ async function getDashboardData() {
   const latestAttendances = await prisma.presensiKuliah.findMany({
     take: 5,
     where: {
+      status: "HADIR",
       waktu_presensi: {
         gte: todayStart,
         lte: todayEnd,
@@ -36,6 +37,7 @@ async function getDashboardData() {
 
   const presensiHariIni = await prisma.presensiKuliah.findMany({
     where: {
+      status: "HADIR",
       waktu_presensi: {
         gte: todayStart,
         lte: todayEnd,

@@ -188,7 +188,7 @@ model ProgramStudi {
 
 model PresensiKuliah {
   id             String         @id @default(cuid())
-  waktu_presensi DateTime       @default(now())
+  waktu_presensi DateTime?      @default(now())
   status         StatusPresensi
   keterangan     String?
 
@@ -196,9 +196,9 @@ model PresensiKuliah {
   matkulId       String
   jadwalKuliahId String
 
-  mahasiswa     User         @relation(fields: [mahasiswaId], references: [id], onDelete: Cascade) // BENAR: onDelete di sisi anak
+  mahasiswa     User         @relation(fields: [mahasiswaId], references: [id], onDelete: Cascade)
   mata_kuliah   MataKuliah   @relation(fields: [matkulId], references: [id])
-  jadwal_kuliah JadwalKuliah @relation(fields: [jadwalKuliahId], references: [id], onDelete: Cascade) // BENAR: onDelete di sisi anak
+  jadwal_kuliah JadwalKuliah @relation(fields: [jadwalKuliahId], references: [id], onDelete: Cascade)
 }
 
 model PengajuanIzin {
@@ -216,7 +216,7 @@ model PengajuanIzin {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  mahasiswa     User         @relation(fields: [mahasiswaId], references: [id], onDelete: Cascade) // BENAR: onDelete di sisi anak
+  mahasiswa     User         @relation(fields: [mahasiswaId], references: [id], onDelete: Cascade)
   jadwal_kuliah JadwalKuliah @relation(fields: [jadwalKuliahId], references: [id])
 }
 

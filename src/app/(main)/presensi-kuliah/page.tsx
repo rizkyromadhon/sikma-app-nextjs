@@ -147,7 +147,8 @@ const PresensiKuliahPage = () => {
                     </TableCell>
                     <TableCell className="text-center">{p.matkul}</TableCell>
                     <TableCell className="text-center">
-                      {format(new Date(p.waktu_presensi), "HH:mm")}
+                      {p.status === "TIDAK_HADIR" ? "-" : format(new Date(p.waktu_presensi), "HH:mm")}
+                      {}
                     </TableCell>
                     <TableCell className="text-center">
                       <Badge

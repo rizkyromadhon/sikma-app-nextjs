@@ -34,6 +34,70 @@ export default function FlashMessageListener() {
     const pengajuanStatus = searchParams.get("pengajuan_izin");
     const pengajuanDosenStatus = searchParams.get("pengajuan-dosen");
     const rekapStatus = searchParams.get("rekap");
+    const pesertaStatus = searchParams.get("peserta-kuliah");
+
+    if (pesertaStatus === "create_success") {
+      toast({
+        type: "success",
+        title: "Sukses!",
+        description: "Mahasiswa berhasil ditambahkan sebagai peserta.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (pesertaStatus === "delete_success") {
+      toast({
+        type: "success",
+        title: "Sukses!",
+        description: "Mahasiswa berhasil dihapus dari peserta.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (pesertaStatus === "user_exists") {
+      toast({
+        type: "error",
+        title: "Gagal!",
+        description: "Mahasiswa sudah terdaftar di jadwal kuliah tersebut.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (pesertaStatus === "missing_fields") {
+      toast({
+        type: "error",
+        title: "Gagal!",
+        description: "Mahasiswa dan Jadwal Kuliah wajib diisi.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (pesertaStatus === "jadwal_not_found") {
+      toast({
+        type: "error",
+        title: "Gagal!",
+        description: "Jadwal Kuliah tidak ditemukan.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (pesertaStatus === "mahasiswa_not_found") {
+      toast({
+        type: "error",
+        title: "Gagal!",
+        description: "Mahasiswa tidak ditemukan.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
+    if (pesertaStatus === "prodi_mismatch") {
+      toast({
+        type: "error",
+        title: "Gagal!",
+        description: "Mahasiswa dan Jadwal Kuliah bukan dari program studi yang sama.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
 
     if (rekapStatus === "presensi_updated") {
       toast({

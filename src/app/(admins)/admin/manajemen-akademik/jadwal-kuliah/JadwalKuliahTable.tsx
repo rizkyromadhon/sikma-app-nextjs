@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { format } from "date-fns";
 import { SubmitButton } from "@/components/auth/SubmitButton";
 import { LuCircleAlert, LuCircleArrowLeft, LuCircleArrowRight } from "react-icons/lu";
 import Link from "next/link";

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { LuArrowLeft } from "react-icons/lu";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useEffect, useMemo, useState } from "react";
@@ -13,19 +12,20 @@ interface Presensi {
   mahasiswa: {
     name: string;
     nim: string;
-    semester?: { name: string } | null;
+    semester?: { id: string; name: string } | null;
     golongan?: { id: string; name: string } | null;
   };
-  mata_kuliah: { name: string };
+  mata_kuliah: { id: string; name: string };
   jadwal_kuliah: {
-    ruangan?: { name: string } | null;
-    semester?: { name: string } | null;
+    ruangan?: { id: string; name: string } | null;
+    semester?: { id: string; name: string } | null;
   };
 }
 
 interface FilterItem {
   id: string;
   name: string;
+  semesterId?: string;
 }
 
 interface Props {
@@ -46,66 +46,51 @@ export default function DetailPresensiTable({
   filters,
   activeSemesterId,
 }: Props) {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
-
   const [presensiData, setPresensiData] = useState<Presensi[]>(initialData);
 
-  const currentSemester = searchParams.get("semester") || "all";
-  const currentGolongan = searchParams.get("golongan") || "all";
-  const currentMataKuliah = searchParams.get("mataKuliah") || "all";
-  const currentRuangan = searchParams.get("ruangan") || "all";
+  useEffect(() => {
+    setPresensiData(initialData);
+  }, [initialData]);
 
-  const isGolonganDisabled = !activeSemesterId || activeSemesterId === "all";
-
-  const updateQuery = (key: string, value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    if (value && value !== "all") {
-      params.set(key, value);
-    } else {
-      params.delete(key);
-    }
-
-    if (key === "semester" && (value === "all" || !value)) {
-      params.delete("golongan");
-    }
-
-    router.push(`${pathname}?${params.toString()}`);
-  };
+  const [currentSemester, setCurrentSemester] = useState<string>("all");
+  const [currentGolongan, setCurrentGolongan] = useState<string>("all");
+  const [currentMataKuliah, setCurrentMataKuliah] = useState<string>("all");
+  const [currentRuangan, setCurrentRuangan] = useState<string>("all");
 
   useEffect(() => {
-    if (isGolonganDisabled && currentGolongan !== "all") {
-      const params = new URLSearchParams(searchParams.toString());
-      params.delete("golongan");
-      router.replace(`${pathname}?${params.toString()}`);
-    }
-  }, [isGolonganDisabled, currentGolongan, pathname, router, searchParams]);
+    setCurrentGolongan("all");
+  }, [currentSemester]);
 
-  const filteredGolongans = useMemo(() => {
-    if (!activeSemesterId || activeSemesterId === "all") return [];
+  const isGolonganDisabled = !currentSemester || currentSemester === "all";
 
-    const uniqueGolonganIds = new Set<string>();
-    const tempGolongans: FilterItem[] = [];
-
-    presensiData.forEach((presensi) => {
-      const g = presensi.mahasiswa.golongan;
-      if (g && !uniqueGolonganIds.has(g.id)) {
-        uniqueGolonganIds.add(g.id);
-        tempGolongans.push({ id: g.id, name: g.name });
-      }
+  const filteredPresensi = useMemo(() => {
+    return presensiData.filter((p) => {
+      if (currentSemester !== "all" && p.mahasiswa.semester?.id !== currentSemester) return false;
+      if (currentGolongan !== "all" && p.mahasiswa.golongan?.id !== currentGolongan) return false;
+      if (currentMataKuliah !== "all" && p.mata_kuliah.id !== currentMataKuliah) return false;
+      if (currentRuangan !== "all" && p.jadwal_kuliah.ruangan?.id !== currentRuangan) return false;
+      return true;
     });
+  }, [presensiData, currentSemester, currentGolongan, currentMataKuliah, currentRuangan]);
 
-    return tempGolongans.sort((a, b) => a.name.localeCompare(b.name));
-  }, [presensiData, activeSemesterId]);
+  console.log(currentGolongan, currentSemester, currentMataKuliah, currentRuangan);
 
-  const groupedByMahasiswa = presensiData.reduce<Record<string, Presensi[]>>((acc, item) => {
-    const key = item.mahasiswa.nim;
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(item);
+  const golongansToDisplay = useMemo(() => {
+    if (!currentSemester || currentSemester === "all") {
+      return [];
+    }
+    return filters.golongans.filter((g) => g.semesterId === currentSemester);
+  }, [filters.golongans, currentSemester]);
+
+  const groupedByMahasiswa = useMemo(() => {
+    const acc: Record<string, Presensi[]> = {};
+    filteredPresensi.forEach((item) => {
+      const key = item.mahasiswa.nim;
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(item);
+    });
     return acc;
-  }, {});
+  }, [filteredPresensi]);
 
   useEffect(() => {
     const socket = new WebSocket("ws://localhost:3001");
@@ -127,13 +112,17 @@ export default function DetailPresensiTable({
               mahasiswa: {
                 name: mahasiswa.name,
                 nim: mahasiswa.nim,
-                semester: mahasiswa.semester,
-                golongan: mahasiswa.golongan,
+                semester: mahasiswa.semester
+                  ? { id: mahasiswa.semester.id, name: mahasiswa.semester.name }
+                  : null,
+                golongan: mahasiswa.golongan
+                  ? { id: mahasiswa.golongan.id, name: mahasiswa.golongan.name }
+                  : null,
               },
-              mata_kuliah: { name: jadwal.mata_kuliah.name },
+              mata_kuliah: { id: jadwal.mata_kuliah.id, name: jadwal.mata_kuliah.name },
               jadwal_kuliah: {
-                ruangan: jadwal.ruangan,
-                semester: jadwal.semester,
+                ruangan: jadwal.ruangan ? { id: jadwal.ruangan.id, name: jadwal.ruangan.name } : null,
+                semester: jadwal.semester ? { id: jadwal.semester.id, name: jadwal.semester.name } : null,
               },
             },
           ];
@@ -159,7 +148,7 @@ export default function DetailPresensiTable({
       </h1>
 
       <div className="flex flex-col md:flex-row items-center gap-4 mt-6">
-        <Select onValueChange={(val) => updateQuery("semester", val)} value={currentSemester}>
+        <Select onValueChange={(val) => setCurrentSemester(val)} value={currentSemester}>
           <SelectTrigger className="w-full md:w-44">
             <SelectValue placeholder="Semua Semester" />
           </SelectTrigger>
@@ -174,7 +163,7 @@ export default function DetailPresensiTable({
         </Select>
 
         <Select
-          onValueChange={(val) => updateQuery("golongan", val)}
+          onValueChange={(val) => setCurrentGolongan(val)}
           value={currentGolongan}
           disabled={isGolonganDisabled}
         >
@@ -185,17 +174,25 @@ export default function DetailPresensiTable({
             {isGolonganDisabled ? (
               <SelectItem value="all">Pilih Semester Dulu</SelectItem>
             ) : (
-              <SelectItem value="all">Semua Golongan</SelectItem>
+              <>
+                <SelectItem value="all">Semua Golongan</SelectItem>
+                {golongansToDisplay.length === 0 && activeSemesterId && activeSemesterId !== "all" ? (
+                  <SelectItem value="no_options" disabled>
+                    Tidak ada Golongan
+                  </SelectItem>
+                ) : (
+                  golongansToDisplay.map((g) => (
+                    <SelectItem key={g.id} value={g.id}>
+                      {g.name}
+                    </SelectItem>
+                  ))
+                )}
+              </>
             )}
-            {filteredGolongans.map((g) => (
-              <SelectItem key={g.id} value={g.id}>
-                {g.name}
-              </SelectItem>
-            ))}
           </SelectContent>
         </Select>
 
-        <Select onValueChange={(val) => updateQuery("mataKuliah", val)} value={currentMataKuliah}>
+        <Select onValueChange={(val) => setCurrentMataKuliah(val)} value={currentMataKuliah}>
           <SelectTrigger className="w-full md:w-80">
             <SelectValue placeholder="Mata Kuliah" />
           </SelectTrigger>
@@ -209,7 +206,7 @@ export default function DetailPresensiTable({
           </SelectContent>
         </Select>
 
-        <Select onValueChange={(val) => updateQuery("ruangan", val)} value={currentRuangan}>
+        <Select onValueChange={(val) => setCurrentRuangan(val)} value={currentRuangan}>
           <SelectTrigger className="w-full md:w-44">
             <SelectValue placeholder="Ruangan" />
           </SelectTrigger>

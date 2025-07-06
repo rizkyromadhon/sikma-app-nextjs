@@ -122,7 +122,6 @@ export default async function ManajemenJadwalPage({
     currentPage
   );
 
-  // Buat data serializable sebelum dikirim ke client
   const serializableJadwalKuliah = jadwalKuliah.map((jadwal) => ({
     ...jadwal,
     jam_mulai: jadwal.jam_mulai,

@@ -3,6 +3,38 @@ import prisma from "@/lib/prisma";
 import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 import { hashSync } from "bcrypt-ts";
 
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const semesterId = searchParams.get("semesterId");
+  const golonganId = searchParams.get("golonganId");
+  const prodiId = searchParams.get("prodiId");
+
+  if (!semesterId || !golonganId || !prodiId) {
+    return NextResponse.json([], { status: 200 });
+  }
+
+  try {
+    const mahasiswa = await prisma.user.findMany({
+      where: {
+        role: "MAHASISWA",
+        prodiId,
+        semesterId,
+        golonganId,
+      },
+      select: {
+        id: true,
+        name: true,
+        nim: true,
+      },
+      orderBy: { name: "asc" },
+    });
+    return NextResponse.json(mahasiswa);
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: "Gagal mengambil data mahasiswa." }, { status: 500 });
+  }
+}
+
 // Konfigurasi Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

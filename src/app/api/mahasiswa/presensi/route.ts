@@ -188,7 +188,7 @@ export async function POST(request: Request) {
           jadwalAktif,
           mata_kuliah: jadwalAktif.mata_kuliah,
         },
-        presensi: { ...presensi, waktu_presensi: presensi.waktu_presensi.toISOString() },
+        presensi: { ...presensi, waktu_presensi: presensi.waktu_presensi?.toISOString() },
       },
     };
 

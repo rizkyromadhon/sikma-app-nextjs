@@ -4,11 +4,12 @@ import DetailPresensiTable from "@/components/main/DetailPresensiTable";
 import { startOfDay, endOfDay } from "date-fns";
 
 export default async function DetailPresensiPage({ params, searchParams }: any) {
-  const { slug } = params;
-  const semesterId = searchParams?.semester !== "all" ? searchParams.semester : undefined;
-  const mataKuliahId = searchParams?.mataKuliah !== "all" ? searchParams.mataKuliah : undefined;
-  const ruanganId = searchParams?.ruangan !== "all" ? searchParams.ruangan : undefined;
-  const golonganId = searchParams?.golongan !== "all" ? searchParams.golongan : undefined;
+  const { slug } = await params;
+  const { semester, mataKuliah, ruangan, golongan } = await searchParams;
+  const semesterId = semester !== "all" ? semester : undefined;
+  const mataKuliahId = mataKuliah !== "all" ? mataKuliah : undefined;
+  const ruanganId = ruangan !== "all" ? ruangan : undefined;
+  const golonganId = golongan !== "all" ? golongan : undefined;
   const todayStart = startOfDay(new Date());
   const todayEnd = endOfDay(new Date());
 
@@ -30,6 +31,11 @@ export default async function DetailPresensiPage({ params, searchParams }: any) 
         : {
             prodiId: prodi.id,
           },
+      select: {
+        id: true,
+        name: true,
+        semesterId: true,
+      },
     }),
   ]);
 

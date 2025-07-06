@@ -103,9 +103,7 @@ export default function ProfilePage() {
 
       setStudent(updatedStudentData);
       setOpen(false);
-      // router.replace("");
       window.location.replace("/?profile=edit_success");
-      // window.location.reload();
     } catch (error) {
       console.error("Gagal update profil:", error);
     } finally {

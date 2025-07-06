@@ -1,11 +1,18 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { Prisma } from "@/generated/prisma";
-import { toDate, getTimezoneOffset } from "date-fns-tz";
 
 export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const semesterId = searchParams.get("semesterId");
+  const prodiId = searchParams.get("prodiId");
+
   try {
     const jadwalKuliah = await prisma.jadwalKuliah.findMany({
+      where: {
+        ...(semesterId && { semesterId }),
+        ...(prodiId && { prodiId }),
+      },
       include: {
         mata_kuliah: true,
         dosen: true,
@@ -14,13 +21,34 @@ export async function GET(request: Request) {
         semester: true,
         golongans: true,
       },
+      orderBy: { jam_mulai: "asc" },
     });
+
     return NextResponse.json(jadwalKuliah);
   } catch (error) {
     console.error("Gagal mengambil data jadwal kuliah:", error);
     return NextResponse.json({ error: "Gagal mengambil data jadwal kuliah" }, { status: 500 });
   }
 }
+
+// export async function GET(request: Request) {
+//   try {
+//     const jadwalKuliah = await prisma.jadwalKuliah.findMany({
+//       include: {
+//         mata_kuliah: true,
+//         dosen: true,
+//         prodi: true,
+//         ruangan: true,
+//         semester: true,
+//         golongans: true,
+//       },
+//     });
+//     return NextResponse.json(jadwalKuliah);
+//   } catch (error) {
+//     console.error("Gagal mengambil data jadwal kuliah:", error);
+//     return NextResponse.json({ error: "Gagal mengambil data jadwal kuliah" }, { status: 500 });
+//   }
+// }
 
 export async function POST(request: Request) {
   try {
