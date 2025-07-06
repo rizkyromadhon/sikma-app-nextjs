@@ -56,12 +56,19 @@ export default function NavbarClient({ session }: NavbarClientProps) {
     signOut({ callbackUrl: "/login?logout=success" });
   };
 
-  const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/jadwal-kuliah", label: "Jadwal Kuliah" },
-    { href: "/presensi-kuliah", label: "Presensi Kuliah" },
-    { href: "/pusat-bantuan", label: "Pusat Bantuan" },
-  ];
+  const navLinks =
+    session?.user && (session.user.role === "ADMIN" || session.user.role === "DOSEN")
+      ? [
+          { href: "/", label: "Home" },
+          { href: "/pusat-bantuan", label: "Pusat Bantuan" },
+        ]
+      : [
+          { href: "/", label: "Home" },
+          { href: "/jadwal-kuliah", label: "Jadwal Kuliah" },
+          { href: "/presensi-kuliah", label: "Presensi Kuliah" },
+          { href: "/pusat-bantuan", label: "Pusat Bantuan" },
+        ];
+
   return (
     <>
       <nav
@@ -108,7 +115,9 @@ export default function NavbarClient({ session }: NavbarClientProps) {
               <div className="hidden md:block ml-4">
                 {session?.user ? (
                   <div className="hidden md:flex items-center gap-2 ml-4">
-                    <NotificationBell userId={session.user.id!} />
+                    {!(session.user.role === "ADMIN" || session.user.role === "DOSEN") && (
+                      <NotificationBell userId={session.user.id!} />
+                    )}
                     <DropdownDesktop session={session} onLogoutClick={() => setIsLogoutModalOpen(true)} />
                   </div>
                 ) : (

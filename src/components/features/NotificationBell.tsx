@@ -29,7 +29,7 @@ export default function NotificationBell({ userId }: { userId: string }) {
   const [ws, setWs] = useState<WebSocket | null>(null);
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:3001"); // ganti sesuai config mu
+    const socket = new WebSocket("ws://localhost:3001");
     setWs(socket);
 
     socket.onmessage = (event) => {

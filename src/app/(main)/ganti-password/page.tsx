@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +9,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { signIn, useSession } from "next-auth/react";
+import { PiWarningCircle } from "react-icons/pi";
 
 export default function GantiPasswordPage() {
   const [oldPassword, setOldPassword] = useState("");
@@ -17,6 +18,8 @@ export default function GantiPasswordPage() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { data: session } = useSession();
+  const [unauthorized, setUnauthorized] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
 
   const router = useRouter();
 
@@ -82,6 +85,51 @@ export default function GantiPasswordPage() {
       return;
     }
   };
+
+  useEffect(() => {
+    if (session === undefined) return; // loading
+
+    if (!session) {
+      router.replace("/login?ganti-password=unauthorized");
+      return;
+    }
+
+    if (session.user && session.user.isDefaultPassword === false) {
+      setUnauthorized(true);
+    }
+    setIsChecking(false); // ⬅️ setelah pengecekan selesai
+  }, [session, router]);
+
+  if (isChecking) {
+    return (
+      <div className="min-h-[92dvh] flex items-center justify-center">
+        <p className="text-sm text-gray-600 dark:text-gray-300">Memeriksa akses...</p>
+      </div>
+    );
+  }
+
+  if (unauthorized) {
+    return (
+      <div className="min-h-[92dvh] flex items-center justify-center px-4">
+        <Card className="w-full max-w-md text-center gap-2">
+          <CardHeader>
+            <CardTitle className="flex flex-col items-center gap-4">
+              <PiWarningCircle className="size-8 text-yellow-500" />
+              Akses Ditolak
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              Anda tidak diperbolehkan mengakses halaman ini karena password Anda sudah pernah diganti.
+            </p>
+            <Button className="mt-4 cursor-pointer" onClick={() => router.replace("/")}>
+              Kembali ke Beranda
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[92dvh] flex items-center justify-center px-4">
