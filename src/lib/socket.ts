@@ -5,7 +5,6 @@ let socket: WebSocket | null = null;
 const messageQueue: string[] = [];
 
 function connect() {
-  // Jangan buat koneksi baru jika sudah ada atau sedang mencoba
   if (socket && (socket.readyState === WebSocket.CONNECTING || socket.readyState === WebSocket.OPEN)) {
     return;
   }
@@ -15,7 +14,6 @@ function connect() {
 
   socket.on("open", () => {
     console.log("✅ API Client: Terhubung ke server WebSocket!");
-    // Kirim semua pesan yang tertunda di antrian
     while (messageQueue.length > 0) {
       const msg = messageQueue.shift();
       if (msg) {
@@ -27,17 +25,16 @@ function connect() {
 
   socket.on("close", () => {
     console.log("❌ API Client: Terputus dari server WebSocket. Mencoba koneksi ulang dalam 5 detik...");
-    socket = null; // Hapus instance lama
-    setTimeout(connect, 5000); // Jadwalkan koneksi ulang
+    socket = null;
+    setTimeout(connect, 5000);
   });
 
   socket.on("error", (err) => {
     console.error("❌ Error pada koneksi WebSocket API Client:", err.message);
-    socket?.close(); // Paksa tutup koneksi saat ada error untuk memicu 'close' dan reconnect
+    socket?.close();
   });
 }
 
-// Panggil fungsi connect sekali saat aplikasi dimulai
 connect();
 
 /**

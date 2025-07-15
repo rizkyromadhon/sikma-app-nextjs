@@ -39,7 +39,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     const body = await request.json();
     const { name, ruanganId, jadwal_nyala, jadwal_mati } = body;
 
-    // Validasi input dasar
     if (!name || !ruanganId) {
       return NextResponse.json({ error: "Nama, Ruangan wajib diisi." }, { status: 400 });
     }
@@ -56,16 +55,13 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       data: dataToUpdate,
     });
 
-    // Setelah berhasil update DB, siapkan dan kirim pesan broadcast
     const configDataForBroadcast = {
-      event: "config-update", // Event yang akan didengarkan ESP32
+      event: "config-update",
       alatId: updatedAlat.id,
       mode: updatedAlat.mode,
-      // Hitung status "live" berdasarkan jadwal yang baru dan kirimkan
       status: isAktifSekarang(updatedAlat) ? "AKTIF" : "NONAKTIF",
     };
 
-    // Gunakan helper untuk mengirim pesan ke server.js, yang akan menyiarkannya
     sendMessage({ event: "broadcast", data: configDataForBroadcast });
     console.log("Pesan broadcast dikirim:", configDataForBroadcast);
 
@@ -79,7 +75,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   }
 }
 
-// --- Handler untuk DELETE ---
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 

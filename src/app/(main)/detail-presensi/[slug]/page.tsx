@@ -47,6 +47,9 @@ export default async function DetailPresensiPage({ params, searchParams }: any) 
         ...(ruanganId && { ruanganId: ruanganId }),
         ...(mataKuliahId && { matkulId: mataKuliahId }),
       },
+      status: {
+        in: ["HADIR", "TERLAMBAT"],
+      },
       waktu_presensi: {
         gte: todayStart,
         lte: todayEnd,

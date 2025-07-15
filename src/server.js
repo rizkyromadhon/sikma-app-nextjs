@@ -38,12 +38,9 @@ wss.on("connection", (ws) => {
             console.log(`Mengirim config ke ${alatId}:`, configData);
           }
         }
-      }
-      // PERBAIKAN: Logika untuk menyiarkan pesan yang diterima dari API Next.js
-      else if (parsedMessage.event === "broadcast") {
+      } else if (parsedMessage.event === "broadcast") {
         console.log("Menyiarkan pesan ke semua client:", parsedMessage.data);
         wss.clients.forEach((client) => {
-          // Siarkan ke semua client, termasuk yang baru terhubung
           if (client.readyState === ws.OPEN) {
             client.send(JSON.stringify(parsedMessage.data));
           }
@@ -87,18 +84,15 @@ setInterval(async () => {
   for (const alat of semuaAlat) {
     const statusBaru = isAktifSekarang(alat) ? "AKTIF" : "NONAKTIF";
 
-    // ❗ Jangan ganggu alat yang sedang dalam mode REGISTRASI
     if (alat.mode === "REGISTRASI") {
       continue;
     }
 
-    // Hanya jika status berubah
     if (previousStatuses[alat.id] !== statusBaru) {
       previousStatuses[alat.id] = statusBaru;
 
       const alatTerbaru = await prisma.alatPresensi.findUnique({ where: { id: alat.id } });
 
-      // ❗ Jangan ganggu alat yang sedang dalam mode REGISTRASI
       if (alatTerbaru?.mode === "REGISTRASI") {
         continue;
       }
@@ -121,6 +115,20 @@ setInterval(async () => {
           console.warn(`⚠️ Tidak bisa kirim ke alatId ${alat.id}, tidak terhubung.`);
         }
       } else {
+        const configData = {
+          event: "config-update",
+          alatId: alatTerbaru.id,
+          nama: alatTerbaru.name,
+          mode: alatTerbaru.mode,
+          status: statusBaru,
+        };
+
+        const targetWS = alatConnections.get(alat.id);
+        if (targetWS && targetWS.readyState === targetWS.OPEN) {
+          targetWS.send(JSON.stringify(configData));
+        } else {
+          console.warn(`⚠️ Tidak bisa kirim ke alatId ${alat.id}, tidak terhubung.`);
+        }
         console.log(`ℹ️ Alat "${alat.name}" (ID: ${alat.id}) kini NONAKTIF (tidak dikirim).`);
       }
     }

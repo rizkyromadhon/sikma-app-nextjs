@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Geist } from "next/font/google";
 import "@/app/globals.css";
 import { Providers } from "@/components/Provider";
 import { auth } from "@/auth";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
+const geist = Geist({ variable: "--font-geist", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "SIKMA - Sistem Kehadiran Mahasiswa",

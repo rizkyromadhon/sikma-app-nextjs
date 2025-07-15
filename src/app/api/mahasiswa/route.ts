@@ -35,7 +35,6 @@ export async function GET(req: Request) {
   }
 }
 
-// Konfigurasi Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -66,14 +65,11 @@ export async function POST(request: Request) {
 
   let foto_url = null;
 
-  // Proses upload foto jika ada
   if (foto) {
     try {
-      // Ubah file menjadi buffer
       const bytes = await foto.arrayBuffer();
       const buffer = Buffer.from(bytes);
 
-      // Upload ke Cloudinary
       const response = await new Promise<UploadApiResponse | undefined>((resolve, reject) => {
         cloudinary.uploader
           .upload_stream({ folder: "mahasiswa" }, (err, result) => {
@@ -94,7 +90,6 @@ export async function POST(request: Request) {
     }
   }
 
-  // Simpan data ke database
   try {
     const newMahasiswa = await prisma.user.create({
       data: {

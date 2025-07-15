@@ -147,7 +147,9 @@ const PresensiKuliahPage = () => {
                     </TableCell>
                     <TableCell className="text-center">{p.matkul}</TableCell>
                     <TableCell className="text-center">
-                      {p.status === "TIDAK_HADIR" ? "-" : format(new Date(p.waktu_presensi), "HH:mm")}
+                      {["TIDAK_HADIR", "IZIN", "SAKIT"].includes(p.status)
+                        ? "-"
+                        : format(new Date(p.waktu_presensi), "HH:mm")}
                       {}
                     </TableCell>
                     <TableCell className="text-center">

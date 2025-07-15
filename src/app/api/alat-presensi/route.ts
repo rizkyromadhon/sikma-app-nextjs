@@ -47,7 +47,7 @@ export async function GET(request: Request) {
       const nyala = alat.jadwal_nyala ? new Date(alat.jadwal_nyala) : null;
       const mati = alat.jadwal_mati ? new Date(alat.jadwal_mati) : null;
 
-      let dynamicStatus = alat.status; // fallback ke status dari DB
+      let dynamicStatus = alat.status;
 
       if (nyala && mati) {
         const currentTime = now.getHours() * 60 + now.getMinutes();
@@ -90,15 +90,13 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { name, ruanganId, jadwal_nyala, jadwal_mati } = body;
 
-    // Validasi input dasar
     if (!name || !ruanganId) {
       return NextResponse.json({ error: "Nama Alat dan Lokasi Ruangan wajib diisi." }, { status: 400 });
     }
 
-    // Siapkan data untuk Prisma, hanya sertakan jadwal jika ada nilainya
     const dataToCreate: Prisma.AlatPresensiCreateInput = {
       name,
-      ruangan: { connect: { id: ruanganId } }, // Hubungkan ke ruangan
+      ruangan: { connect: { id: ruanganId } },
       ...(jadwal_nyala && { jadwal_nyala: new Date(jadwal_nyala) }),
       ...(jadwal_mati && { jadwal_mati: new Date(jadwal_mati) }),
     };

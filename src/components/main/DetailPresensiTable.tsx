@@ -292,10 +292,12 @@ export default function DetailPresensiTable({
                 ))}
               </AnimatePresence>
             ))}
-            {presensiData.length === 0 && (
+            {filteredPresensi.length === 0 && (
               <tr>
                 <td colSpan={5} className="px-6 py-10 text-center text-sm text-gray-500 dark:text-gray-400">
-                  Belum ada data presensi.
+                  {presensiData.length === 0
+                    ? "Belum ada data presensi."
+                    : "Tidak ada data presensi yang sesuai dengan filter."}
                 </td>
               </tr>
             )}

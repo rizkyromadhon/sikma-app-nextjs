@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { auth } from "@/auth"; // NextAuth session
+import { auth } from "@/auth";
 import { Hari, StatusPresensi } from "@/generated/prisma/client";
 import { sendMessage } from "@/lib/socket";
 import { toZonedTime, format } from "date-fns-tz";
@@ -38,11 +38,11 @@ const timeToMinutes = (time: string): number => {
   const [hours, minutes] = time.split(":").map(Number);
   return hours * 60 + minutes;
 };
+
 export async function POST(request: Request) {
   try {
     const { uid, alatId } = await request.json();
 
-    // Cari mahasiswa dan alat
     const [mahasiswa, alat] = await Promise.all([
       prisma.user.findUnique({
         where: { uid },
@@ -63,38 +63,29 @@ export async function POST(request: Request) {
       }),
     ]);
 
-    console.log("Mahasiswa ditemukan:", mahasiswa?.id);
-
-    const peserta = await prisma.pesertaKuliah.findMany({
-      where: { mahasiswaId: mahasiswa?.id },
-    });
-    console.log(
-      "Daftar jadwal yang diikuti:",
-      peserta.map((p) => p.jadwalKuliahId)
-    );
-
     if (!mahasiswa || mahasiswa.role !== "MAHASISWA") {
-      const errorMessage = "UID tidak terdaftar";
       sendMessage({
         event: "broadcast",
         data: {
           event: "presensi-gagal",
-          data: { mahasiswa: { name: "User Not Found" }, error: errorMessage, reason: "USER_NOT_FOUND" },
+          data: {
+            mahasiswa: { name: "User Not Found" },
+            error: "UID tidak terdaftar atau bukan mahasiswa.",
+            reason: "USER_NOT_FOUND",
+          },
         },
       });
-      return NextResponse.json({ error: "Mahasiswa tidak ditemukan." }, { status: 404 });
+      return NextResponse.json({ error: "UID tidak terdaftar atau bukan mahasiswa." }, { status: 404 });
     }
+
     if (!alat) {
-      return NextResponse.json({ error: "Alat Presensi tidak valid." }, { status: 404 });
+      return NextResponse.json({ error: "Alat Presensi tidak valid." }, { status: 400 });
     }
 
     const timeZone = "Asia/Jakarta";
-    const now = new Date();
-    const nowInWib = toZonedTime(now, timeZone);
-
+    const nowInWib = toZonedTime(new Date(), timeZone);
     const hariIni = format(nowInWib, "EEEE", { locale: localeID, timeZone }).toUpperCase() as Hari;
-    const currentTimeString = format(nowInWib, "HH:mm", { timeZone });
-    const currentTimeInMinutes = timeToMinutes(currentTimeString);
+    const currentTimeInMinutes = timeToMinutes(format(nowInWib, "HH:mm", { timeZone }));
 
     const potentialJadwals = await prisma.jadwalKuliah.findMany({
       where: {
@@ -104,18 +95,18 @@ export async function POST(request: Request) {
       include: {
         mata_kuliah: true,
         dosen: true,
-        semester: true,
-        prodi: true,
-        golongans: true,
         ruangan: true,
       },
     });
 
     if (potentialJadwals.length === 0) {
-      const errorMessage = "Tidak ada jadwal untuk Anda hari ini.";
+      const errorMessage = "Tidak ada jadwal kuliah untuk Anda hari ini.";
       sendMessage({
         event: "broadcast",
-        data: { event: "presensi-gagal", data: { mahasiswa, error: errorMessage } },
+        data: {
+          event: "presensi-gagal",
+          data: { mahasiswa, error: errorMessage, reason: "NO_SCHEDULE_TODAY" },
+        },
       });
       return NextResponse.json({ error: errorMessage }, { status: 404 });
     }
@@ -123,27 +114,26 @@ export async function POST(request: Request) {
     const jadwalAktif = potentialJadwals.find((jadwal) => {
       const jamMulaiMin = timeToMinutes(jadwal.jam_mulai);
       const jamSelesaiMin = timeToMinutes(jadwal.jam_selesai);
-      const waktuBukaPresensi = jamMulaiMin - 10;
+      const waktuBukaPresensi = jamMulaiMin - 15;
 
-      if (jamSelesaiMin <= jamMulaiMin) {
-        return currentTimeInMinutes >= waktuBukaPresensi || currentTimeInMinutes < jamSelesaiMin;
-      } else {
-        return currentTimeInMinutes >= waktuBukaPresensi && currentTimeInMinutes <= jamSelesaiMin;
-      }
+      return currentTimeInMinutes >= waktuBukaPresensi && currentTimeInMinutes <= jamSelesaiMin;
     });
 
     if (!jadwalAktif) {
-      const errorMessage = "Tidak ada jadwal aktif";
+      const errorMessage = "Saat ini tidak ada sesi kelas yang aktif untuk presensi.";
       sendMessage({
         event: "broadcast",
-        data: { event: "presensi-gagal", data: { mahasiswa, error: errorMessage, reason: "NO_SCHEDULE" } },
+        data: {
+          event: "presensi-gagal",
+          data: { mahasiswa, error: errorMessage, reason: "NO_SCHEDULE" },
+        },
       });
       return NextResponse.json({ error: errorMessage }, { status: 404 });
     }
 
-    const todayStart = new Date(now);
+    const todayStart = new Date(nowInWib);
     todayStart.setHours(0, 0, 0, 0);
-    const todayEnd = new Date(now);
+    const todayEnd = new Date(nowInWib);
     todayEnd.setHours(23, 59, 59, 999);
 
     const sudahPresensi = await prisma.presensiKuliah.findFirst({
@@ -155,7 +145,7 @@ export async function POST(request: Request) {
     });
 
     if (sudahPresensi) {
-      const errorMessage = "Anda sudah presensi";
+      const errorMessage = "Anda sudah melakukan presensi untuk mata kuliah ini.";
       sendMessage({
         event: "broadcast",
         data: {
@@ -167,7 +157,7 @@ export async function POST(request: Request) {
     }
 
     const jamMulaiMin = timeToMinutes(jadwalAktif.jam_mulai);
-    const batasToleransiMin = jamMulaiMin + 10;
+    const batasToleransiMin = jamMulaiMin + 15;
     const status: StatusPresensi = currentTimeInMinutes > batasToleransiMin ? "TERLAMBAT" : "HADIR";
 
     const presensi = await prisma.presensiKuliah.create({
@@ -180,27 +170,37 @@ export async function POST(request: Request) {
       },
     });
 
-    const payloadSukses = {
-      event: "presensi-sukses",
-      data: {
-        mahasiswa,
-        jadwal: {
-          jadwalAktif,
-          mata_kuliah: jadwalAktif.mata_kuliah,
-        },
-        presensi: { ...presensi, waktu_presensi: presensi.waktu_presensi?.toISOString() },
+    const sudahPresensiLain = await prisma.presensiKuliah.findFirst({
+      where: {
+        mahasiswaId: mahasiswa.id,
+        waktu_presensi: { gte: todayStart, lte: todayEnd },
+        NOT: { id: presensi.id },
       },
-    };
+    });
 
-    sendMessage({ event: "broadcast", data: payloadSukses });
+    const isFirstToday = !sudahPresensiLain;
+
+    sendMessage({
+      event: "broadcast",
+      data: {
+        event: "presensi-sukses",
+        data: {
+          mahasiswa,
+          jadwal: jadwalAktif,
+          presensi: { ...presensi, waktu_presensi: presensi.waktu_presensi?.toISOString() },
+          isFirstToday,
+        },
+      },
+    });
 
     return NextResponse.json({
-      message: `Presensi ${status}`,
+      message: `Presensi berhasil dengan status: ${status}`,
       mahasiswa: mahasiswa.name,
       matkul: jadwalAktif.mata_kuliah.name,
     });
   } catch (error) {
     console.error("Gagal menyimpan presensi:", error);
+    // Hindari mengirim detail error ke client
     return NextResponse.json({ error: "Terjadi kesalahan pada server." }, { status: 500 });
   }
 }

@@ -42,7 +42,6 @@ export default async function ManajemenAlatPresensiPage({
   const searchParms = search;
   const data = await getAlatPresensi(searchParms);
 
-  // Serialisasi objek Date sebelum dikirim ke client
   const serializableData = data.map((item) => ({
     ...item,
     jadwal_nyala: item.jadwal_nyala?.toISOString() || null,

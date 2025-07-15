@@ -246,7 +246,13 @@ export default function PresensiDetailPage() {
                 presensi.map((p) => (
                   <tr key={p.id} className="border-t">
                     <td className="p-2 text-center">{format(parseISO(p.waktu_presensi), "dd/MM/yyyy")}</td>
-                    <td className="p-2 text-center">{format(parseISO(p.waktu_presensi), "HH:mm:ss")}</td>
+                    {/* <td className="p-2 text-center">{format(parseISO(p.waktu_presensi), "HH:mm:ss")}</td> */}
+                    <td className="p-2 text-center">
+                      {["TIDAK_HADIR", "IZIN", "SAKIT"].includes(p.status)
+                        ? "-"
+                        : format(new Date(p.waktu_presensi), "HH:mm")}
+                    </td>
+
                     <td className="p-2 text-center">{p.matkul?.name}</td>
                     <td className="p-2 text-center">
                       <span

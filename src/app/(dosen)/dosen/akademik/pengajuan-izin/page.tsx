@@ -17,24 +17,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import PengajuanCard from "./PengajuanCard";
 import { FaRegEnvelope } from "react-icons/fa";
 
-const pengajuanIzin = [
-  {
-    id: 1,
-    user: { name: "Budi Santoso", nim: "1234567890", foto: "" },
-    tipe_pengajuan: "Izin",
-    pesan: "Saya tidak bisa hadir karena ada keperluan keluarga.",
-    file_bukti: "",
-    mata_kuliah: "Pemrograman Web",
-    tanggal_izin: "Senin, 01 Juli 2025",
-  },
-  // Tambahkan data dummy lainnya...
-];
-
 interface Pengajuan {
   id: string;
   pesan: string;
   file_bukti: string | null;
-  tanggal_izin: string; // di-serialize di API
+  tanggal_izin: string;
   tipe_pengajuan: "IZIN" | "SAKIT";
   mahasiswa: {
     name: string;
@@ -114,7 +101,6 @@ export default function PengajuanIzinDosenPage() {
 
         <div className="space-y-4">
           {loading ? (
-            // skeleton loader
             Array.from({ length: 3 }).map((_, i) => (
               <Card key={i} className="p-5 bg-neutral-200/40 dark:bg-neutral-800/50">
                 <div className="flex items-start gap-4">
@@ -133,7 +119,6 @@ export default function PengajuanIzinDosenPage() {
                 key={pengajuan.id}
                 pengajuan={pengajuan}
                 currentStatus={tab}
-                // onActionSuccess={() => setRefreshKey((k) => k + 1)}
               />
             ))
           ) : (

@@ -16,6 +16,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.role = user.role;
         token.prodiId = user.prodiId;
         token.foto = user.foto;
+        token.nip = user.nip;
         token.isDefaultPassword = user.isDefaultPassword ?? false;
         token.isProfileComplete = user.isProfileComplete ?? false;
       }
@@ -24,6 +25,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.isProfileComplete = session.user.isProfileComplete ?? false;
         token.isDefaultPassword = session.user.isDefaultPassword ?? false;
         token.no_hp = session.user.no_hp;
+        token.nip = session.user.nip;
         token.alamat = session.user.alamat;
         token.foto = session.user.foto;
       }
@@ -38,6 +40,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.isDefaultPassword = token.isDefaultPassword ?? false;
         session.user.isProfileComplete = token.isProfileComplete ?? false;
         session.user.no_hp = token.no_hp;
+        session.user.nip = token.nip as string;
         session.user.alamat = token.alamat;
         session.user.foto = token.foto;
       }

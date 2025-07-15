@@ -1,6 +1,3 @@
-// src/features/dashboard/components/LiveSummaryProdi.tsx
-// 1. Pastikan Anda sudah menginstal react-icons: npm install react-icons
-
 import Link from "next/link";
 import { LuUsers, LuUserX } from "react-icons/lu";
 

@@ -1,7 +1,6 @@
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import EditAlatForm from "./EditAlatForm";
-// import { Ruangan } from "@/generated/prisma/client";
 
 async function getFormData(alatId: string) {
   const [alat, ruangans] = await Promise.all([
@@ -15,7 +14,6 @@ async function getFormData(alatId: string) {
     notFound();
   }
 
-  // Serialisasi objek Date sebelum dikirim ke client
   const serializableAlat = {
     ...alat,
     jadwal_nyala: alat.jadwal_nyala?.toISOString() || null,

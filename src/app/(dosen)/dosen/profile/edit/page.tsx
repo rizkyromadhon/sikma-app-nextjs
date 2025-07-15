@@ -77,6 +77,10 @@ export default function EditProfileDosenPage() {
     }
   };
 
+  const handleCancel = () => {
+    router.push("/dosen/profile");
+  };
+
   if (!profile) {
     return (
       <main className="p-8">
@@ -200,10 +204,17 @@ export default function EditProfileDosenPage() {
                 </>
               ) : (
                 <>
-                  <Save className="w-4 h-4 mr-2" />
+                  <Save className="w-4 h-4" />
                   Simpan
                 </>
               )}
+            </Button>
+            <Button
+              type="button"
+              onClick={handleCancel}
+              className="w-full cursor-pointer bg-transparent dark:bg-neutral-800 border-2 dark:border-neutral-800 text-neutral-700 dark:text-white hover:bg-neutral-200 dark:hover:bg-neutral-700 py-4 hover:transition-all"
+            >
+              Batal
             </Button>
           </form>
         </CardContent>

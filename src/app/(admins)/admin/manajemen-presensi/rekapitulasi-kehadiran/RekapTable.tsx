@@ -90,7 +90,7 @@ function ExportModal({ isOpen, onClose, filters }: ExportModalProps) {
 
   const handleExport = async (format: "pdf" | "excel") => {
     if (!selectedFilters.semesterId || !selectedFilters.matkulId) {
-      alert("Semester dan Mata Kuliah wajib dipilih.");
+      alert("Semester, Golongan, Mata Kuliah wajib dipilih.");
       return;
     }
     setExportingFormat(format);
@@ -195,7 +195,7 @@ function ExportModal({ isOpen, onClose, filters }: ExportModalProps) {
               <Button
                 onClick={() => handleExport("excel")}
                 disabled={!!exportingFormat}
-                className="relative bg-emerald-600 text-white hover:bg-emerald-700 hover:shadow-[0_0_12px_1px] shadow-emerald-600 dark:shadow-emerald-800 hover:transition-all"
+                className="relative bg-emerald-600 text-white hover:bg-emerald-700 hover:shadow-[0_0_12px_1px] shadow-emerald-600 dark:shadow-emerald-800 hover:transition-all cursor-pointer"
               >
                 {isLoadingFormat === "excel" ? (
                   <Loader2 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-spin h-4 w-4" />
@@ -209,7 +209,7 @@ function ExportModal({ isOpen, onClose, filters }: ExportModalProps) {
               <Button
                 onClick={() => handleExport("pdf")}
                 disabled={!!exportingFormat}
-                className="relative bg-red-700 text-white hover:bg-red-700 hover:shadow-[0_0_12px_1px] shadow-red-600 dark:shadow-red-800 hover:transition-all"
+                className="relative bg-red-700 text-white hover:bg-red-700 hover:shadow-[0_0_12px_1px] shadow-red-600 dark:shadow-red-800 hover:transition-all cursor-pointer"
               >
                 {isLoadingFormat === "pdf" ? (
                   <Loader2 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 animate-spin h-4 w-4" />

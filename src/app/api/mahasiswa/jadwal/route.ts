@@ -45,6 +45,8 @@ export const GET = async () => {
     orderBy: [{ hari: "asc" }, { jam_mulai: "asc" }],
   });
 
+  console.log(jadwal);
+
   const formatted = jadwal.map((j) => ({
     day: j.hari.charAt(0).toUpperCase() + j.hari.slice(1).toLowerCase(),
     start: j.jam_mulai,

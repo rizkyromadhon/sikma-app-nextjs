@@ -44,7 +44,6 @@ export default function EditAlatForm({ alat, ruangans }: EditAlatFormProps) {
     setIsLoading(true);
     setError(null);
 
-    // Validasi frontend
     if (form.jadwal_nyala && form.jadwal_mati && form.jadwal_nyala >= form.jadwal_mati) {
       setError("Jadwal Nyala harus lebih awal dari Jadwal Mati.");
       setIsLoading(false);

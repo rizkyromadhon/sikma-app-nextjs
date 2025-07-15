@@ -44,11 +44,13 @@ export default function AlatPresensiTable({ data, initialSearch }: AlatPresensiT
   const searchParams = useSearchParams();
   const search = searchParams.get("search") || "";
 
-  const { error, isLoading } = useSWR<AlatPresensiData[]>(
-    `/api/alat-presensi${search ? `?search=${search}` : ""}`,
-    fetcher,
-    { refreshInterval: 5000 }
-  );
+  const {
+    data: fetchedData,
+    error,
+    isLoading,
+  } = useSWR<AlatPresensiData[]>(`/api/alat-presensi${search ? `?search=${search}` : ""}`, fetcher, {
+    refreshInterval: 5000,
+  });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAlat, setSelectedAlat] = useState<AlatPresensiData | null>(null);
@@ -106,7 +108,7 @@ export default function AlatPresensiTable({ data, initialSearch }: AlatPresensiT
     }
   };
 
-  if (isLoading) return <p className="text-sm">Memuat data...</p>;
+  if (isLoading || !fetchedData) return <p className="text-sm">Memuat data...</p>;
   if (error) return <p className="text-sm text-red-500">Gagal memuat data alat presensi.</p>;
 
   return (
@@ -140,14 +142,14 @@ export default function AlatPresensiTable({ data, initialSearch }: AlatPresensiT
             </tr>
           </thead>
           <tbody>
-            {data?.length === 0 ? (
+            {fetchedData?.length === 0 ? (
               <tr>
                 <td colSpan={6} className="text-center py-8">
                   Tidak ada alat ditemukan.
                 </td>
               </tr>
             ) : (
-              data?.map((alat) => (
+              fetchedData?.map((alat) => (
                 <tr
                   key={alat.id}
                   className="border-t border-gray-200 dark:border-neutral-800 hover:bg-gray-50 dark:hover:bg-neutral-950/40"

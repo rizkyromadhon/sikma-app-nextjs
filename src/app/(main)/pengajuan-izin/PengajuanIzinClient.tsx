@@ -72,7 +72,7 @@ export default function PengajuanIzinClient({ jadwals }: { jadwals: Jadwal[] }) 
                 <div>
                   <CardTitle className="text-lg">{pengajuan.tipe}</CardTitle>
                   <CardDescription className="text-sm text-muted-foreground mt-4">
-                    {pengajuan.jadwal_kuliah.mata_kuliah?.name}
+                    Mengajukan izin untuk mata kuliah: {pengajuan.jadwal_kuliah.mata_kuliah?.name}
                     <p className="text-sm text-muted-foreground">
                       Mengajukan izin untuk tanggal:{" "}
                       {new Date(pengajuan.tanggal_izin).toLocaleDateString("id-ID", { dateStyle: "long" })}

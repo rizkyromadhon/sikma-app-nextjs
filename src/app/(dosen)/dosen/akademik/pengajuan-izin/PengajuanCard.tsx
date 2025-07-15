@@ -30,12 +30,19 @@ interface PengajuanCardProps {
 function PengajuanCard({
   pengajuan,
   currentStatus,
-}: // onActionSuccess,
-{
+}: {
   pengajuan: PengajuanCardProps;
   currentStatus: string;
-  // onActionSuccess: () => void;
 }) {
+  const formatTanggal = (isoString: string) => {
+    const date = new Date(isoString);
+    const options: Intl.DateTimeFormatOptions = {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    };
+    return date.toLocaleDateString("id-ID", options);
+  };
   return (
     <Card key={pengajuan.id} className="p-5 bg-white dark:bg-neutral-800/50">
       <div className="flex items-start gap-4">
@@ -95,7 +102,7 @@ function PengajuanCard({
             </p>
             <p>
               <i className="fas fa-calendar-day fa-fw mr-2"></i>Tanggal Izin:{" "}
-              <span className="font-medium text-foreground">{pengajuan.tanggal_izin}</span>
+              <span className="font-medium text-foreground">{formatTanggal(pengajuan.tanggal_izin)}</span>
             </p>
           </div>
 
@@ -122,10 +129,12 @@ const FormCatatan = ({ pengajuan }: { pengajuan: PengajuanCardProps }) => {
       console.log(response);
       if (response.status === 200) {
         router.push("?pengajuan-dosen=status_success");
+        router.refresh();
       }
     } catch (e: any) {
       console.error(e);
       router.push("?pengajuan-dosen=error");
+      router.refresh();
     } finally {
       setIsSubmitting(false);
       setCatatan("");
@@ -137,18 +146,18 @@ const FormCatatan = ({ pengajuan }: { pengajuan: PengajuanCardProps }) => {
         type="text"
         placeholder="Tambahkan catatan (opsional)..."
         onChange={(e) => setCatatan(e.target.value)}
-        className="w-full sm:flex-1 px-4 py-2 text-sm rounded-md border border-neutral-300 dark:border-neutral-700"
+        className="w-full sm:flex-1 px-4 py-2 text-sm rounded-md border border-neutral-300 dark:border-neutral-700 dark:focus:outline-none"
       />
       <div className="flex gap-3">
         <Button
           onClick={() => handleSubmit(pengajuan.id, "DITOLAK")}
-          className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 dark:bg-red-800/70 dark:hover:bg-red-900 rounded-lg transition-colors"
+          className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 dark:bg-red-800/70 dark:hover:bg-red-900 rounded-lg transition-colors cursor-pointer"
         >
           Tolak
         </Button>
         <Button
           onClick={() => handleSubmit(pengajuan.id, "DISETUJUI")}
-          className="px-4 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-800 dark:hover:bg-emerald-900 rounded-lg transition-colors"
+          className="px-4 py-2 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-800 dark:hover:bg-emerald-900 rounded-lg transition-colors cursor-pointer"
         >
           Setujui
         </Button>

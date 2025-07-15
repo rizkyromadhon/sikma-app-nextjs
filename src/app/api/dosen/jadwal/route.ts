@@ -5,8 +5,12 @@ import { auth } from "@/auth";
 export async function GET() {
   const session = await auth();
 
+  console.log(session);
+
   try {
     const dosenNip = session?.user?.nip;
+
+    console.log(dosenNip);
 
     const jadwals = await prisma.jadwalKuliah.findMany({
       where: { dosen: { nip: dosenNip } },
@@ -25,17 +29,16 @@ export async function GET() {
       orderBy: [{ hari: "asc" }, { jam_mulai: "asc" }],
     });
 
-    // Grouping jadwal per hari
     const jadwalPerHari: Record<string, any[]> = {};
 
     jadwals.forEach((jadwal) => {
-      const hari = jadwal.hari; // misal: "Senin", "Selasa", ...
+      const hari = jadwal.hari;
       if (!jadwalPerHari[hari]) jadwalPerHari[hari] = [];
       const semuaGolongan = jadwal.golongans.map((g) => g.name).join(", ");
 
       jadwalPerHari[hari].push({
         id: jadwal.id,
-        jam_mulai: jadwal.jam_mulai.slice(0, 5), // H:i
+        jam_mulai: jadwal.jam_mulai.slice(0, 5),
         jam_selesai: jadwal.jam_selesai.slice(0, 5),
         mata_kuliah: jadwal.mata_kuliah?.name ?? "-",
         ruangan: jadwal.ruangan?.name ?? "-",

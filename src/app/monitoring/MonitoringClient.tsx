@@ -64,7 +64,7 @@ const getStatusProps = (status: StatusKey, data: PresensiPayload | null) => {
       }
       return {
         class:
-          "bg-emerald-200/40 dark:bg-emerald-800/30 border-emerald-400 dark:border-emerald-800 text-emerald-800 dark:text-emerald-100 shadow-[0_0_40px_1px] shadow-emerald-800/50 dark:shadow-emerald-800/50",
+          "bg-emerald-200/40 dark:bg-emerald-800/30 border-emerald-400 dark:border-emerald-800 text-emerald-800 dark:text-emerald-100 shadow-[0_0_40px_1px] shadow-transparent dark:shadow-emerald-800/50",
         title: "Presensi Berhasil",
         glow: "shadow-green-500/30",
         icon: <LuCircleCheck className="h-16 w-16 text-green-500" />,
@@ -74,11 +74,11 @@ const getStatusProps = (status: StatusKey, data: PresensiPayload | null) => {
     case "no_schedule": {
       return {
         class:
-          "bg-neutral-200 dark:bg-neutral-600 border-gray-400 dark:border-neutral-700 text-gray-800 dark:text-neutral-200 shadow-[0_0_80px_1px] shadow-neutral-400 dark:shadow-neutral-800",
+          "bg-neutral-200 dark:bg-neutral-800 border-gray-400 dark:border-neutral-700 text-gray-800 dark:text-neutral-200",
         title: "Presensi Gagal",
         glow: "shadow-red-500/30",
         icon: <LuX className="h-16 w-16 text-red-500" />,
-        message: "Tidak ada jadwal presensi untuk hari ini.",
+        message: "Saat ini tidak ada sesi kelas yang aktif untuk presensi.",
       };
     }
 
@@ -103,9 +103,10 @@ const getStatusProps = (status: StatusKey, data: PresensiPayload | null) => {
 
     case "already_scanned":
       return {
-        class: "bg-blue-200/30 border-blue-400 text-blue-800 shadow-blue-500/30",
+        class:
+          "bg-blue-200/30 border-blue-400 text-blue-800 dark:text-sky-400 shadow-blue-500/30 dark:shadow-sky-400",
         title: "Sudah Presensi",
-        glow: "shadow-blue-500/30",
+        glow: "shadow-blue-500/30 dark:shadow-sky-400",
         icon: <LuUserCheck className="h-16 w-16" />,
         message: data?.error,
       };
@@ -113,7 +114,7 @@ const getStatusProps = (status: StatusKey, data: PresensiPayload | null) => {
     default:
       return {
         class:
-          "bg-sky-200/40 dark:bg-sky-800/30 border-sky-400 dark:border-sky-800 text-sky-800 dark:text-sky-100 shadow-[0_0_40px_1px] shadow-sky-800/50 dark:shadow-sky-800/50",
+          "bg-sky-200 dark:bg-sky-800/30 border-sky-400 dark:border-sky-800 text-sky-800 dark:text-sky-100",
         title: "Menunggu Presensi...",
         glow: "shadow-sky-500/20",
         icon: <TbLoader3 className="w-16 h-16 text-sky-500 animate-spin" />,
@@ -206,7 +207,6 @@ export default function MonitoringClient() {
     return () => socket.close();
   }, []);
 
-  // PERBAIKAN 1: Objek konfigurasi menggunakan kunci huruf kecil
   const currentStatus = useMemo(() => getStatusProps(status, data), [status, data]);
 
   const displayedData = useMemo(() => {
@@ -238,7 +238,7 @@ export default function MonitoringClient() {
           exit={{ opacity: 0, scale: 1, y: 20 }}
           transition={{ duration: 0.2, ease: "circInOut" }}
           className={cn(
-            "w-full max-w-6xl rounded-3xl p-8 relative overflow-hidden border shadow-2xl transition-all duration-700 mt-12",
+            "w-full max-w-6xl rounded-3xl p-8 relative overflow-hidden border transition-all duration-700 mt-12",
             currentStatus.class
           )}
         >
@@ -264,10 +264,10 @@ export default function MonitoringClient() {
                           )}
 
                           {/* Foto jika ada */}
-                          {displayedData?.mahasiswa?.foto ? (
+                          {data?.mahasiswa?.foto ? (
                             <Image
-                              key={displayedData.mahasiswa.nim}
-                              src={displayedData.mahasiswa.foto}
+                              key={data.mahasiswa.nim}
+                              src={data.mahasiswa.foto}
                               alt="Foto Mahasiswa"
                               width={144}
                               height={144}
@@ -304,18 +304,14 @@ export default function MonitoringClient() {
                       </div>
                     )}
                   </div>
-                  <h2 className="mt-4 text-xl font-bold">
-                    {displayedData?.mahasiswa?.name || "Menunggu Presensi"}
-                  </h2>
+                  <h2 className="mt-4 text-xl font-bold">{data?.mahasiswa?.name || "Menunggu Presensi"}</h2>
                   <p className="text-neutral-600 dark:text-neutral-300 font-mono">
-                    {displayedData?.mahasiswa?.nim || "--------"}
+                    {data?.mahasiswa?.nim || "--------"}
                   </p>
                   <div className="mt-2 flex flex-wrap gap-2 justify-center text-xs">
-                    <Badge variant="outline">{displayedData?.mahasiswa?.semester?.name || "-"}</Badge>
-                    <Badge variant="outline">{displayedData?.mahasiswa?.prodi?.name || "-"}</Badge>
-                    <Badge variant="outline">
-                      Golongan {displayedData?.mahasiswa?.golongan?.name || "-"}
-                    </Badge>
+                    <Badge variant="outline">{data?.mahasiswa?.semester?.name || "-"}</Badge>
+                    <Badge variant="outline">{data?.mahasiswa?.prodi?.name || "-"}</Badge>
+                    <Badge variant="outline">Golongan {data?.mahasiswa?.golongan?.name || "-"}</Badge>
                   </div>
                 </div>
 
@@ -336,11 +332,9 @@ export default function MonitoringClient() {
                     <div className="text-neutral-600 dark:text-neutral-300 text-sm mt-1 space-y-1">
                       <p>
                         Jam:{" "}
-                        {displayedData?.jadwal
-                          ? `${displayedData.jadwal.jam_mulai} - ${displayedData.jadwal.jam_selesai}`
-                          : "--:--"}
+                        {data?.jadwal ? `${data.jadwal.jam_mulai} - ${data.jadwal.jam_selesai}` : "--:--"}
                       </p>
-                      <p>Ruangan: {displayedData?.jadwal?.ruangan?.name || "-"}</p>
+                      <p>Ruangan: {data?.jadwal?.ruangan?.name || "-"}</p>
                     </div>
                   </div>
                 </div>
@@ -348,7 +342,6 @@ export default function MonitoringClient() {
             </>
           ) : (
             <div className="flex flex-col gap-6 items-center justify-center min-h-[300px]">
-              {/* Tampilan awal saat menunggu */}
               <TbLoader3 className="w-12 h-12 animate-spin text-muted-foreground" />
               <p className="ml-4 text-neutral-600 dark:text-neutral-300 text-2xl font-bold">Memuat...</p>
             </div>

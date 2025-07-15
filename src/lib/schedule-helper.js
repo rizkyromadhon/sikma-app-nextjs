@@ -1,8 +1,6 @@
-// File: src/lib/schedule-helper.js
 import { format } from "date-fns-tz";
 
 export function isAktifSekarang(alat) {
-  // Jika tidak ada jadwal, anggap selalu aktif untuk keamanan
   if (!alat.jadwal_nyala || !alat.jadwal_mati) return true;
 
   const now = new Date();
@@ -12,7 +10,6 @@ export function isAktifSekarang(alat) {
   const [nowHour, nowMinute] = nowFormatted.split(":").map(Number);
   const nowMin = nowHour * 60 + nowMinute;
 
-  // Format waktu jadwal dari DB (yang UTC) ke string "HH:mm" dalam zona waktu Jakarta
   const nyalaFormatted = format(alat.jadwal_nyala, "HH:mm", { timeZone });
   const matiFormatted = format(alat.jadwal_mati, "HH:mm", { timeZone });
 
@@ -26,7 +23,6 @@ export function isAktifSekarang(alat) {
     `[Helper] Pengecekan Jadwal untuk alat ${alat.id} ${alat.name}: Sekarang Jam ${nowFormatted} | Jadwal Alat Aktif ${nyalaFormatted} - ${matiFormatted}`
   );
 
-  // Logika untuk jadwal yang melewati tengah malam
   if (matiMin <= nyalaMin) {
     return nowMin >= nyalaMin || nowMin < matiMin;
   } else {

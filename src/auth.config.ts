@@ -27,6 +27,7 @@ export default {
               foto: true,
               prodiId: true,
               is_profile_complete: true,
+              nip: true,
             },
           });
 

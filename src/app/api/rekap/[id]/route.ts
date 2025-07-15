@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { startOfDay, endOfDay, parseISO, isValid } from "date-fns";
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -9,8 +10,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
   const to = searchParams.get("to");
   const matkulId = searchParams.get("matkulId");
 
-  const startDate = from ? new Date(from) : undefined;
-  const endDate = to ? new Date(to) : undefined;
+  const startDate = from && isValid(parseISO(from)) ? startOfDay(parseISO(from)) : undefined;
+  const endDate = to && isValid(parseISO(to)) ? endOfDay(parseISO(to)) : undefined;
 
   const mahasiswa = await prisma.user.findUnique({
     where: { id },

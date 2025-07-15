@@ -36,6 +36,15 @@ export default function FlashMessageListener() {
     const rekapStatus = searchParams.get("rekap");
     const pesertaStatus = searchParams.get("peserta-kuliah");
 
+    if (pengajuanDosenStatus === "status_success") {
+      toast({
+        type: "success",
+        title: "Sukses!",
+        description: "Status Pengajuan Izin Berhasil diperbarui!.",
+      });
+      router.replace(pathname, { scroll: false });
+    }
+
     if (pesertaStatus === "create_success") {
       toast({
         type: "success",
