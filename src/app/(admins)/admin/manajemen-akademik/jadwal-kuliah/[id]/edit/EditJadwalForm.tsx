@@ -241,7 +241,7 @@ export default function EditJadwalForm({
             </label>
             <select
               name="dosenId"
-              value={form.dosenId}
+              value={form.dosenId ?? ""}
               onChange={handleChange}
               className="w-full px-4 py-2 border rounded-md bg-gray-50 dark:bg-neutral-950/40 dark:text-white border-gray-300 dark:border-neutral-800 text-sm placeholder-gray-700/50 dark:placeholder-gray-400/50 focus:shadow-[0_0_10px_1px_#1a1a1a1a] dark:focus:shadow-[0_0_10px_1px_#ffffff1a] focus:outline-none"
               required
