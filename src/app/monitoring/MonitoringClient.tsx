@@ -189,7 +189,7 @@ export default function MonitoringClient() {
   }, [status]);
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:3001");
+    const socket = new WebSocket("wss://sikma-websocket-server.onrender.com");
     socket.onopen = () => console.log("Monitoring UI terhubung.");
     socket.onclose = () => console.log("Monitoring UI terputus.");
     socket.onerror = (err) => console.error("Error WebSocket:", err);

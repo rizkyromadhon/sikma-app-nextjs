@@ -64,7 +64,7 @@ export default function RegistrasiRfidPageClient({ initialMahasiswa, alatId }: R
   useEffect(() => {
     if (status !== "waiting") return;
 
-    const socket = new WebSocket("ws://localhost:3001");
+    const socket = new WebSocket("wss://sikma-websocket-server.onrender.com");
 
     socket.onopen = () => {
       console.log("Browser terhubung ke server WebSocket!");

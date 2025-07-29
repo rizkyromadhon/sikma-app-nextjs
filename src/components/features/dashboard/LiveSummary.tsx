@@ -27,7 +27,7 @@ export default function SummaryPresence({
   const [tidakHadir, setTidakHadir] = useState(totalTidakHadir);
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:3001");
+    const socket = new WebSocket("wss://sikma-websocket-server.onrender.com");
 
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data);

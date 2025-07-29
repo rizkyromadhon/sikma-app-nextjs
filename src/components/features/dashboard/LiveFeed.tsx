@@ -22,7 +22,7 @@ export default function LiveFeed({ initialAttendances }: LiveFeedProps) {
   const [attendances, setAttendances] = useState<Attendance[]>(initialAttendances);
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:3001");
+    const socket = new WebSocket("wss://sikma-websocket-server.onrender.com");
 
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data);

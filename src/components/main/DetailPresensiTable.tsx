@@ -93,7 +93,7 @@ export default function DetailPresensiTable({
   }, [filteredPresensi]);
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:3001");
+    const socket = new WebSocket("wss://sikma-websocket-server.onrender.com");
 
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data);

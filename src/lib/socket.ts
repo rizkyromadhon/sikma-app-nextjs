@@ -1,6 +1,6 @@
 import WebSocket from "ws";
 
-const SOCKET_URL = "ws://localhost:3001";
+const SOCKET_URL = "wss://sikma-websocket-server.onrender.com";
 let socket: WebSocket | null = null;
 const messageQueue: string[] = [];
 

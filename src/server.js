@@ -21,7 +21,6 @@ wss.on("connection", (ws) => {
       const parsedMessage = JSON.parse(msgString);
       console.log("Server menerima pesan:", parsedMessage);
 
-      // Logika untuk merespons permintaan konfigurasi dari ESP32
       if (parsedMessage.event === "request-config") {
         const { alatId } = parsedMessage;
         if (alatId) {

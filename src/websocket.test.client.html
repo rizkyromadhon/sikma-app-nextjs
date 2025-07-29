@@ -34,7 +34,7 @@
         }
 
         // Ganti 'localhost' dengan IP Address PC Anda jika perlu, tapi localhost harusnya bekerja
-        const socket = new WebSocket('ws://localhost:3001');
+        const socket = new WebSocket('wss://sikma-websocket-server.onrender.com');
 
         socket.onopen = function(event) {
             statusEl.textContent = 'Terhubung!';
