@@ -1,8 +1,7 @@
-
 import prisma from "@/lib/prisma";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import RfidTable from "./RfidTable"; 
+import RfidTable from "./RfidTable";
 import { Prisma } from "@/generated/prisma/client";
 import {
   Breadcrumb,
@@ -14,9 +13,8 @@ import {
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 
-const ITEMS_PER_PAGE = 15;
+const ITEMS_PER_PAGE = 6;
 
-// Fungsi untuk mengambil data mahasiswa dengan filter dan pagination
 async function getMahasiswa(adminProdiId: string, search?: string, statusRfid?: string, page: number = 1) {
   const where: Prisma.UserWhereInput = {
     role: "MAHASISWA",
@@ -31,9 +29,12 @@ async function getMahasiswa(adminProdiId: string, search?: string, statusRfid?: 
   }
 
   if (statusRfid === "terdaftar") {
-    where.uid = { not: null };
+    where.uid = {
+      not: null,
+      notIn: [""],
+    };
   } else if (statusRfid === "belum_terdaftar") {
-    where.uid = null;
+    where.OR = [{ uid: null }, { uid: "" }];
   }
 
   const [data, totalCount] = await Promise.all([
@@ -45,11 +46,20 @@ async function getMahasiswa(adminProdiId: string, search?: string, statusRfid?: 
         id: true,
         nim: true,
         name: true,
-        uid: true, 
+        uid: true,
         semester: { select: { name: true } },
         golongan: { select: { name: true } },
       },
-      orderBy: { name: "asc" },
+      orderBy: [
+        {
+          uid: {
+            sort: "desc",
+          },
+        },
+        {
+          name: "asc",
+        },
+      ],
     }),
     prisma.user.count({ where }),
   ]);

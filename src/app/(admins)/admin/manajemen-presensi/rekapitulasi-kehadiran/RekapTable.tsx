@@ -64,29 +64,38 @@ function ExportModal({ isOpen, onClose, filters }: ExportModalProps) {
   const [isLoadingFormat, setIsLoadingFormat] = useState<"pdf" | "excel" | null>(null);
 
   useEffect(() => {
-    setFilteredGolongans([]);
+    if (!selectedFilters.semesterId) return;
+
+    const golonganOptions = filters.golongans.filter((g) => g.semesterId === selectedFilters.semesterId);
+
+    setFilteredGolongans(golonganOptions);
+    setSelectedFilters((prev) => ({
+      ...prev,
+      golonganId: "",
+      matkulId: "",
+    }));
     setFilteredMatkuls([]);
-    setSelectedFilters((prev) => ({ ...prev, golonganId: "", matkulId: "" }));
-
-    if (selectedFilters.semesterId) {
-      setFilteredGolongans(filters.golongans.filter((g) => g.semesterId === selectedFilters.semesterId));
-
-      const fetchMatkuls = async () => {
-        setLoadingMatkul(true);
-        try {
-          const res = await axios.get(
-            `/api/rekap/get-matkul-options?semesterId=${selectedFilters.semesterId}`
-          );
-          setFilteredMatkuls(res.data);
-        } catch (err) {
-          console.error("Gagal mengambil matkul:", err);
-        } finally {
-          setLoadingMatkul(false);
-        }
-      };
-      fetchMatkuls();
-    }
   }, [selectedFilters.semesterId, filters.golongans]);
+
+  useEffect(() => {
+    if (!selectedFilters.semesterId || !selectedFilters.golonganId) return;
+
+    const fetchMatkuls = async () => {
+      setLoadingMatkul(true);
+      try {
+        const res = await axios.get(
+          `/api/rekap/get-matkul-options?semesterId=${selectedFilters.semesterId}&golonganId=${selectedFilters.golonganId}`
+        );
+        setFilteredMatkuls(res.data);
+      } catch (err) {
+        console.error("Gagal mengambil matkul:", err);
+      } finally {
+        setLoadingMatkul(false);
+      }
+    };
+
+    fetchMatkuls();
+  }, [selectedFilters.semesterId, selectedFilters.golonganId]);
 
   const handleExport = async (format: "pdf" | "excel") => {
     if (!selectedFilters.semesterId || !selectedFilters.matkulId) {
@@ -177,17 +186,21 @@ function ExportModal({ isOpen, onClose, filters }: ExportModalProps) {
             <Select
               value={selectedFilters.matkulId}
               onValueChange={(val) => setSelectedFilters((f) => ({ ...f, matkulId: val }))}
-              disabled={!selectedFilters.semesterId || loadingMatkul}
+              disabled={!selectedFilters.semesterId || !selectedFilters.golonganId || loadingMatkul}
             >
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Pilih Mata Kuliah" />
               </SelectTrigger>
               <SelectContent>
-                {filteredMatkuls.map((mk) => (
-                  <SelectItem key={mk.id} value={mk.id}>
-                    {mk.name}
-                  </SelectItem>
-                ))}
+                {filteredMatkuls.length > 0 ? (
+                  filteredMatkuls.map((mk) => (
+                    <SelectItem key={mk.id} value={mk.id}>
+                      {mk.name}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <div className="px-4 py-2 text-sm text-muted-foreground">Tidak ada mata kuliah</div>
+                )}
               </SelectContent>
             </Select>
 

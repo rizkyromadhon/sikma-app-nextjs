@@ -107,6 +107,34 @@ export async function POST(request: Request) {
         password: password,
       },
     });
+
+    const jadwalCocok = await prisma.jadwalKuliah.findMany({
+      where: {
+        semesterId,
+        prodiId,
+        golongans: {
+          some: {
+            id: golonganId,
+          },
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    // Insert ke peserta_kuliah
+    if (jadwalCocok.length > 0) {
+      const pesertaData = jadwalCocok.map((jadwal) => ({
+        jadwalKuliahId: jadwal.id,
+        mahasiswaId: newMahasiswa.id,
+      }));
+
+      await prisma.pesertaKuliah.createMany({
+        data: pesertaData,
+        skipDuplicates: true,
+      });
+    }
     return NextResponse.json(newMahasiswa, { status: 201 });
   } catch (error) {
     console.error("Gagal membuat mahasiswa:", error);

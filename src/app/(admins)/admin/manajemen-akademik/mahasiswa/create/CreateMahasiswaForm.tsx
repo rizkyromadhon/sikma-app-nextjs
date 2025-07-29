@@ -36,7 +36,6 @@ interface CreateMahasiswaFormProps {
 export default function CreateMahasiswaForm({ semesters, prodis, golongans }: CreateMahasiswaFormProps) {
   const router = useRouter();
 
-  // State untuk form utama
   const [form, setForm] = useState({
     name: "",
     nim: "",
@@ -50,12 +49,10 @@ export default function CreateMahasiswaForm({ semesters, prodis, golongans }: Cr
     foto: null as File | null,
   });
 
-  // State untuk preview foto dan loading
   const [preview, setPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
-  // State untuk daftar golongan yang sudah difilter
   const [filteredGolongans, setFilteredGolongans] = useState<GolonganOption[]>([]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -79,7 +76,6 @@ export default function CreateMahasiswaForm({ semesters, prodis, golongans }: Cr
       return;
     }
 
-    // Logika untuk upload file
     if (type === "file" && e.target instanceof HTMLInputElement) {
       const file = e.target.files?.[0];
 

@@ -173,9 +173,20 @@ export default function MonitoringClient() {
   const [status, setStatus] = useState<StatusKey>("waiting");
   const [history, setHistory] = useState<PresensiPayload[]>([]);
   const [isImageLoading, setIsImageLoading] = useState(true);
+  const [jadwalAktif, setJadwalAktif] = useState<PresensiPayload["jadwal"] | null>(null);
+
   useEffect(() => {
     console.log("Foto Mahasiswa:", data?.mahasiswa?.foto);
   }, [data]);
+
+  useEffect(() => {
+    if (status === "waiting") {
+      fetch("/api/jadwal-aktif")
+        .then((res) => res.json())
+        .then((data) => setJadwalAktif(data))
+        .catch((err) => console.error("Gagal mengambil jadwal aktif:", err));
+    }
+  }, [status]);
 
   useEffect(() => {
     const socket = new WebSocket("ws://localhost:3001");
@@ -199,6 +210,11 @@ export default function MonitoringClient() {
         } else if (payload.event === "presensi-gagal") {
           setStatus((payload.data?.reason?.toLowerCase() as StatusKey) || "error");
         }
+
+        setTimeout(() => {
+          setStatus("waiting");
+          setData(null);
+        }, 5000);
       } catch (e) {
         console.error("Gagal parsing pesan WebSocket:", e);
       }
@@ -220,12 +236,12 @@ export default function MonitoringClient() {
           semester: { name: "-" },
           golongan: { name: "-" },
         },
-        jadwal: undefined,
+        jadwal: jadwalAktif || undefined,
         presensi: undefined,
       } as PresensiPayload;
     }
     return data;
-  }, [status, data]);
+  }, [status, data, jadwalAktif]);
 
   return (
     <div className="min-h-screen p-4 bg-white dark:bg-black text-foreground flex flex-col items-center">
@@ -258,12 +274,10 @@ export default function MonitoringClient() {
                         </div>
                       ) : (
                         <>
-                          {/* Skeleton saat loading */}
                           {isImageLoading && (
                             <Skeleton className="absolute inset-0 w-full h-full rounded-full z-0" />
                           )}
 
-                          {/* Foto jika ada */}
                           {data?.mahasiswa?.foto ? (
                             <Image
                               key={data.mahasiswa.nim}
@@ -315,13 +329,11 @@ export default function MonitoringClient() {
                   </div>
                 </div>
 
-                {/* Status */}
                 <div className="md:col-span-2 space-y-4">
                   <div className="p-4 rounded-xl border shadow-sm bg-white dark:bg-muted/40">
                     <h3 className="text-2xl font-black uppercase tracking-tight">{currentStatus.title}</h3>
                     <p className="text-neutral-600 dark:text-neutral-300 mt-2">{currentStatus.message}</p>
                   </div>
-                  {/* Info jadwal */}
                   <div>
                     <p className="text-sm font-semibold text-blue-500 uppercase tracking-wider mb-1">
                       Mata Kuliah Saat Ini
@@ -332,9 +344,11 @@ export default function MonitoringClient() {
                     <div className="text-neutral-600 dark:text-neutral-300 text-sm mt-1 space-y-1">
                       <p>
                         Jam:{" "}
-                        {data?.jadwal ? `${data.jadwal.jam_mulai} - ${data.jadwal.jam_selesai}` : "--:--"}
+                        {displayedData?.jadwal
+                          ? `${displayedData.jadwal.jam_mulai} - ${displayedData.jadwal.jam_selesai}`
+                          : "--:--"}
                       </p>
-                      <p>Ruangan: {data?.jadwal?.ruangan?.name || "-"}</p>
+                      <p>Ruangan: {displayedData?.jadwal?.ruangan?.name || "-"}</p>
                     </div>
                   </div>
                 </div>

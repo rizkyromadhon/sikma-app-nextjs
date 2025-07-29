@@ -45,6 +45,40 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       data: dataToUpdate,
     });
 
+    const jadwalId = updatedJadwal.id;
+
+    await prisma.pesertaKuliah.deleteMany({
+      where: {
+        jadwalKuliahId: jadwalId,
+      },
+    });
+
+    const mahasiswaCocok = await prisma.user.findMany({
+      where: {
+        role: "MAHASISWA",
+        prodiId,
+        semesterId,
+        golonganId: {
+          in: golonganIds,
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (mahasiswaCocok.length > 0) {
+      const pesertaBaru = mahasiswaCocok.map((m) => ({
+        mahasiswaId: m.id,
+        jadwalKuliahId: jadwalId,
+      }));
+
+      await prisma.pesertaKuliah.createMany({
+        data: pesertaBaru,
+        skipDuplicates: true,
+      });
+    }
+
     return NextResponse.json(updatedJadwal);
   } catch (error) {
     console.error(`Gagal mengupdate jadwal dengan ID: ${id}`, error);

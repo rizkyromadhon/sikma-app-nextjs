@@ -19,6 +19,7 @@ interface Option {
   name: string;
 }
 interface GolonganOption extends Option {
+  semesterId: string;
   prodiId: string;
 }
 interface MahasiswaData {
@@ -68,12 +69,15 @@ export default function EditMahasiswaForm({
   const [filteredGolongans, setFilteredGolongans] = useState<GolonganOption[]>([]);
 
   useEffect(() => {
-    if (form.prodi) {
-      setFilteredGolongans(golongans.filter((g) => g.prodiId === form.prodi));
+    if (form.prodi && form.semester) {
+      const newFilteredGolongans = golongans.filter(
+        (g) => g.prodiId === form.prodi && g.semesterId === form.semester
+      );
+      setFilteredGolongans(newFilteredGolongans);
     } else {
       setFilteredGolongans([]);
     }
-  }, [form.prodi, golongans]);
+  }, [form.prodi, form.semester, golongans]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 

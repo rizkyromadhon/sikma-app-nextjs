@@ -6,12 +6,20 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const semesterId = searchParams.get("semesterId");
   const prodiId = searchParams.get("prodiId");
+  const golonganId = searchParams.get("golonganId");
 
   try {
     const jadwalKuliah = await prisma.jadwalKuliah.findMany({
       where: {
         ...(semesterId && { semesterId }),
         ...(prodiId && { prodiId }),
+        ...(golonganId && {
+          golongans: {
+            some: {
+              id: golonganId,
+            },
+          },
+        }),
       },
       include: {
         mata_kuliah: true,
@@ -30,25 +38,6 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Gagal mengambil data jadwal kuliah" }, { status: 500 });
   }
 }
-
-// export async function GET(request: Request) {
-//   try {
-//     const jadwalKuliah = await prisma.jadwalKuliah.findMany({
-//       include: {
-//         mata_kuliah: true,
-//         dosen: true,
-//         prodi: true,
-//         ruangan: true,
-//         semester: true,
-//         golongans: true,
-//       },
-//     });
-//     return NextResponse.json(jadwalKuliah);
-//   } catch (error) {
-//     console.error("Gagal mengambil data jadwal kuliah:", error);
-//     return NextResponse.json({ error: "Gagal mengambil data jadwal kuliah" }, { status: 500 });
-//   }
-// }
 
 export async function POST(request: Request) {
   try {

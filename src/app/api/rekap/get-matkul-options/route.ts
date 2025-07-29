@@ -12,40 +12,51 @@ export async function GET(request: Request) {
 
   const { searchParams } = new URL(request.url);
   const semesterId = searchParams.get("semesterId");
+  const golonganId = searchParams.get("golonganId");
 
-  if (!semesterId) {
-    return NextResponse.json({ error: "Parameter semesterId wajib diisi." }, { status: 400 });
+  if (!semesterId || !golonganId) {
+    return NextResponse.json({ error: "Parameter semesterId dan golonganId wajib diisi." }, { status: 400 });
   }
 
   try {
     const jadwals = await prisma.jadwalKuliah.findMany({
       where: {
         prodiId: prodiId,
-        semesterId: semesterId, // Pastikan tipe data cocok dengan skema
-      },
-      select: {
-        matkulId: true, // Ambil hanya ID mata kuliahnya untuk efisiensi
-      },
-    });
-
-    const uniqueMatkulIds = [...new Set(jadwals.map((j) => j.matkulId))];
-
-    const mataKuliahs = await prisma.mataKuliah.findMany({
-      where: {
-        id: {
-          in: uniqueMatkulIds, // Cari semua mata kuliah yang ID-nya ada di dalam daftar unik
+        semesterId: semesterId,
+        golongans: {
+          some: { id: golonganId },
         },
       },
-      select: {
-        id: true,
-        name: true,
-      },
-      orderBy: {
-        name: "asc", // Urutkan hasilnya berdasarkan abjad
+      include: {
+        mata_kuliah: true,
       },
     });
 
-    return NextResponse.json(mataKuliahs);
+    const uniqueMatkuls = Array.from(
+      new Map(jadwals.map((j) => [j.mata_kuliah.id, j.mata_kuliah])).values()
+    ).map((matkul) => ({
+      id: matkul.id,
+      name: matkul.name,
+    }));
+
+    uniqueMatkuls.sort((a, b) => a.name.localeCompare(b.name));
+
+    // const mataKuliahs = await prisma.mataKuliah.findMany({
+    //   where: {
+    //     id: {
+    //       in: uniqueMatkulIds,
+    //     },
+    //   },
+    //   select: {
+    //     id: true,
+    //     name: true,
+    //   },
+    //   orderBy: {
+    //     name: "asc",
+    //   },
+    // });
+
+    return NextResponse.json(uniqueMatkuls);
   } catch (error) {
     console.error("Gagal mengambil opsi mata kuliah:", error);
     return NextResponse.json({ error: "Terjadi kesalahan pada server." }, { status: 500 });

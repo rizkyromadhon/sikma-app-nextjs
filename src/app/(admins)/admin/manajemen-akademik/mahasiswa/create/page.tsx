@@ -1,7 +1,6 @@
 import prisma from "@/lib/prisma";
 import CreateMahasiswaForm from "@/app/(admins)/admin/manajemen-akademik/mahasiswa/create/CreateMahasiswaForm";
 
-
 export default async function CreateMahasiswaPage() {
   const [semesters, prodis, golongans] = await Promise.all([
     prisma.semester.findMany({ orderBy: { name: "asc" } }),

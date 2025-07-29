@@ -46,7 +46,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const [kelasHariIniCount, totalMataKuliah, totalMahasiswaUnik, jamMengajarPerMinggu] = await Promise.all([
+    const [kelasHariIniCount, totalMataKuliah, jadwalList, jamMengajarPerMinggu] = await Promise.all([
       prisma.jadwalKuliah.count({
         where: {
           dosenId: dosenId,
@@ -57,58 +57,55 @@ export async function GET(request: Request) {
       prisma.mataKuliah.count({
         where: {
           jadwal_kuliah: {
-            some: {
-              dosenId: dosenId,
-            },
+            some: { dosenId },
           },
         },
       }),
 
-      prisma.user.count({
-        where: {
-          AND: [
-            { role: "MAHASISWA" },
-            {
-              presensi: {
-                some: {
-                  jadwal_kuliah: {
-                    dosenId: dosenId,
-                  },
-                },
-              },
-            },
-          ],
+      prisma.jadwalKuliah.findMany({
+        where: { dosenId },
+        select: {
+          semesterId: true,
+          prodiId: true,
+          golongans: { select: { id: true } },
         },
       }),
 
       prisma.jadwalKuliah
         .findMany({
-          where: {
-            dosenId: dosenId,
-          },
-          select: {
-            jam_mulai: true,
-            jam_selesai: true,
-          },
+          where: { dosenId },
+          select: { jam_mulai: true, jam_selesai: true },
         })
         .then((schedules) => {
           let totalMinutes = 0;
           schedules.forEach((schedule) => {
             const [startHour, startMinute] = schedule.jam_mulai.split(":").map(Number);
             const [endHour, endMinute] = schedule.jam_selesai.split(":").map(Number);
-
-            const startTimeInMinutes = startHour * 60 + startMinute;
-            const endTimeInMinutes = endHour * 60 + endMinute;
-
-            if (endTimeInMinutes < startTimeInMinutes) {
-              totalMinutes += endTimeInMinutes + 24 * 60 - startTimeInMinutes;
-            } else {
-              totalMinutes += endTimeInMinutes - startTimeInMinutes;
-            }
+            const startTime = startHour * 60 + startMinute;
+            const endTime = endHour * 60 + endMinute;
+            totalMinutes += endTime >= startTime ? endTime - startTime : endTime + 24 * 60 - startTime;
           });
           return Math.round(totalMinutes / 60);
         }),
     ]);
+
+    const mahasiswaSet = new Set<string>();
+
+    for (const jadwal of jadwalList) {
+      const mahasiswa = await prisma.user.findMany({
+        where: {
+          role: "MAHASISWA",
+          prodiId: jadwal.prodiId,
+          semesterId: jadwal.semesterId,
+          golonganId: { in: jadwal.golongans.map((g) => g.id) },
+        },
+        select: { id: true },
+      });
+
+      mahasiswa.forEach((m) => mahasiswaSet.add(m.id));
+    }
+
+    const totalMahasiswaUnik = mahasiswaSet.size;
 
     return NextResponse.json(
       {

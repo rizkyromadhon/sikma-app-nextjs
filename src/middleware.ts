@@ -20,6 +20,7 @@ export default auth(async (req) => {
 
   if (isAuthRoute) {
     if (isLoggedIn) {
+      if (role === "MAHASISWA") return Response.redirect(new URL("/jadwal-kuliah", nextUrl));
       if (role === "ADMIN") return Response.redirect(new URL("/admin/dashboard", nextUrl));
       if (role === "DOSEN") return Response.redirect(new URL("/dosen/dashboard", nextUrl));
       return Response.redirect(new URL("/", nextUrl));
@@ -37,6 +38,18 @@ export default auth(async (req) => {
 
   if (isDosenRoute && role !== "DOSEN") {
     return Response.redirect(new URL("/not-dosen", nextUrl));
+  }
+
+  if (isLoggedIn && role === "MAHASISWA" && nextUrl.pathname === "/") {
+    return Response.redirect(new URL("/jadwal-kuliah", nextUrl));
+  }
+
+  if (isLoggedIn && role === "ADMIN" && nextUrl.pathname === "/") {
+    return Response.redirect(new URL("/admin/dashboard", nextUrl));
+  }
+
+  if (isLoggedIn && role === "DOSEN" && nextUrl.pathname === "/") {
+    return Response.redirect(new URL("/dosen/dashboard", nextUrl));
   }
 
   const mustCompleteProfile =

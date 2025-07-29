@@ -56,18 +56,20 @@ export default function NavbarClient({ session }: NavbarClientProps) {
     signOut({ callbackUrl: "/login?logout=success" });
   };
 
-  const navLinks =
-    session?.user && (session.user.role === "ADMIN" || session.user.role === "DOSEN")
-      ? [
-          { href: "/", label: "Home" },
-          { href: "/pusat-bantuan", label: "Pusat Bantuan" },
-        ]
-      : [
-          { href: "/", label: "Home" },
-          { href: "/jadwal-kuliah", label: "Jadwal Kuliah" },
-          { href: "/presensi-kuliah", label: "Presensi Kuliah" },
-          { href: "/pusat-bantuan", label: "Pusat Bantuan" },
-        ];
+  const navLinks = !session?.user
+    ? [] // Tidak ada navigasi jika belum login
+    : session.user.role === "ADMIN" || session.user.role === "DOSEN"
+    ? [
+        { href: "/", label: "Home" },
+        { href: "/pusat-bantuan", label: "Pusat Bantuan" },
+      ]
+    : session.user.role === "MAHASISWA"
+    ? [
+        { href: "/jadwal-kuliah", label: "Jadwal Kuliah" },
+        { href: "/presensi-kuliah", label: "Presensi Kuliah" },
+        { href: "/pusat-bantuan", label: "Pusat Bantuan" },
+      ]
+    : [];
 
   return (
     <>
@@ -77,38 +79,42 @@ export default function NavbarClient({ session }: NavbarClientProps) {
         <div className="mx-auto max-w-12/13 ">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-16">
-              <Link href="/" className="text-2xl font-bold tracking-tight text-black dark:text-white">
+              <Link
+                href={session?.user ? "#" : "/"}
+                className="text-2xl font-bold tracking-tight text-black dark:text-white"
+              >
                 &apos;SIKMA&apos;
               </Link>
 
-              <div
-                ref={navContainerRef}
-                className="relative hidden md:flex items-center space-x-4"
-                onMouseLeave={handleMouseLeave}
-              >
+              {session?.user && (
                 <div
-                  ref={highlightRef}
-                  className="absolute bg-slate-100 dark:bg-[#1f1f1f] rounded-full transition-all duration-200 ease-out -z-10 opacity-0"
-                />
-
-                {navLinks.map(({ href, label }) => {
-                  const isActive = pathname === href;
-                  return (
-                    <Link
-                      key={href}
-                      href={href}
-                      onMouseEnter={handleMouseEnter}
-                      className={`relative text-sm font-medium transition-colors ease-out duration-200 px-3 py-1.5 rounded-full ${
-                        isActive
-                          ? "text-black dark:text-[#e2e2e2]"
-                          : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-[#c9c9c9]"
-                      }`}
-                    >
-                      {label}
-                    </Link>
-                  );
-                })}
-              </div>
+                  ref={navContainerRef}
+                  className="relative hidden md:flex items-center space-x-4"
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <div
+                    ref={highlightRef}
+                    className="absolute bg-slate-100 dark:bg-[#1f1f1f] rounded-full transition-all duration-200 ease-out -z-10 opacity-0"
+                  />
+                  {navLinks.map(({ href, label }) => {
+                    const isActive = pathname === href;
+                    return (
+                      <Link
+                        key={href}
+                        href={href}
+                        onMouseEnter={handleMouseEnter}
+                        className={`relative text-sm font-medium transition-colors ease-out duration-200 px-3 py-1.5 rounded-full ${
+                          isActive
+                            ? "text-black dark:text-[#e2e2e2]"
+                            : "text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-[#c9c9c9]"
+                        }`}
+                      >
+                        {label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
             </div>
             <div className="z-10 flex items-center">
               {/* Desktop */}

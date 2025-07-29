@@ -128,15 +128,13 @@ model User {
   prodi    ProgramStudi? @relation(fields: [prodiId], references: [id])
   golongan Golongan?     @relation(fields: [golonganId], references: [id])
 
-  // --- PERBAIKAN: HAPUS onDelete dari sisi User (induk) ---
-  laporans           LaporanMahasiswa[] @relation("LaporanDariUser") // Hapus onDelete: Cascade
-  presensi           PresensiKuliah[]   @relation // Hapus onDelete: Cascade
-  pengajuanIzin      PengajuanIzin[]    @relation // Hapus onDelete: Cascade
-  notifikasiDiterima Notifikasi[]       @relation("NotifikasiUntukUser") // Hapus onDelete: Cascade
-  notifikasiDikirim  Notifikasi[]       @relation("NotifikasiDariSender") // Hapus onDelete: Cascade
-  jadwalMengajar     JadwalKuliah[]     @relation // Hapus onDelete: SetNull
-  jadwalDiikuti      PesertaKuliah[]    @relation // Hapus onDelete: Cascade
-  // --- AKHIR PERBAIKAN ---
+  laporans           LaporanMahasiswa[] @relation("LaporanDariUser")
+  presensi           PresensiKuliah[]   @relation
+  pengajuanIzin      PengajuanIzin[]    @relation
+  notifikasiDiterima Notifikasi[]       @relation("NotifikasiUntukUser")
+  notifikasiDikirim  Notifikasi[]       @relation("NotifikasiDariSender")
+  jadwalMengajar     JadwalKuliah[]     @relation
+  jadwalDiikuti      PesertaKuliah[]    @relation
 
   account Account[]
   session Session[]
@@ -233,8 +231,8 @@ model Notifikasi {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user   User @relation("NotifikasiUntukUser", fields: [userId], references: [id], onDelete: Cascade) // BENAR: onDelete di sisi anak
-  sender User @relation("NotifikasiDariSender", fields: [senderId], references: [id], onDelete: Cascade) // BENAR: onDelete di sisi anak
+  user   User @relation("NotifikasiUntukUser", fields: [userId], references: [id], onDelete: Cascade)
+  sender User @relation("NotifikasiDariSender", fields: [senderId], references: [id], onDelete: Cascade)
 }
 
 model MataKuliah {
@@ -268,13 +266,13 @@ model JadwalKuliah {
   jam_mulai      String
   jam_selesai    String
 
-  dosenId    String? // <-- Jika onDelete: SetNull, harus nullable
+  dosenId    String?
   matkulId   String
   semesterId String
   prodiId    String
   ruanganId  String
 
-  dosen         User?            @relation(fields: [dosenId], references: [id], onDelete: SetNull) // BENAR: onDelete di sisi anak
+  dosen         User?            @relation(fields: [dosenId], references: [id], onDelete: SetNull)
   mata_kuliah   MataKuliah       @relation(fields: [matkulId], references: [id])
   semester      Semester         @relation(fields: [semesterId], references: [id])
   prodi         ProgramStudi     @relation(fields: [prodiId], references: [id])

@@ -34,7 +34,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Semester atau Mata Kuliah tidak ditemukan." }, { status: 404 });
     }
 
-    // Ambil info jadwal
     const jadwals = await prisma.jadwalKuliah.findMany({
       where: {
         semesterId: filters.semesterId,
@@ -55,7 +54,6 @@ export async function POST(request: Request) {
       },
     });
 
-    // Siapkan PDF
     const pdfDoc = await PDFDocument.create();
     let page = pdfDoc.addPage(PageSizes.A4);
     const { height } = page.getSize();
@@ -82,19 +80,8 @@ export async function POST(request: Request) {
       color: rgb(0.4, 0.4, 0.4),
     });
     y -= 30;
-    const tableHeaders = [
-      "No",
-      "NIM",
-      "Nama",
-      "H",
-      "TH",
-      "T",
-      "I/S Disetujui",
-      "I/S Ditolak",
-      "Total",
-      "Persentase",
-    ];
-    const colWidths = [25, 65, 140, 25, 25, 25, 50, 50, 55, 55];
+    const tableHeaders = ["No", "NIM", "Nama", "Hadir", "Tidak Hadir", "Izin/Sakit", "Total", "Persentase"];
+    const colWidths = [25, 65, 140, 45, 55, 55, 40, 60];
     const headerHeight = 20;
 
     page.drawRectangle({
@@ -133,7 +120,7 @@ export async function POST(request: Request) {
         where: { mahasiswaId: p.mahasiswa.id, jadwalKuliahId: { in: jadwalIds } },
       });
 
-      const jumlah = { HADIR: 0, TERLAMBAT: 0, IZIN_DISETUJUI: 0, IZIN_DITOLAK: 0, TIDAK_HADIR: 0 };
+      const jumlah = { HADIR: 0, TERLAMBAT: 0, IZIN_DISETUJUI: 0, TIDAK_HADIR: 0 };
       for (const presensi of presensiMahasiswa) {
         if (["IZIN", "SAKIT"].includes(presensi.status)) {
           const pengajuan = await prisma.pengajuanIzin.findFirst({
@@ -144,9 +131,7 @@ export async function POST(request: Request) {
             },
           });
           if (pengajuan?.status === "DISETUJUI") jumlah.IZIN_DISETUJUI++;
-          else jumlah.IZIN_DITOLAK++;
         } else if (presensi.status === "HADIR") jumlah.HADIR++;
-        else if (presensi.status === "TERLAMBAT") jumlah.TERLAMBAT++;
         else if (presensi.status === "TIDAK_HADIR") jumlah.TIDAK_HADIR++;
       }
 
@@ -160,9 +145,7 @@ export async function POST(request: Request) {
         p.mahasiswa.name ?? "-",
         jumlah.HADIR.toString(),
         jumlah.TIDAK_HADIR.toString(),
-        jumlah.TERLAMBAT.toString(),
         jumlah.IZIN_DISETUJUI.toString(),
-        jumlah.IZIN_DITOLAK.toString(),
         totalText,
         persentase,
       ];
@@ -194,22 +177,16 @@ export async function POST(request: Request) {
       y = height - 50;
     }
 
-    const keterangan = [
-      "Keterangan :",
-      "H   = Hadir",
-      "TH = Tidak Hadir",
-      "T    = Terlambat",
-      "I/S = Izin atau Sakit",
-    ];
-    keterangan.forEach((line, i) => {
-      page.drawText(line, {
-        x: margin,
-        y: y - 30 - i * 14,
-        font,
-        size: 9,
-        color: rgb(0.3, 0.3, 0.3),
-      });
-    });
+    // const keterangan = ["Keterangan :", "H   = Hadir", "TH = Tidak Hadir", "I/S = Izin atau Sakit"];
+    // keterangan.forEach((line, i) => {
+    //   page.drawText(line, {
+    //     x: margin,
+    //     y: y - 30 - i * 14,
+    //     font,
+    //     size: 9,
+    //     color: rgb(0.3, 0.3, 0.3),
+    //   });
+    // });
 
     const pdfBytes = await pdfDoc.save();
     const pdfBuffer = Buffer.from(pdfBytes);

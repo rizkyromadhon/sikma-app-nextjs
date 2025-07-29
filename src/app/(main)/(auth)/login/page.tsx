@@ -15,12 +15,12 @@ const LoginPage = () => {
           <LoginForm />
         </Suspense>
         {/* <GoogleButton /> */}
-        <p className="text-center text-sm text-gray-500 dark:text-neutral-400">
+        {/* <p className="text-center text-sm text-gray-500 dark:text-neutral-400">
           Belum punya akun?{" "}
           <Link href={"/register"} className="underline hover:text-gray-900 dark:hover:text-white">
             Daftar sekarang.
           </Link>
-        </p>
+        </p> */}
       </Card>
     </AuthLayout>
   );

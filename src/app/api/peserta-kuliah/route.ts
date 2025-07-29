@@ -13,7 +13,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 1️⃣ Validasi jadwal kuliah ada
     const jadwal = await prisma.jadwalKuliah.findUnique({
       where: { id: jadwalKuliahId },
       include: { prodi: true },
@@ -25,7 +24,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 2️⃣ Validasi mahasiswa ada
     const mahasiswa = await prisma.user.findUnique({
       where: { id: mahasiswaId },
       select: { id: true, prodiId: true, name: true },
@@ -37,7 +35,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 3️⃣ Validasi prodi sama
     if (jadwal.prodi.id !== mahasiswa.prodiId) {
       return NextResponse.json(
         {
@@ -48,7 +45,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 4️⃣ Cek duplikasi
     const existing = await prisma.pesertaKuliah.findFirst({
       where: { mahasiswaId, jadwalKuliahId },
     });
@@ -62,7 +58,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 5️⃣ Simpan peserta
     const peserta = await prisma.pesertaKuliah.create({
       data: { mahasiswaId, jadwalKuliahId },
     });

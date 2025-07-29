@@ -41,7 +41,7 @@ export default function CreatePesertaForm({ prodiId, semesters }: CreatePesertaF
       try {
         const [golonganRes, jadwalRes] = await Promise.all([
           fetch(`/api/golongan?semesterId=${semesterId}&prodiId=${prodiId}`),
-          fetch(`/api/jadwal-kuliah?semesterId=${semesterId}&prodiId=${prodiId}`),
+          fetch(`/api/jadwal-kuliah?semesterId=${semesterId}&prodiId=${prodiId}&golonganId=${golonganId}`),
         ]);
         const [golonganData, jadwalData] = await Promise.all([golonganRes.json(), jadwalRes.json()]);
         setGolonganOptions(Array.isArray(golonganData) ? golonganData : []);
@@ -61,7 +61,7 @@ export default function CreatePesertaForm({ prodiId, semesters }: CreatePesertaF
     };
 
     fetchData();
-  }, [semesterId, prodiId]);
+  }, [semesterId, prodiId, golonganId]);
 
   useEffect(() => {
     if (!semesterId || !golonganId) {

@@ -29,7 +29,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
   const gender = formData.get("gender") as string;
   const fotoFile = formData.get("foto") as File | null;
 
-  // Validasi input
   if (!name || !nim || !email || !semesterId || !prodiId || !golonganId || !gender) {
     return NextResponse.json({ error: "Semua field wajib diisi." }, { status: 400 });
   }
@@ -39,7 +38,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     if (fotoFile && fotoFile.size > 0) {
       const currentUser = await prisma.user.findUnique({ where: { id: mahasiswaId } });
 
-      // 2. Jika ada foto lama, hapus dari Cloudinary
       if (currentUser?.foto) {
         const publicId = getPublicIdFromUrl(currentUser.foto);
         if (publicId) {
@@ -47,7 +45,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
         }
       }
 
-      // 3. Upload foto baru
       const bytes = await fotoFile.arrayBuffer();
       const buffer = Buffer.from(bytes);
       const response = await new Promise<UploadApiResponse | undefined>((resolve, reject) => {
@@ -63,7 +60,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       }
     }
 
-    // Buat objek data untuk diupdate
     const updateData: Prisma.UserUpdateInput = {
       name: formData.get("name") as string,
       nim: formData.get("nim") as string,
@@ -76,7 +72,6 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       golongan: { connect: { id: golonganId } },
     };
 
-    // Hanya tambahkan foto_url ke data update jika ada foto baru
     if (uploadedFotoUrl) {
       updateData.foto = uploadedFotoUrl;
     }
@@ -85,6 +80,39 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       where: { id: mahasiswaId },
       data: updateData,
     });
+
+    await prisma.pesertaKuliah.deleteMany({
+      where: {
+        mahasiswaId,
+      },
+    });
+
+    const jadwalCocok = await prisma.jadwalKuliah.findMany({
+      where: {
+        semesterId,
+        prodiId,
+        golongans: {
+          some: {
+            id: golonganId,
+          },
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (jadwalCocok.length > 0) {
+      const pesertaData = jadwalCocok.map((jadwal) => ({
+        mahasiswaId,
+        jadwalKuliahId: jadwal.id,
+      }));
+
+      await prisma.pesertaKuliah.createMany({
+        data: pesertaData,
+        skipDuplicates: true,
+      });
+    }
 
     return NextResponse.json(updatedMahasiswa);
   } catch (error) {

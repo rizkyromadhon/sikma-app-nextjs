@@ -18,15 +18,16 @@ interface RegistrasiProps {
 
 export default function RegistrasiRfidPageClient({ initialMahasiswa, alatId }: RegistrasiProps) {
   const [currentUid, setCurrentUid] = useState<string | null>(initialMahasiswa.uid);
-  const [status, setStatus] = useState<"viewing" | "waiting" | "success" | "duplicate" | "error">(() =>
+  const [status, setStatus] = useState<"viewing" | "waiting" | "success" | "used" | "error">(() =>
     initialMahasiswa.uid ? "viewing" : "waiting"
   );
+  const [usedByName, setUsedByName] = useState<string | null>(null);
 
   const registrationModeActivated = useRef(false);
 
   const handleStartNewRegistration = () => {
     setStatus("waiting");
-    setCurrentUid(null);
+    // setCurrentUid(null);
   };
 
   useEffect(() => {
@@ -78,9 +79,9 @@ export default function RegistrasiRfidPageClient({ initialMahasiswa, alatId }: R
           if (messageData.status === "success") {
             setCurrentUid(messageData.uid);
             setStatus("success");
-          } else if (messageData.status === "duplicate") {
-            setCurrentUid(messageData.uid);
-            setStatus("duplicate");
+          } else if (messageData.status === "used") {
+            setStatus("used");
+            setUsedByName(messageData.usedByName || null);
           }
         }
       } catch (e) {
@@ -111,7 +112,7 @@ export default function RegistrasiRfidPageClient({ initialMahasiswa, alatId }: R
         return `${baseClass} shadow-[0_0_30px_1px] shadow-sky-500/80 dark:shadow-sky-800`;
       case "success":
         return `${baseClass} shadow-[0_0_40px_1px] shadow-emerald-400 dark:shadow-emerald-800/80`;
-      case "duplicate":
+      case "used":
         return `${baseClass} shadow-[0_0_40px_1px] shadow-red-400 dark:shadow-red-800/80`;
       default:
         return `${baseClass} shadow-lg`;
@@ -136,8 +137,10 @@ export default function RegistrasiRfidPageClient({ initialMahasiswa, alatId }: R
         {status === "viewing" && (
           <span className="text-amber-500">Mahasiswa ini sudah memiliki UID terdaftar.</span>
         )}
-        {status === "duplicate" && (
-          <span className="text-red-500">Gagal: UID yang dipindai sama dengan UID yang sudah terdaftar.</span>
+        {status === "used" && (
+          <span className="text-red-500">
+            Gagal: UID yang dipindai sudah digunakan oleh {usedByName || "-"}.
+          </span>
         )}
       </p>
       <div className="space-y-6">
@@ -180,13 +183,11 @@ export default function RegistrasiRfidPageClient({ initialMahasiswa, alatId }: R
               <p className="mt-1 text-sm text-neutral-500">Kartu RFID baru telah berhasil didaftarkan.</p>
             </>
           )}
-          {status === "duplicate" && (
+          {status === "used" && (
             <>
               <LuCircleX className="h-12 w-12 text-red-500 mx-auto" />
-              <h2 className="mt-4 text-xl font-semibold text-red-500">UID Tidak Berubah</h2>
-              <p className="mt-2 text-sm text-gray-500">
-                Kartu yang ditempelkan memiliki UID yang sama dengan yang sudah terdaftar.
-              </p>
+              <h2 className="mt-4 text-xl font-semibold text-red-500">UID sudah digunakan</h2>
+              <p className="mt-2 text-sm text-gray-500">UID ini telah didaftarkan oleh mahasiswa lain</p>
               <div className="mt-4">
                 <SubmitButton
                   text="Coba Lagi"
